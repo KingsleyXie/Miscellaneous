@@ -12,3 +12,9 @@ This is used for some naive projects like C++ dazuoye in Grade One, etc.
 >4. The direction of search is arranged by: right-down-left-up;
 >5. When the terminal is reached, print "Terminal Reached!" and exit the program;
 >6. As you can see, this initial program is just a normal naive DFS program, and I will update to promote it later, maybe in winter vocation or sometime else when I am free.
+
+## Update in 2016.12.14:
+###The brief introduction of initial RandRollcall.cpp:
+>1. This is the program I wrote in Grade Two in High school, as a tool for my teacher's rollcall;
+>2. At present the program is only the demo I did then, and it doesn's fit in even other teachers' need. I will update it later so that it can fit in more situations.
+>3. Todo: write a document to explain the main variables of the program and how to use it.
