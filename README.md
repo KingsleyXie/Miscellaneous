@@ -5,7 +5,7 @@ My English is still Too Simple, Sometimes Naive. So if you can't read what I am 
 This is used for some naive projects like some tools' demos, C++ dazuoye in grade one, etc.
 
 ## Update in 2016.12.12:
-###A brief introduction of initial `maze.cpp`:
+### A brief introduction of initial `maze.cpp`:
 ```
 This is the initial program of our homework this semester, and the main process is:
     1. Initialize the two-dimensional array maze with 0s, while the dimensional range is:
@@ -21,7 +21,7 @@ This is the initial program of our homework this semester, and the main process 
 ```
 
 ## Update in 2016.12.14:
-###A brief introduction of initial `RandRollcall.cpp`:
+### A brief introduction of initial `RandRollcall.cpp`:
 ```
 * This is the program I wrote in Grade Two in High school, as a tool for my teacher's rollcall;
 * At present the program is only the demo I did then, and it doesn's fit in even other teachers' need.
@@ -30,7 +30,7 @@ This is the initial program of our homework this semester, and the main process 
 ```
 
 ## Update in 2017.01.04:
-###A brief introduction of initial `Battleship Game.py`:
+### A brief introduction of initial `Battleship Game.py`:
 ```
 * This was a program wrote when I learn Python on Codecademy 5 months ago,
   and I modified it later when I finished the course;
