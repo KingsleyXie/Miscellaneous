@@ -1,5 +1,8 @@
 import java.awt.BorderLayout;
-import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JButton;
+import javax.swing.JFrame;
 
 public class Array2D extends JFrame {
 	private JButton north = new JButton("N");
@@ -19,7 +22,15 @@ public class Array2D extends JFrame {
 		add(east, BorderLayout.EAST);
 		add(west, BorderLayout.WEST);
 		add(center, BorderLayout.CENTER);
+
+		north.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JButton clc = (JButton) e.getSource();
+				clc.setText("CLIKCED");
+			}
+		});
 	}
+
 	public static void main(String[] args) {
 		Array2D frame = new Array2D();
 		frame.setVisible(true);
