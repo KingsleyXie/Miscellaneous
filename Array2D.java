@@ -1,11 +1,9 @@
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.JFrame;
-import javax.swing.JTable;
-import javax.swing.JButton;
-import javax.swing.JScrollPane;
+import javax.swing.*;
 import javax.swing.table.*;
+import java.io.*;
 
 public class Array2D extends JFrame {
 	public Array2D() {
@@ -163,12 +161,19 @@ public class Array2D extends JFrame {
 						index++;
 					}
 				}
-
-				for (i = 0; i < index; i++) {
-					System.out.print(statistics[i][0]);
-					System.out.print("   ");
-					System.out.println(statistics[i][1]);
-				}
+				
+				try {
+					String csvFile = "statistics.csv";
+					FileWriter writer = new FileWriter(csvFile);
+					writer.append("籍贯,人数\n");
+					for (i = 0; i < index; i++) {
+						writer.append(statistics[i][0] + ',' + statistics[i][1] + '\n');
+					}
+					writer.flush();
+					writer.close();
+				} catch(IOException err) {
+					err.printStackTrace();
+				} 
 			}
 		});
 	}
