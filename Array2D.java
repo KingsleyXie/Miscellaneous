@@ -1,34 +1,35 @@
 import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.AbstractTableModel;
 
 public class Array2D extends JFrame {
-	private JButton north = new JButton("N");
-	private JButton south = new JButton("S");
-	private JButton east = new JButton("E");
-	private JButton west = new JButton("W");
-	private JButton center = new JButton("C");
-
 	public Array2D() {
-		setSize(300, 650);
-		setLocation(300, 50);
+		setSize(300,600);
+		setLocation(50,50);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLayout(new BorderLayout());
 
-		add(north, BorderLayout.NORTH);
-		add(south, BorderLayout.SOUTH);
-		add(east, BorderLayout.EAST);
-		add(west, BorderLayout.WEST);
-		add(center, BorderLayout.CENTER);
-
-		north.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				JButton clc = (JButton) e.getSource();
-				clc.setText("CLIKCED");
+		JTable table = new JTable(new AbstractTableModel() {
+			private String columnName[] = {"学号", "姓名", "籍贯"};
+			
+			public String getColumnName(int column) {
+				return columnName[column];
+			}
+			public int getColumnCount() {
+				return 3;
+			}
+			public int getRowCount() {
+				return 100;
+			}
+			public Object getValueAt(int row, int col) {
+				return new Integer(row * col);
 			}
 		});
+
+		JScrollPane scrollpane = new JScrollPane(table);
+		add(scrollpane, BorderLayout.CENTER);
 	}
 
 	public static void main(String[] args) {
