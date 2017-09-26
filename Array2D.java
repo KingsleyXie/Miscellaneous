@@ -1,7 +1,10 @@
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.JFrame;
-import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JButton;
+import javax.swing.JScrollPane;
 import javax.swing.table.AbstractTableModel;
 
 public class Array2D extends JFrame {
@@ -121,21 +124,29 @@ public class Array2D extends JFrame {
 				return columnName[column];
 			}
 			public int getColumnCount() {
-				return 3;
+				return columnName.length;
 			}
 			public int getRowCount() {
 				return data.length;
 			}
 			public Object getValueAt(int row, int col) {
-				// return new Integer(row * col);
 				return data[row][col];
 			}
 		});
 
 		JScrollPane scrollpane = new JScrollPane(table);
 		add(scrollpane, BorderLayout.CENTER);
-	}
 
+		JButton btn = new JButton("数据统计");
+		add(btn, BorderLayout.NORTH);
+
+		btn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				remove(scrollpane);
+			}
+		});
+	}
+	
 	public static void main(String[] args) {
 		Array2D frame = new Array2D();
 		frame.setVisible(true);
