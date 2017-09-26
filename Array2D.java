@@ -5,10 +5,12 @@ import javax.swing.JFrame;
 import javax.swing.JTable;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
-import javax.swing.table.AbstractTableModel;
+import javax.swing.table.*;
 
 public class Array2D extends JFrame {
 	public Array2D() {
+		final int STATISTICS_MAX_SIZE = 100;
+
 		setSize(500,600);
 		setLocation(50,50);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -136,13 +138,37 @@ public class Array2D extends JFrame {
 
 		JScrollPane scrollpane = new JScrollPane(table);
 		add(scrollpane, BorderLayout.CENTER);
+		table.setAutoCreateRowSorter(true);
 
 		JButton btn = new JButton("数据统计");
 		add(btn, BorderLayout.NORTH);
 
 		btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				remove(scrollpane);
+				TableColumn col = table.getColumnModel().getColumn(2);
+				table.removeColumn(col);
+				String statistics[][] = new String[STATISTICS_MAX_SIZE][2];
+				int i, j, index = 0;
+				for (i = 0; i < data.length; i++) {
+					j = 0;
+					while(j < index && data[i][2] != statistics[j][1]) {
+						j++;
+					}
+
+					if (j < index) {
+						statistics[j][0] = String.valueOf(Integer.parseInt(statistics[j][0]) + 1);
+					} else {
+						statistics[index][0] = "1";
+						statistics[index][1] = data[i][2];
+						index++;
+					}
+				}
+
+				for (i = 0; i < index; i++) {
+					System.out.print(statistics[i][0]);
+					System.out.print("   ");
+					System.out.println(statistics[i][1]);
+				}
 			}
 		});
 	}
