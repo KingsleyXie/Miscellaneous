@@ -1,13 +1,13 @@
 import java.io.*;
-import java.util.Objects;
 import javax.swing.*;
 import javax.swing.table.*;
+import java.util.Objects;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class Array2D extends JFrame {
-	final int STATISTICS_MAX_SIZE = 100;
+	final int MAX_ARRAY_SIZE = 1000;
 	public int dataLen = 0;
 	
 	public Array2D() {
@@ -16,24 +16,23 @@ public class Array2D extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLayout(new BorderLayout());
 
-		String[][] data = new String[99][3];
+		String[][] data = new String[MAX_ARRAY_SIZE][3];
 		
 		try { 
-                BufferedReader reader = new BufferedReader(new FileReader("data.csv"));
-                reader.readLine();
-                String line = null;
-                while((line = reader.readLine()) != null){ 
-                    String it[] = line.split(",");
-                    data[dataLen][0] = it[0];
-                    data[dataLen][1] = it[1];
-                    data[dataLen][2] = it[2];
-                    dataLen++;
-                } 
-                reader.close();
-            } catch (Exception e) { 
-                e.printStackTrace(); 
-            } 
-		
+			BufferedReader reader = new BufferedReader(new FileReader("data.csv"));
+			reader.readLine();
+			String line = null;
+			while((line = reader.readLine()) != null){ 
+				String it[] = line.split(",");
+				data[dataLen][0] = it[0];
+				data[dataLen][1] = it[1];
+				data[dataLen][2] = it[2];
+				dataLen++;
+			} 
+			reader.close();
+		} catch (Exception e) { 
+			e.printStackTrace(); 
+		} 
 
 		String[] columnName = {"学号", "姓名", "籍贯"};
 		
@@ -46,7 +45,7 @@ public class Array2D extends JFrame {
 				return columnName.length;
 			}
 			public int getRowCount() {
-				return data.length;
+				return dataLen;
 			}
 			public Object getValueAt(int row, int col) {
 				return data[row][col];
@@ -62,7 +61,7 @@ public class Array2D extends JFrame {
 
 		btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String statistics[][] = new String[STATISTICS_MAX_SIZE][2];
+				String statistics[][] = new String[MAX_ARRAY_SIZE][2];
 				int i, j, index = 0;
 				for (i = 0; i < dataLen; i++) {
 					j = 0;
@@ -91,7 +90,7 @@ public class Array2D extends JFrame {
 					writer.flush();
 					writer.close();
 
-					JOptionPane.showMessageDialog(null, "学生籍贯统计数据已成功导出");
+					JOptionPane.showMessageDialog(null, "学生籍贯统计数据已成功导出\n学生总数：" + dataLen);
 					Process process = Runtime.getRuntime().exec("cmd /c statistics.csv");
 				} catch(IOException err) {
 					err.printStackTrace();
