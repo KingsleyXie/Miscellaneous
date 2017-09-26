@@ -11,6 +11,16 @@ public class Array2D extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLayout(new BorderLayout());
 
+		String[][] data = {
+			{"201633322332", "董建华", "香港"},
+			{"201633322332", "张宝华", "香港"},
+			{"201633322332", "董富强", "香港"},
+			{"201633322332", "董民主", "香港"},
+			{"201633322332", "董文明", "香港"},
+			{"201633322332", "董和谐", "香港"},
+			{"201633322332", "董诚信", "香港"},
+			{"201633322332", "董友善", "香港"},
+		};
 		JTable table = new JTable(new AbstractTableModel() {
 			private String columnName[] = {"学号", "姓名", "籍贯"};
 			
@@ -21,10 +31,11 @@ public class Array2D extends JFrame {
 				return 3;
 			}
 			public int getRowCount() {
-				return 100;
+				return data.length;
 			}
 			public Object getValueAt(int row, int col) {
-				return new Integer(row * col);
+				// return new Integer(row * col);
+				return data[row][col];
 			}
 		});
 
