@@ -138,13 +138,11 @@ public class Array2D extends JFrame {
 		add(scrollpane, BorderLayout.CENTER);
 		table.setAutoCreateRowSorter(true);
 
-		JButton btn = new JButton("数据统计");
+		JButton btn = new JButton("导出统计数据");
 		add(btn, BorderLayout.NORTH);
 
 		btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				TableColumn col = table.getColumnModel().getColumn(2);
-				table.removeColumn(col);
 				String statistics[][] = new String[STATISTICS_MAX_SIZE][2];
 				int i, j, index = 0;
 				for (i = 0; i < data.length; i++) {
@@ -161,7 +159,7 @@ public class Array2D extends JFrame {
 						index++;
 					}
 				}
-				
+
 				try {
 					String csvFile = "statistics.csv";
 					FileWriter writer = new FileWriter(csvFile);
@@ -171,9 +169,12 @@ public class Array2D extends JFrame {
 					}
 					writer.flush();
 					writer.close();
+
+					JOptionPane.showMessageDialog(null, "学生籍贯统计数据已成功导出");
+					Process process = Runtime.getRuntime().exec("cmd /c statistics.csv");
 				} catch(IOException err) {
 					err.printStackTrace();
-				} 
+				}
 			}
 		});
 	}
