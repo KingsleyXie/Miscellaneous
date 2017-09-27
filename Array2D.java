@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 public class Array2D extends JFrame {
 	final int MAX_ARRAY_SIZE = 1000;
 	public int dataLen = 0;
+	public String columnName[] = null;
 	
 	public Array2D() {
 		setSize(500,600);
@@ -20,8 +21,11 @@ public class Array2D extends JFrame {
 		
 		try { 
 			BufferedReader reader = new BufferedReader(new FileReader("data.csv"));
-			reader.readLine();
+			
 			String line = null;
+			line = reader.readLine();
+			columnName = line.split(",");
+			
 			while((line = reader.readLine()) != null){ 
 				String it[] = line.split(",");
 				data[dataLen][0] = it[0];
@@ -35,8 +39,6 @@ public class Array2D extends JFrame {
 			e.printStackTrace(); 
 		} 
 
-		String[] columnName = {"学号","姓名","性别","籍贯"};
-		
 		JTable table = new JTable(new AbstractTableModel() {
 			
 			public String getColumnName(int column) {
