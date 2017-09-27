@@ -16,7 +16,7 @@ public class Array2D extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLayout(new BorderLayout());
 
-		String[][] data = new String[MAX_ARRAY_SIZE][3];
+		String[][] data = new String[MAX_ARRAY_SIZE][4];
 		
 		try { 
 			BufferedReader reader = new BufferedReader(new FileReader("data.csv"));
@@ -27,6 +27,7 @@ public class Array2D extends JFrame {
 				data[dataLen][0] = it[0];
 				data[dataLen][1] = it[1];
 				data[dataLen][2] = it[2];
+				data[dataLen][3] = it[3];
 				dataLen++;
 			} 
 			reader.close();
@@ -34,7 +35,7 @@ public class Array2D extends JFrame {
 			e.printStackTrace(); 
 		} 
 
-		String[] columnName = {"学号", "姓名", "籍贯"};
+		String[] columnName = {"学号","姓名","性别","籍贯"};
 		
 		JTable table = new JTable(new AbstractTableModel() {
 			
@@ -61,19 +62,21 @@ public class Array2D extends JFrame {
 
 		btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String statistics[][] = new String[MAX_ARRAY_SIZE][2];
+				String statistics[][] = new String[MAX_ARRAY_SIZE][3];
 				int i, j, index = 0;
 				for (i = 0; i < dataLen; i++) {
 					j = 0;
-					while(j < index && !Objects.equals(data[i][2], statistics[j][1])) {
+					while(j < index && !Objects.equals(data[i][3], statistics[j][0])) {
 						j++;
 					}
 
+					int id = Objects.equals(data[i][2], "男") ? 1 : 2;
 					if (j < index) {
-						statistics[j][0] = String.valueOf(Integer.parseInt(statistics[j][0]) + 1);
+						statistics[j][id] = String.valueOf(Integer.parseInt(statistics[j][id]) + 1);
 					} else {
-						statistics[index][0] = "1";
-						statistics[index][1] = data[i][2];
+						statistics[index][0] = data[i][3];
+						statistics[index][id] = "1";
+						statistics[index][3 - id] = "0";
 						index++;
 					}
 				}
@@ -81,11 +84,13 @@ public class Array2D extends JFrame {
 				try {
 					String csvFile = "statistics.csv";
 					FileWriter writer = new FileWriter(csvFile);
-					writer.append("籍贯,人数\n");
+					writer.append("籍贯,男生,女生\n");
 					System.out.println("学生信息统计数据如下：");
 					for (i = 0; i < index; i++) {
-						writer.append(statistics[i][1] + ',' + statistics[i][0] + '\n');
-						System.out.println("籍贯：" + statistics[i][1] + "\t人数：" + statistics[i][0]);
+						writer.append(statistics[i][0] + ',' + statistics[i][1] + ',' + statistics[i][2] + '\n');
+						statistics[i][1] = String.format("%3s", statistics[i][1]);
+						statistics[i][2] = String.format("%3s", statistics[i][2]);
+						System.out.println("籍贯：" + statistics[i][0] + "\t\t男生：" + statistics[i][1] + "\t女生：" + statistics[i][2]);
 					}
 					writer.flush();
 					writer.close();
