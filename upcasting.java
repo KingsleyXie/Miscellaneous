@@ -13,6 +13,7 @@ class Base extends JFrame {
 	public String statistics[][] = new String[MAX_ARRAY_SIZE][3];
 	public int dataLen = 0, statisticsLen = 0, i, j;
 	public JTable table;
+	public JButton importBtn;
 
 	private String columnName[] = new String[TABLE_COLUMN_LENGTH];
 	private String data[][] = new String[MAX_ARRAY_SIZE][TABLE_COLUMN_LENGTH];
@@ -24,8 +25,19 @@ class Base extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLayout(new BorderLayout());
 
-		readData();
-		drawInterface();
+		importPrepare();
+	}
+
+	public void importPrepare() {
+		importBtn = new JButton("导入统计数据");
+		add(importBtn, BorderLayout.CENTER);
+		importBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				importBtn.setVisible(false);
+				readData();
+				drawInterface();
+			}
+		});
 	}
 
 	public void readData() {
@@ -73,10 +85,10 @@ class Base extends JFrame {
 		add(scrollpane, BorderLayout.CENTER);
 		table.setAutoCreateRowSorter(true);
 
-		JButton btn = new JButton("导出统计数据");
-		add(btn, BorderLayout.NORTH);
+		JButton exportBtn = new JButton("导出统计数据");
+		add(exportBtn, BorderLayout.NORTH);
 
-		btn.addActionListener(new ActionListener() {
+		exportBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				statistics();
 				outputData();
