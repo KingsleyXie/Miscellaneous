@@ -97,6 +97,23 @@ class Base extends JFrame {
 	}
 
 	public void outputData() {
+		System.out.println("If You See This Then The Upcasting Is Failed");
+		//This Function Was Rewrote In Extended Class So The Message Won't Show
+	}
+}
+
+class Extended extends Base {
+	public int i = 233;
+	public int newi = 233;
+
+	public void uncallable() {
+		System.out.println("This Functiton Is Not Callable");
+	}
+
+
+
+	// Rewrite Output Function
+	public void outputData() {
 		try {
 			String csvFile = "statistics.csv";
 			FileWriter writer = new FileWriter(csvFile);
@@ -131,9 +148,28 @@ class Base extends JFrame {
 
 public class upcasting {
 	public static void main(String[] args) {
-		Base frame = new Base();
+		Base frame = new Extended();
 
 		frame.readData();
 		frame.setVisible(true);
+
+
+
+		/***************************
+		 * EXTRA TEST CASE - START
+		 ***************************/
+
+			// frame.uncallable();
+			// Function `uncallable` Is Blocked
+
+			System.out.printf("Value Of Variable `i` is: %d\n", frame.i);
+			// Output Value Of `i` was from Base Class Instead Of Extended Class
+
+			// System.out.println(frame.newi);
+			// Variable `newi` Is Blocked Either
+
+		/***************************
+		 * EXTRA TEST CASE - END
+		 ***************************/
 	}
 }
