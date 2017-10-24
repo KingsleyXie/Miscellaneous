@@ -6,7 +6,7 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class upcasting extends JFrame {
+class Base extends JFrame {
 	final int MAX_ARRAY_SIZE = 1000;
 	final int TABLE_COLUMN_LENGTH = 4;
 
@@ -15,7 +15,7 @@ public class upcasting extends JFrame {
 	public String data[][] = new String[MAX_ARRAY_SIZE][TABLE_COLUMN_LENGTH];
 	public String statistics[][] = new String[MAX_ARRAY_SIZE][3];
 
-	public upcasting() {
+	public Base() {
 		setSize(900,600);
 		setLocation(50,50);
 
@@ -57,15 +57,18 @@ public class upcasting extends JFrame {
 			BufferedReader reader = new BufferedReader(new FileReader("data.csv"));
 
 			String line = null;
+
 			line = reader.readLine();
 			columnName = line.split(",");
 
 			while((line = reader.readLine()) != null) {
 				String it[] = line.split(",");
+
 				data[dataLen][0] = it[0];
 				data[dataLen][1] = it[1];
 				data[dataLen][2] = it[2];
 				data[dataLen][3] = it[3];
+
 				dataLen++;
 			}
 			reader.close();
@@ -77,9 +80,8 @@ public class upcasting extends JFrame {
 	public void statistics() {
 		for (i = 0; i < dataLen; i++) {
 			j = 0;
-			while(j < statisticsLen && !Objects.equals(data[i][3], statistics[j][0])) {
+			while(j < statisticsLen && !Objects.equals(data[i][3], statistics[j][0]))
 				j++;
-			}
 
 			int id = Objects.equals(data[i][2], "男") ? 1 : 2;
 			if (j < statisticsLen) {
@@ -88,6 +90,7 @@ public class upcasting extends JFrame {
 				statistics[statisticsLen][0] = data[i][3];
 				statistics[statisticsLen][id] = "1";
 				statistics[statisticsLen][3 - id] = "0";
+
 				statisticsLen++;
 			}
 		}
@@ -119,14 +122,16 @@ public class upcasting extends JFrame {
 			writer.close();
 
 			JOptionPane.showMessageDialog(null, "学生籍贯统计数据已成功导出\n学生总数：" + dataLen);
-			Process process = Runtime.getRuntime().exec("cmd /c statistics.csv");
+			// Process process = Runtime.getRuntime().exec("cmd /c statistics.csv");
 		} catch(IOException err) {
 			err.printStackTrace();
 		}
 	}
+}
 
+public class upcasting {
 	public static void main(String[] args) {
-		upcasting frame = new upcasting();
+		Base frame = new Base();
 
 		frame.readData();
 		frame.setVisible(true);
