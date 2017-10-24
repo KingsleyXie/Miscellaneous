@@ -4,6 +4,7 @@ import javax.swing.table.*;
 import java.util.Objects;
 import java.awt.BorderLayout;
 import java.awt.Font;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -13,17 +14,20 @@ class Base extends JFrame {
 
 	public int dataLen = 0, statisticsLen = 0, i, j;
 
-	public String statistics[][] = new String[MAX_ARRAY_SIZE][3];
+	public String
+		statistics[][] = new String[MAX_ARRAY_SIZE][3];
 
-	private String columnName[] = new String[TABLE_COLUMN_LENGTH];
-	private String data[][] = new String[MAX_ARRAY_SIZE][TABLE_COLUMN_LENGTH];
+	private String
+		columnName[] = new String[TABLE_COLUMN_LENGTH],
+		data[][] = new String[MAX_ARRAY_SIZE][TABLE_COLUMN_LENGTH];
 
-	public Font ft0 = new Font("方正卡通简体", Font.PLAIN, 45);
-	public Font ft1 = new Font("方正卡通简体", Font.PLAIN, 21);
-	public Font ft2 = new Font("微软雅黑", Font.PLAIN, 13);
+	public Font
+		ft0 = new Font("方正卡通简体", Font.PLAIN, 67),
+		ft1 = new Font("方正卡通简体", Font.PLAIN, 21),
+		ft2 = new Font("微软雅黑", Font.PLAIN, 13);
 
 	public JTable table;
-	public JButton importBtn;
+	public JButton importBtn, exportBtn;
 
 	public Base() {
 		setSize(900,600);
@@ -39,7 +43,9 @@ class Base extends JFrame {
 		importBtn = new JButton("导入统计数据");
 		importBtn.setFont(ft0);
 		importBtn.setFocusPainted(false);
+
 		add(importBtn, BorderLayout.CENTER);
+
 		importBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				importBtn.setVisible(false);
@@ -79,12 +85,15 @@ class Base extends JFrame {
 			public String getColumnName(int column) {
 				return columnName[column];
 			}
+
 			public int getColumnCount() {
 				return columnName.length;
 			}
+
 			public int getRowCount() {
 				return dataLen;
 			}
+
 			public Object getValueAt(int row, int col) {
 				return data[row][col];
 			}
@@ -93,16 +102,18 @@ class Base extends JFrame {
 		DefaultTableCellRenderer tcr = new DefaultTableCellRenderer();
 		tcr.setHorizontalAlignment(SwingConstants.CENTER);
 		table.setDefaultRenderer(Object.class, tcr);
+
+		table.setAutoCreateRowSorter(true);
 		table.setFont(ft2);
 		table.setRowHeight(21);
 
 		JScrollPane scrollpane = new JScrollPane(table);
 		add(scrollpane, BorderLayout.CENTER);
-		table.setAutoCreateRowSorter(true);
 
-		JButton exportBtn = new JButton("导出统计数据");
+		exportBtn = new JButton("导出统计数据");
 		exportBtn.setFont(ft1);
 		exportBtn.setFocusPainted(false);
+
 		add(exportBtn, BorderLayout.NORTH);
 
 		exportBtn.addActionListener(new ActionListener() {
@@ -134,16 +145,16 @@ class Base extends JFrame {
 
 	public void outputData() {
 		System.out.println("If You See This Then The Upcasting Is Failed");
-		//This Function Was Rewrote In Extended Class So The Message Won't Show
+		// This Function Is Rewrote In Extended Class So The Message Above Won't Be Printed
 	}
 }
 
 class Extended extends Base {
-	public int i = 233;
-	public int newi = 233;
+	public int i = 233, newi = 233;
 
 	public void uncallable() {
 		System.out.println("This Functiton Is Not Callable");
+		// This Function Is New In Extended Class So The Upcasting Object Can't Call It
 	}
 
 	// Rewrite Output Function
@@ -173,7 +184,7 @@ class Extended extends Base {
 			writer.close();
 
 			JOptionPane.showMessageDialog(null, "学生籍贯统计数据已成功导出\n学生总数：" + dataLen);
-			// Process process = Runtime.getRuntime().exec("cmd /c statistics.csv");
+			Process process = Runtime.getRuntime().exec("cmd /c statistics.csv");
 		} catch(IOException err) {
 			err.printStackTrace();
 		}
@@ -182,7 +193,7 @@ class Extended extends Base {
 
 public class upcasting {
 	public static void main(String[] args) {
-		//Upcasting Object
+		// Upcasting Object
 		Base frame = new Extended();
 
 		frame.setVisible(true);
