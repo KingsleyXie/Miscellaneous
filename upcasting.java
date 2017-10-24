@@ -3,6 +3,7 @@ import javax.swing.*;
 import javax.swing.table.*;
 import java.util.Objects;
 import java.awt.BorderLayout;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -10,13 +11,19 @@ class Base extends JFrame {
 	final int MAX_ARRAY_SIZE = 1000;
 	final int TABLE_COLUMN_LENGTH = 4;
 
-	public String statistics[][] = new String[MAX_ARRAY_SIZE][3];
 	public int dataLen = 0, statisticsLen = 0, i, j;
-	public JTable table;
-	public JButton importBtn;
+
+	public String statistics[][] = new String[MAX_ARRAY_SIZE][3];
 
 	private String columnName[] = new String[TABLE_COLUMN_LENGTH];
 	private String data[][] = new String[MAX_ARRAY_SIZE][TABLE_COLUMN_LENGTH];
+	
+	public Font ft0 = new Font("方正卡通简体", Font.PLAIN, 45);
+	public Font ft1 = new Font("方正卡通简体", Font.PLAIN, 21);
+	public Font ft2 = new Font("微软雅黑", Font.PLAIN, 13);
+	
+	public JTable table;
+	public JButton importBtn;
 
 	public Base() {
 		setSize(900,600);
@@ -30,6 +37,7 @@ class Base extends JFrame {
 
 	public void importPrepare() {
 		importBtn = new JButton("导入统计数据");
+		importBtn.setFont(ft0);
 		add(importBtn, BorderLayout.CENTER);
 		importBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -81,11 +89,14 @@ class Base extends JFrame {
 			}
 		});
 
+		table.setFont(ft2);
+
 		JScrollPane scrollpane = new JScrollPane(table);
 		add(scrollpane, BorderLayout.CENTER);
 		table.setAutoCreateRowSorter(true);
 
 		JButton exportBtn = new JButton("导出统计数据");
+		exportBtn.setFont(ft1);
 		add(exportBtn, BorderLayout.NORTH);
 
 		exportBtn.addActionListener(new ActionListener() {
