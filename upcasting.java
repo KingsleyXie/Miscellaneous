@@ -17,11 +17,11 @@ class Base extends JFrame {
 
 	private String columnName[] = new String[TABLE_COLUMN_LENGTH];
 	private String data[][] = new String[MAX_ARRAY_SIZE][TABLE_COLUMN_LENGTH];
-	
+
 	public Font ft0 = new Font("方正卡通简体", Font.PLAIN, 45);
 	public Font ft1 = new Font("方正卡通简体", Font.PLAIN, 21);
 	public Font ft2 = new Font("微软雅黑", Font.PLAIN, 13);
-	
+
 	public JTable table;
 	public JButton importBtn;
 
@@ -38,6 +38,7 @@ class Base extends JFrame {
 	public void importPrepare() {
 		importBtn = new JButton("导入统计数据");
 		importBtn.setFont(ft0);
+		importBtn.setFocusPainted(false);
 		add(importBtn, BorderLayout.CENTER);
 		importBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -89,7 +90,11 @@ class Base extends JFrame {
 			}
 		});
 
+		DefaultTableCellRenderer tcr = new DefaultTableCellRenderer();
+		tcr.setHorizontalAlignment(SwingConstants.CENTER);
+		table.setDefaultRenderer(Object.class, tcr);
 		table.setFont(ft2);
+		table.setRowHeight(21);
 
 		JScrollPane scrollpane = new JScrollPane(table);
 		add(scrollpane, BorderLayout.CENTER);
@@ -97,6 +102,7 @@ class Base extends JFrame {
 
 		JButton exportBtn = new JButton("导出统计数据");
 		exportBtn.setFont(ft1);
+		exportBtn.setFocusPainted(false);
 		add(exportBtn, BorderLayout.NORTH);
 
 		exportBtn.addActionListener(new ActionListener() {
