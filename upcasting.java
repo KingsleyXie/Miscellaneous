@@ -10,10 +10,12 @@ class Base extends JFrame {
 	final int MAX_ARRAY_SIZE = 1000;
 	final int TABLE_COLUMN_LENGTH = 4;
 
-	public int dataLen = 0, statisticsLen = 0, i, j;
-	public String columnName[] = new String[TABLE_COLUMN_LENGTH];
-	public String data[][] = new String[MAX_ARRAY_SIZE][TABLE_COLUMN_LENGTH];
 	public String statistics[][] = new String[MAX_ARRAY_SIZE][3];
+	public int dataLen = 0, statisticsLen = 0, i, j;
+	public JTable table;
+
+	private String columnName[] = new String[TABLE_COLUMN_LENGTH];
+	private String data[][] = new String[MAX_ARRAY_SIZE][TABLE_COLUMN_LENGTH];
 
 	public Base() {
 		setSize(900,600);
@@ -22,7 +24,37 @@ class Base extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLayout(new BorderLayout());
 
-		JTable table = new JTable(new AbstractTableModel() {
+		readData();
+		drawInterface();
+	}
+
+	public void readData() {
+		try {
+			BufferedReader reader = new BufferedReader(new FileReader("data.csv"));
+
+			String line = null;
+
+			line = reader.readLine();
+			columnName = line.split(",");
+
+			while((line = reader.readLine()) != null) {
+				String it[] = line.split(",");
+
+				data[dataLen][0] = it[0];
+				data[dataLen][1] = it[1];
+				data[dataLen][2] = it[2];
+				data[dataLen][3] = it[3];
+
+				dataLen++;
+			}
+			reader.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void drawInterface() {
+		table = new JTable(new AbstractTableModel() {
 			public String getColumnName(int column) {
 				return columnName[column];
 			}
@@ -50,31 +82,6 @@ class Base extends JFrame {
 				outputData();
 			}
 		});
-	}
-
-	public void readData() {
-		try {
-			BufferedReader reader = new BufferedReader(new FileReader("data.csv"));
-
-			String line = null;
-
-			line = reader.readLine();
-			columnName = line.split(",");
-
-			while((line = reader.readLine()) != null) {
-				String it[] = line.split(",");
-
-				data[dataLen][0] = it[0];
-				data[dataLen][1] = it[1];
-				data[dataLen][2] = it[2];
-				data[dataLen][3] = it[3];
-
-				dataLen++;
-			}
-			reader.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 	public void statistics() {
@@ -109,8 +116,6 @@ class Extended extends Base {
 	public void uncallable() {
 		System.out.println("This Functiton Is Not Callable");
 	}
-
-
 
 	// Rewrite Output Function
 	public void outputData() {
@@ -148,12 +153,10 @@ class Extended extends Base {
 
 public class upcasting {
 	public static void main(String[] args) {
+		//Upcasting Object
 		Base frame = new Extended();
 
-		frame.readData();
 		frame.setVisible(true);
-
-
 
 		/***************************
 		 * EXTRA TEST CASE - START
@@ -162,7 +165,7 @@ public class upcasting {
 			// frame.uncallable();
 			// Function `uncallable` Is Blocked
 
-			System.out.printf("Value Of Variable `i` is: %d\n", frame.i);
+			System.out.printf("Value Of Variable `i` is: %d\n\n", frame.i);
 			// Output Value Of `i` was from Base Class Instead Of Extended Class
 
 			// System.out.println(frame.newi);
