@@ -159,11 +159,23 @@ class Extended extends Base {
 
 	// Rewrite Output Function
 	public void outputData() {
+		String
+			exportFile = "statistics.csv",
+			statisticsHeader = "数据统计结果",
+			statisticsMessage =
+			"<html>" +
+			"<p>总人数： " + dataLen + "</p>" +
+			"<table style='width:100%;'>" + "<tbody>" +
+			"<tr>" +
+				"<td><strong>籍贯</strong></td>" +
+				"<td><strong>男生</strong></td>" +
+				"<td><strong>女生</strong></td>" +
+			"</tr>";
+
 		try {
-			String csvFile = "statistics.csv";
-			FileWriter writer = new FileWriter(csvFile);
+			FileWriter writer = new FileWriter(exportFile);
 			writer.append("籍贯,男生,女生\n");
-			System.out.println("学生信息统计数据如下：");
+
 			for (i = 0; i < statisticsLen; i++) {
 				writer.append(
 					statistics[i][0] + ',' +
@@ -174,30 +186,35 @@ class Extended extends Base {
 				statistics[i][1] = String.format("%3s", statistics[i][1]);
 				statistics[i][2] = String.format("%3s", statistics[i][2]);
 
-				System.out.println(
-					"籍贯：" + statistics[i][0] +
-					"\t\t男生：" + statistics[i][1] +
-					"\t女生：" + statistics[i][2]
-				);
+				statisticsMessage +=
+				"<tr>" +
+					"<td>" + statistics[i][0] + "</td>" +
+					"<td>" + statistics[i][1] + "</td>" +
+					"<td>" + statistics[i][2] + "</td>" +
+				"</tr>";
 			}
+
 			writer.flush();
 			writer.close();
+			statisticsMessage +=
+			"</tbody>" + "</table>" +
+			"<p>统计数据已导出至 " + exportFile + "</p>" + "<br>" + "<hr>" +
+			"<p>点击 【确定】 后将关闭程序并打开文件</p>" +
+			"<p>若需重新操作请点击 【取消】 </p>" + "</html>";
 
+			UIManager.put("OptionPane.messageFont", ft2);
 			int choice = JOptionPane.showConfirmDialog(null,
-				"学生籍贯统计数据已成功导出\n" +
-				"学生总数：" + dataLen +
-				"\n\n点击“确定”后将关闭程序并自动打开统计数据文件",
-				"统计结果",
+				statisticsMessage,
+				statisticsHeader,
 				JOptionPane.OK_CANCEL_OPTION,
 				JOptionPane.PLAIN_MESSAGE
 			);
 
-			if (choice == JOptionPane.OK_OPTION) {
-				Process process = Runtime.getRuntime().exec("cmd /c statistics.csv");
-				System.exit(0);
-			} else {
-				// TODO: Reinitialize
-			}
+			String cmd = choice == JOptionPane.OK_OPTION ?
+				"cmd /c statistics.csv" : "java upcasting";
+			Process process = Runtime.getRuntime().exec(cmd);
+
+			System.exit(0);
 		} catch(IOException err) {
 			err.printStackTrace();
 		}
@@ -208,23 +225,23 @@ public class upcasting {
 	public static void main(String[] args) {
 		// Upcasting Object
 		Base frame = new Extended();
-
 		frame.setVisible(true);
 
 		/***************************
 		 * EXTRA TEST CASE - START
-		 ***************************/
+		 ***************************
 
-			// frame.uncallable();
-			// Function `uncallable` Is Blocked
+			frame.uncallable();
+			System.out.println(frame.newi);
+			// Function `uncallable` And Variable `newi` Are Both Blocked
+			// So This Two Lines Of Code Will Cause A Compile Error
 
 			System.out.printf("Value Of Variable `i` is: %d\n\n", frame.i);
 			// Output Value Of `i` was from Base Class Instead Of Extended Class
+			// So The Output Is:
+			//     Value Of Variable `i` is: 0
 
-			// System.out.println(frame.newi);
-			// Variable `newi` Is Blocked Either
-
-		/***************************
+		 ***************************
 		 * EXTRA TEST CASE - END
 		 ***************************/
 	}
