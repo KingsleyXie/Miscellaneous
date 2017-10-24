@@ -12,7 +12,7 @@ class Base extends JFrame {
 	final int MAX_ARRAY_SIZE = 1000;
 	final int TABLE_COLUMN_LENGTH = 4;
 
-	public int dataLen = 0, statisticsLen = 0, i, j;
+	public int dataLen = 0, statisticsLen = 0, t = 12, i, j;
 
 	public String
 		statistics[][] = new String[MAX_ARRAY_SIZE][3];
@@ -150,7 +150,7 @@ class Base extends JFrame {
 }
 
 class Extended extends Base {
-	public int i = 233, newi = 233;
+	public int t = 233, newt = 233;
 
 	public void uncallable() {
 		System.out.println("This Functiton Is Not Callable");
@@ -232,16 +232,16 @@ public class upcasting {
 		 ***************************
 
 			frame.uncallable();
-			System.out.println(frame.newi);
-			// Function `uncallable` And Variable `newi` Are Both Blocked
+			System.out.println(frame.newt);
+			// Function `uncallable` And Variable `newt` Are Both Blocked
 			// So This Two Lines Of Code Will Cause A Compile Error
 
-			System.out.printf("Value Of Variable `i` is: %d\n\n", frame.i);
-			// Output Value Of `i` was from Base Class Instead Of Extended Class
+			System.out.printf("Value Of Variable `t` is: %d\n\n", frame.t);
+			// Output Value Of `t` was from Base Class Instead Of Extended Class
 			// So The Output Is:
-			//     Value Of Variable `i` is: 0
+			//     Value Of Variable `t` is: 12
 
-		 ***************************
+		 ****************************
 		 * EXTRA TEST CASE - END
 		 ***************************/
 	}
