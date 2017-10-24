@@ -184,7 +184,15 @@ class Extended extends Base {
 			writer.close();
 
 			JOptionPane.showMessageDialog(null, "学生籍贯统计数据已成功导出\n学生总数：" + dataLen);
+
+			try {
+				Thread.sleep(7000);
+			} catch(InterruptedException e) {
+				e.printStackTrace();
+			}
+
 			Process process = Runtime.getRuntime().exec("cmd /c statistics.csv");
+			System.exit(0);
 		} catch(IOException err) {
 			err.printStackTrace();
 		}
