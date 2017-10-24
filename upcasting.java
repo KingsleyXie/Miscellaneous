@@ -183,16 +183,21 @@ class Extended extends Base {
 			writer.flush();
 			writer.close();
 
-			JOptionPane.showMessageDialog(null, "学生籍贯统计数据已成功导出\n学生总数：" + dataLen);
+			int choice = JOptionPane.showConfirmDialog(null,
+				"学生籍贯统计数据已成功导出\n" +
+				"学生总数：" + dataLen +
+				"\n\n点击“确定”后将关闭程序并自动打开统计数据文件",
+				"统计结果",
+				JOptionPane.OK_CANCEL_OPTION,
+				JOptionPane.PLAIN_MESSAGE
+			);
 
-			try {
-				Thread.sleep(7000);
-			} catch(InterruptedException e) {
-				e.printStackTrace();
+			if (choice == JOptionPane.OK_OPTION) {
+				Process process = Runtime.getRuntime().exec("cmd /c statistics.csv");
+				System.exit(0);
+			} else {
+				// TODO: Reinitialize
 			}
-
-			Process process = Runtime.getRuntime().exec("cmd /c statistics.csv");
-			System.exit(0);
 		} catch(IOException err) {
 			err.printStackTrace();
 		}
