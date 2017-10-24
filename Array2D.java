@@ -12,35 +12,34 @@ public class Array2D extends JFrame {
 	public String columnName[] = null;
 	
 	public Array2D() {
-		setSize(500,600);
+		setSize(900,600);
 		setLocation(50,50);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLayout(new BorderLayout());
 
 		String[][] data = new String[MAX_ARRAY_SIZE][4];
 		
-		try { 
+		try {
 			BufferedReader reader = new BufferedReader(new FileReader("data.csv"));
 			
 			String line = null;
 			line = reader.readLine();
 			columnName = line.split(",");
 			
-			while((line = reader.readLine()) != null){ 
+			while((line = reader.readLine()) != null) {
 				String it[] = line.split(",");
 				data[dataLen][0] = it[0];
 				data[dataLen][1] = it[1];
 				data[dataLen][2] = it[2];
 				data[dataLen][3] = it[3];
 				dataLen++;
-			} 
+			}
 			reader.close();
-		} catch (Exception e) { 
-			e.printStackTrace(); 
-		} 
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		JTable table = new JTable(new AbstractTableModel() {
-			
 			public String getColumnName(int column) {
 				return columnName[column];
 			}
