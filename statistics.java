@@ -127,14 +127,14 @@ class Frame extends JFrame {
 	public void statistics() {
 		for (i = 0; i < dataLen; i++) {
 			j = 0;
-			while(j < statisticsLen && !Objects.equals(data[i][3], statistics[j][0]))
+			while(j < statisticsLen && !Objects.equals(Character.toString(data[i][1].charAt(0)), statistics[j][0]))
 				j++;
 
 			int id = Objects.equals(data[i][2], "男") ? 1 : 2;
 			if (j < statisticsLen) {
 				statistics[j][id] = String.valueOf(Integer.parseInt(statistics[j][id]) + 1);
 			} else {
-				statistics[statisticsLen][0] = data[i][3];
+				statistics[statisticsLen][0] = Character.toString(data[i][1].charAt(0));
 				statistics[statisticsLen][id] = "1";
 				statistics[statisticsLen][3 - id] = "0";
 
@@ -159,7 +159,7 @@ class Frame extends JFrame {
 
 		try {
 			FileWriter writer = new FileWriter(exportFile);
-			writer.append("籍贯,男生,女生\n");
+			writer.append("姓氏,男生,女生\n");
 
 			for (i = 0; i < statisticsLen; i++) {
 				writer.append(
