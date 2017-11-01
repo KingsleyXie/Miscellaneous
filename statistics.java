@@ -193,9 +193,10 @@ class Frame extends JFrame {
 			statisticsMessage +=
 			"</tbody>" + "</table>" + "<hr>" + "<br>" +
 			"<p style='text-align: center;'>统计数据已导出至 " + exportFile +
-			"&nbsp;&nbsp;&nbsp;点击 【确定】 后将关闭程序并打开文件</p>" + "<br>" + "</html>";
+			"&nbsp;&nbsp;&nbsp;点击 【确定】 后将显示具体信息并打开文件</p>" + "<br>" + "</html>";
 
 			UIManager.put("OptionPane.messageFont", ft2);
+
 			int choice = JOptionPane.showConfirmDialog(null,
 				statisticsMessage,
 				statisticsHeader,
@@ -203,11 +204,48 @@ class Frame extends JFrame {
 				JOptionPane.PLAIN_MESSAGE
 			);
 
-			String cmd = choice == JOptionPane.OK_OPTION ?
-				"cmd /c statistics.csv" : "java statistics";
-			Process process = Runtime.getRuntime().exec(cmd);
+			if (choice == JOptionPane.OK_OPTION) {
+				String infoHeader = "具体统计信息", infoMessage = "<html>";
+				for (int i = 0; i < statisticsLen; i++) {
+					infoMessage +=
+					"<div>" +
+						"&nbsp;&nbsp;&nbsp;姓氏：" + statistics[i][0] +
+						"&nbsp;&nbsp;&nbsp;总人数：" + String.valueOf(Integer.parseInt(statistics[i][1]) +
+							Integer.parseInt(statistics[i][2])) +
+						"&nbsp;&nbsp;&nbsp;男生：" + statistics[i][1] +
+						"&nbsp;&nbsp;&nbsp;女生：" + statistics[i][2] +
+						"<hr>" +
+						"<table style='width:100%;'>" +
+							"<thead>" +
+								"<tr>" +
+									"<td> 学号 </td>" +
+									"<td> 姓名 </td>" +
+									"<td> 性别 </td>" +
+									"<td> 籍贯 </td>" +
+								"</tr>" +
+							"</thead>" +
+							"<tbody>";
 
-			System.exit(0);
+					for (int j = 0; j < dataLen; j++) {
+						if (Objects.equals(Character.toString(data[j][1].charAt(0)), statistics[i][0])) {
+							infoMessage +=
+							"<tr>" +
+								"<td>" + data[j][0] + "</td>" +
+								"<td>" + data[j][1] + "</td>" +
+								"<td>" + data[j][2] + "</td>" +
+								"<td>" + data[j][3] + "</td>" +
+							"</tr>";
+						}
+					}
+					infoMessage += "</tbody>" + "</table>" + "</div>" + "<br><br><br>";
+				}
+				infoMessage += "</html>";
+				JOptionPane.showMessageDialog(null, infoMessage, infoHeader, JOptionPane.PLAIN_MESSAGE);
+				// Process process = Runtime.getRuntime().exec("cmd /c statistics.csv");
+			} else {
+				Process process = Runtime.getRuntime().exec("java statistics");
+				System.exit(0);
+			}
 		} catch(IOException err) {
 			err.printStackTrace();
 		}
