@@ -8,7 +8,7 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-class Base extends JFrame {
+class Frame extends JFrame {
 	final int MAX_ARRAY_SIZE = 1000;
 	final int TABLE_COLUMN_LENGTH = 4;
 
@@ -29,7 +29,7 @@ class Base extends JFrame {
 	public JTable table;
 	public JButton importBtn, exportBtn;
 
-	public Base() {
+	public Frame() {
 		setSize(900,600);
 		setLocation(50,50);
 
@@ -144,21 +144,6 @@ class Base extends JFrame {
 	}
 
 	public void outputData() {
-		System.out.println("If You See This Then The Upcasting Is Failed");
-		// This Function Is Rewrote In Extended Class So The Message Above Won't Be Printed
-	}
-}
-
-class Extended extends Base {
-	public int t = 233, newt = 233;
-
-	public void uncallable() {
-		System.out.println("This Functiton Is Not Callable");
-		// This Function Is New In Extended Class So The Upcasting Object Can't Call It
-	}
-
-	// Rewrite Output Function
-	public void outputData() {
 		String
 			exportFile = "statistics.csv",
 			statisticsHeader = "数据统计结果",
@@ -211,7 +196,7 @@ class Extended extends Base {
 			);
 
 			String cmd = choice == JOptionPane.OK_OPTION ?
-				"cmd /c statistics.csv" : "java upcasting";
+				"cmd /c statistics.csv" : "java statistics";
 			Process process = Runtime.getRuntime().exec(cmd);
 
 			System.exit(0);
@@ -221,28 +206,9 @@ class Extended extends Base {
 	}
 }
 
-public class upcasting {
+public class statistics {
 	public static void main(String[] args) {
-		// Upcasting Object
-		Base frame = new Extended();
+		Frame frame = new Frame();
 		frame.setVisible(true);
-
-		/***************************
-		 * EXTRA TEST CASE - START
-		 ***************************
-
-			frame.uncallable();
-			System.out.println(frame.newt);
-			// Function `uncallable` And Variable `newt` Are Both Blocked
-			// So This Two Lines Of Code Will Cause A Compile Error
-
-			System.out.printf("Value Of Variable `t` is: %d\n\n", frame.t);
-			// Output Value Of `t` was from Base Class Instead Of Extended Class
-			// So The Output Is:
-			//     Value Of Variable `t` is: 12
-
-		 ****************************
-		 * EXTRA TEST CASE - END
-		 ***************************/
 	}
 }
