@@ -127,7 +127,8 @@ class Frame extends JFrame {
 	public void statistics() {
 		for (i = 0; i < dataLen; i++) {
 			j = 0;
-			while(j < statisticsLen && !Objects.equals(Character.toString(data[i][1].charAt(0)), statistics[j][0]))
+			while(j < statisticsLen
+				&& !Objects.equals(Character.toString(data[i][1].charAt(0)), statistics[j][0]))
 				j++;
 
 			int id = Objects.equals(data[i][2], "男") ? 1 : 2;
@@ -153,10 +154,12 @@ class Frame extends JFrame {
 			"<table style='width:100%;'>" + "<tbody>";
 		try {
 			FileWriter writer = new FileWriter(exportFile);
-			writer.append("姓氏,男生,女生\n");
+			writer.append("姓氏,总人数,男生,女生\n");
 			for (i = 0; i < statisticsLen; i++)
 				writer.append(
 					statistics[i][0] + ',' +
+					String.valueOf(Integer.parseInt(statistics[i][1]) +
+						Integer.parseInt(statistics[i][2])) + ',' +
 					statistics[i][1] + ',' +
 					statistics[i][2] + '\n'
 				);
@@ -166,6 +169,15 @@ class Frame extends JFrame {
 			statisticsMessage += "<tr><td><strong>姓氏</strong></td>";
 			for (int i = 0; i < statisticsLen; i++)
 				statisticsMessage += "<td>" + statistics[i][0] + "</td>";
+			statisticsMessage += "</tr>";
+
+			statisticsMessage += "<tr><td><strong>总人数</strong></td>";
+			for (int i = 0; i < statisticsLen; i++)
+				statisticsMessage +=
+				"<td>" +
+					String.format("%3s", Integer.parseInt(statistics[i][1])
+						+ Integer.parseInt(statistics[i][2])) +
+				"</td>";
 			statisticsMessage += "</tr>";
 
 			statisticsMessage += "<tr><td><strong>男生</strong></td>";
