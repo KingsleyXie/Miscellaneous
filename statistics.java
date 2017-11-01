@@ -149,43 +149,39 @@ class Frame extends JFrame {
 			statisticsHeader = "数据统计结果",
 			statisticsMessage =
 			"<html>" +
-			"<p>总人数： " + dataLen + "</p>" +
-			"<table style='width:100%;'>" + "<tbody>" +
-			"<tr>" +
-				"<td><strong>籍贯</strong></td>" +
-				"<td><strong>男生</strong></td>" +
-				"<td><strong>女生</strong></td>" +
-			"</tr>";
-
+			"<p>总人数： " + dataLen + "</p>" + "<br><hr>" +
+			"<table style='width:100%;'>" + "<tbody>";
 		try {
 			FileWriter writer = new FileWriter(exportFile);
 			writer.append("姓氏,男生,女生\n");
-
-			for (i = 0; i < statisticsLen; i++) {
+			for (i = 0; i < statisticsLen; i++)
 				writer.append(
 					statistics[i][0] + ',' +
 					statistics[i][1] + ',' +
 					statistics[i][2] + '\n'
 				);
-
-				statistics[i][1] = String.format("%3s", statistics[i][1]);
-				statistics[i][2] = String.format("%3s", statistics[i][2]);
-
-				statisticsMessage +=
-				"<tr>" +
-					"<td>" + statistics[i][0] + "</td>" +
-					"<td>" + statistics[i][1] + "</td>" +
-					"<td>" + statistics[i][2] + "</td>" +
-				"</tr>";
-			}
-
 			writer.flush();
 			writer.close();
+
+			statisticsMessage += "<tr><td><strong>姓氏</strong></td>";
+			for (int i = 0; i < statisticsLen; i++)
+				statisticsMessage += "<td>" + statistics[i][0] + "</td>";
+			statisticsMessage += "</tr>";
+
+			statisticsMessage += "<tr><td><strong>男生</strong></td>";
+			for (int i = 0; i < statisticsLen; i++)
+				statisticsMessage += "<td>" + String.format("%3s", statistics[i][1]) + "</td>";
+			statisticsMessage += "</tr>";
+
+			statisticsMessage += "<tr><td><strong>女生</strong></td>";
+			for (int i = 0; i < statisticsLen; i++)
+				statisticsMessage += "<td>" + String.format("%3s", statistics[i][2]) + "</td>";
+			statisticsMessage += "</tr>";
+
 			statisticsMessage +=
-			"</tbody>" + "</table>" +
-			"<p>统计数据已导出至 " + exportFile + "</p>" + "<br>" + "<hr>" +
-			"<p>点击 【确定】 后将关闭程序并打开文件</p>" +
-			"<p>若需重新操作请点击 【取消】 </p>" + "</html>";
+			"</tbody>" + "</table>" + "<hr>" + "<br>" +
+			"<p style='text-align: center;'>统计数据已导出至 " + exportFile +
+			"&nbsp;&nbsp;&nbsp;点击 【确定】 后将关闭程序并打开文件</p>" + "<br>" + "</html>";
 
 			UIManager.put("OptionPane.messageFont", ft2);
 			int choice = JOptionPane.showConfirmDialog(null,
