@@ -1,12 +1,20 @@
+import java.util.Objects;
 import java.io.*;
+import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.table.*;
-import java.util.Objects;
-import java.awt.BorderLayout;
-import java.awt.Font;
-import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+
+class Info extends JFrame {
+	public Info(String str) {
+		setSize(900,600);
+		setLocation(50,50);
+
+		JEditorPane ep = new JEditorPane("text/html", str);
+		JScrollPane sp = new JScrollPane(ep);
+		add(sp);
+	}
+}
 
 class Frame extends JFrame {
 	final int MAX_ARRAY_SIZE = 1000;
@@ -240,8 +248,10 @@ class Frame extends JFrame {
 					infoMessage += "</tbody>" + "</table>" + "</div>" + "<br><br><br>";
 				}
 				infoMessage += "</html>";
-				JOptionPane.showMessageDialog(null, infoMessage, infoHeader, JOptionPane.PLAIN_MESSAGE);
-				// Process process = Runtime.getRuntime().exec("cmd /c statistics.csv");
+				Info test = new Info(infoMessage);
+				test.setVisible(true);
+
+				Process process = Runtime.getRuntime().exec("cmd /c statistics.csv");
 			} else {
 				Process process = Runtime.getRuntime().exec("java statistics");
 				System.exit(0);
