@@ -158,112 +158,52 @@ class Frame extends JFrame {
 
 	public void outputData() {
 		String
-			exportFile = "statistics.csv",
 			statisticsHeader = "数据统计结果",
 			statisticsMessage =
 			"<html>" +
 			"<h2 style='text-align:center;'>总人数： " + dataLen + "</h2>" + "<hr>" +
 			"<table style='width:100%;'>" + "<tbody>";
-		try {
-			FileWriter writer = new FileWriter(exportFile);
-			writer.append("姓氏,总人数,男生,女生\n");
-			for (i = 0; i < statisticsLen; i++)
-				writer.append(
-					statistics[i][0] + ',' +
-					String.valueOf(Integer.parseInt(statistics[i][1]) +
-						Integer.parseInt(statistics[i][2])) + ',' +
-					statistics[i][1] + ',' +
-					statistics[i][2] + '\n'
-				);
-			writer.flush();
-			writer.close();
 
-			statisticsMessage += "<tr><td><strong>姓氏</strong></td>";
-			for (int i = 0; i < statisticsLen; i++)
-				statisticsMessage += "<td>" + statistics[i][0] + "</td>";
-			statisticsMessage += "</tr>";
+		statisticsMessage += "<tr><td><strong>姓氏</strong></td>";
+		for (int i = 0; i < statisticsLen; i++)
+			statisticsMessage += "<td>" + statistics[i][0] + "</td>";
+		statisticsMessage += "</tr>";
 
-			statisticsMessage += "<tr><td><strong>总人数</strong></td>";
-			for (int i = 0; i < statisticsLen; i++)
-				statisticsMessage +=
-				"<td>" +
-					String.format("%3s", Integer.parseInt(statistics[i][1])
-						+ Integer.parseInt(statistics[i][2])) +
-				"</td>";
-			statisticsMessage += "</tr>";
-
-			statisticsMessage += "<tr><td><strong>男生</strong></td>";
-			for (int i = 0; i < statisticsLen; i++)
-				statisticsMessage += "<td>" + String.format("%3s", statistics[i][1]) + "</td>";
-			statisticsMessage += "</tr>";
-
-			statisticsMessage += "<tr><td><strong>女生</strong></td>";
-			for (int i = 0; i < statisticsLen; i++)
-				statisticsMessage += "<td>" + String.format("%3s", statistics[i][2]) + "</td>";
-			statisticsMessage += "</tr>";
-
+		statisticsMessage += "<tr><td><strong>总人数</strong></td>";
+		for (int i = 0; i < statisticsLen; i++)
 			statisticsMessage +=
-			"</tbody>" + "</table>" + "<hr>" + "<br>" +
-			"<p style='text-align: center;'>统计数据已导出至 " + exportFile +
-			"&nbsp;&nbsp;&nbsp;点击 【确定】 后将显示具体信息并打开文件</p>" + "<br>" + "</html>";
+			"<td>" +
+				String.format("%3s", Integer.parseInt(statistics[i][1])
+					+ Integer.parseInt(statistics[i][2])) +
+			"</td>";
+		statisticsMessage += "</tr>";
 
-			UIManager.put("OptionPane.messageFont", ft2);
+		statisticsMessage += "<tr><td><strong>男生</strong></td>";
+		for (int i = 0; i < statisticsLen; i++)
+			statisticsMessage += "<td>" + String.format("%3s", statistics[i][1]) + "</td>";
+		statisticsMessage += "</tr>";
 
-			int choice = JOptionPane.showConfirmDialog(null,
-				statisticsMessage,
-				statisticsHeader,
-				JOptionPane.OK_CANCEL_OPTION,
-				JOptionPane.PLAIN_MESSAGE
-			);
+		statisticsMessage += "<tr><td><strong>女生</strong></td>";
+		for (int i = 0; i < statisticsLen; i++)
+			statisticsMessage += "<td>" + String.format("%3s", statistics[i][2]) + "</td>";
+		statisticsMessage += "</tr>";
 
+		statisticsMessage +=
+		"</tbody>" + "</table>" + "<hr>" + "<br>" +
+		"<p style='text-align:center;'>点击 【确定】 后将显示具体数据并自动打开数据导出文件</p>" +
+		"<br>" + "</html>";
+
+		UIManager.put("OptionPane.messageFont", ft2);
+		int choice = JOptionPane.showConfirmDialog(null,
+			statisticsMessage,
+			statisticsHeader,
+			JOptionPane.OK_CANCEL_OPTION,
+			JOptionPane.PLAIN_MESSAGE
+		);
+
+		try {
 			if (choice == JOptionPane.OK_OPTION) {
-				String infoHeader = "具体统计信息", infoMessage =
-					"<html>" + "<h1 style='text-align:center'>具体统计信息</h1>" + "<br>";
-				for (int i = 0; i < statisticsLen; i++) {
-					infoMessage +=
-					"<div>" +
-						"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-						"姓氏：" + statistics[i][0] +
-
-						"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-						"总人数：" + String.valueOf(Integer.parseInt(statistics[i][1]) +
-							Integer.parseInt(statistics[i][2])) +
-
-						"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-						"男生：" + statistics[i][1] +
-
-						"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-						"女生：" + statistics[i][2] +
-
-						"<hr>" +
-						"<table style='width:300px;'>" +
-							"<thead>" +
-								"<tr>" +
-									"<td> 学号 </td>" +
-									"<td> 姓名 </td>" +
-									"<td> 性别 </td>" +
-									"<td> 籍贯 </td>" +
-								"</tr>" +
-							"</thead>" +
-							"<tbody>";
-
-					for (int j = 0; j < dataLen; j++) {
-						if (Objects.equals(Character.toString(data[j][1].charAt(0)), statistics[i][0])) {
-							infoMessage +=
-							"<tr>" +
-								"<td>" + data[j][0] + "</td>" +
-								"<td>" + data[j][1] + "</td>" +
-								"<td>" + data[j][2] + "</td>" +
-								"<td>" + data[j][3] + "</td>" +
-							"</tr>";
-						}
-					}
-					infoMessage += "</tbody>" + "</table>" + "</div>" + "<br><br><br>";
-				}
-				infoMessage += "</html>";
-				Detail det = new Detail(infoMessage);
-				det.setVisible(true);
-
+				showDetailData();
 				Process process = Runtime.getRuntime().exec("cmd /c statistics.csv");
 			} else {
 				Process process = Runtime.getRuntime().exec("java statistics");
@@ -272,6 +212,77 @@ class Frame extends JFrame {
 		} catch(IOException err) {
 			err.printStackTrace();
 		}
+	}
+
+	public void showDetailData() throws IOException {
+		String detailContent = "<html>" + "<h1 style='text-align:center'>具体统计信息</h1>" + "<br>";
+		FileWriter writer = new FileWriter("statistics.csv");
+
+		for (int i = 0; i < statisticsLen; i++) {
+			detailContent +=
+			"<div>" +
+				"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
+				"姓氏：" + statistics[i][0] +
+
+				"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
+				"总人数：" + String.valueOf(Integer.parseInt(statistics[i][1]) +
+					Integer.parseInt(statistics[i][2])) +
+
+				"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
+				"男生：" + statistics[i][1] +
+
+				"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
+				"女生：" + statistics[i][2] +
+
+				"<hr>" +
+				"<table style='width:300px;'>" +
+					"<thead>" +
+						"<tr>" +
+							"<td> 学号 </td>" +
+							"<td> 姓名 </td>" +
+							"<td> 性别 </td>" +
+							"<td> 籍贯 </td>" +
+						"</tr>" +
+					"</thead>" +
+					"<tbody>";
+
+			writer.append(
+				"姓氏：" + statistics[i][0] +
+				",总人数：" + String.valueOf(Integer.parseInt(statistics[i][1]) +
+					Integer.parseInt(statistics[i][2])) +
+				",男生：" + statistics[i][1] +
+				",女生：" + statistics[i][2] +
+				"\n\n" + "学号,姓名,性别,籍贯\n");
+
+			for (int j = 0; j < dataLen; j++) {
+				if (Objects.equals(Character.toString(data[j][1].charAt(0)), statistics[i][0])) {
+					detailContent +=
+					"<tr>" +
+						"<td>" + data[j][0] + "</td>" +
+						"<td>" + data[j][1] + "</td>" +
+						"<td>" + data[j][2] + "</td>" +
+						"<td>" + data[j][3] + "</td>" +
+					"</tr>";
+
+					writer.append(
+						data[j][0] + "," +
+						data[j][1] + "," +
+						data[j][2] + "," +
+						data[j][3] + "\n"
+					);
+				}
+			}
+
+			detailContent += "</tbody>" + "</table>" + "</div>" + "<br><br><br>";
+			writer.append("\n\n\n");
+		}
+
+		detailContent += "</html>";
+		writer.flush();
+		writer.close();
+
+		Detail detailFrame = new Detail(detailContent);
+		detailFrame.setVisible(true);
 	}
 }
 
