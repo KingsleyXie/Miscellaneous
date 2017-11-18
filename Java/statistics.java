@@ -5,14 +5,17 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.table.*;
 
-class Info extends JFrame {
-	public Info(String str) {
-		setSize(500,600);
-		setLocation(300,50);
-
-		JLabel content = new JLabel(str, SwingConstants.CENTER);
+class Detail extends JFrame {
+	public Detail(String html) {
+		JLabel content = new JLabel(html, SwingConstants.CENTER);
 		JScrollPane detail = new JScrollPane(content);
+		Font ft = new Font("微软雅黑", Font.PLAIN, 13);
+		content.setFont(ft);
+
 		add(detail);
+		setTitle("姓氏统计具体数据");
+		setLocation(430,70);
+		setSize(475,600);
 	}
 }
 
@@ -38,8 +41,9 @@ class Frame extends JFrame {
 	public JButton importBtn, exportBtn;
 
 	public Frame() {
+		setTitle("姓氏统计小程序");
+		setLocation(230,70);
 		setSize(900,600);
-		setLocation(50,50);
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLayout(new BorderLayout());
@@ -158,7 +162,7 @@ class Frame extends JFrame {
 			statisticsHeader = "数据统计结果",
 			statisticsMessage =
 			"<html>" +
-			"<p>总人数： " + dataLen + "</p>" + "<br><hr>" +
+			"<h2 style='text-align:center;'>总人数： " + dataLen + "</h2>" + "<hr>" +
 			"<table style='width:100%;'>" + "<tbody>";
 		try {
 			FileWriter writer = new FileWriter(exportFile);
@@ -218,17 +222,17 @@ class Frame extends JFrame {
 				for (int i = 0; i < statisticsLen; i++) {
 					infoMessage +=
 					"<div>" +
-						"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
+						"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
 						"姓氏：" + statistics[i][0] +
 
-						"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
+						"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
 						"总人数：" + String.valueOf(Integer.parseInt(statistics[i][1]) +
 							Integer.parseInt(statistics[i][2])) +
 
-						"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
+						"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
 						"男生：" + statistics[i][1] +
 
-						"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
+						"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
 						"女生：" + statistics[i][2] +
 
 						"<hr>" +
@@ -257,10 +261,10 @@ class Frame extends JFrame {
 					infoMessage += "</tbody>" + "</table>" + "</div>" + "<br><br><br>";
 				}
 				infoMessage += "</html>";
-				Info test = new Info(infoMessage);
-				test.setVisible(true);
+				Detail det = new Detail(infoMessage);
+				det.setVisible(true);
 
-				// Process process = Runtime.getRuntime().exec("cmd /c statistics.csv");
+				Process process = Runtime.getRuntime().exec("cmd /c statistics.csv");
 			} else {
 				Process process = Runtime.getRuntime().exec("java statistics");
 				System.exit(0);
