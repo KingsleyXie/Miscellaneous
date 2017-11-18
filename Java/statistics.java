@@ -7,12 +7,12 @@ import javax.swing.table.*;
 
 class Info extends JFrame {
 	public Info(String str) {
-		setSize(900,600);
-		setLocation(50,50);
+		setSize(500,600);
+		setLocation(300,50);
 
-		JEditorPane ep = new JEditorPane("text/html", str);
-		JScrollPane sp = new JScrollPane(ep);
-		add(sp);
+		JLabel content = new JLabel(str, SwingConstants.CENTER);
+		JScrollPane detail = new JScrollPane(content);
+		add(detail);
 	}
 }
 
@@ -213,17 +213,26 @@ class Frame extends JFrame {
 			);
 
 			if (choice == JOptionPane.OK_OPTION) {
-				String infoHeader = "具体统计信息", infoMessage = "<html>";
+				String infoHeader = "具体统计信息", infoMessage =
+					"<html>" + "<h1 style='text-align:center'>具体统计信息</h1>" + "<br>";
 				for (int i = 0; i < statisticsLen; i++) {
 					infoMessage +=
 					"<div>" +
-						"&nbsp;&nbsp;&nbsp;姓氏：" + statistics[i][0] +
-						"&nbsp;&nbsp;&nbsp;总人数：" + String.valueOf(Integer.parseInt(statistics[i][1]) +
+						"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
+						"姓氏：" + statistics[i][0] +
+
+						"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
+						"总人数：" + String.valueOf(Integer.parseInt(statistics[i][1]) +
 							Integer.parseInt(statistics[i][2])) +
-						"&nbsp;&nbsp;&nbsp;男生：" + statistics[i][1] +
-						"&nbsp;&nbsp;&nbsp;女生：" + statistics[i][2] +
+
+						"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
+						"男生：" + statistics[i][1] +
+
+						"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
+						"女生：" + statistics[i][2] +
+
 						"<hr>" +
-						"<table style='width:100%;'>" +
+						"<table style='width:300px;'>" +
 							"<thead>" +
 								"<tr>" +
 									"<td> 学号 </td>" +
@@ -251,7 +260,7 @@ class Frame extends JFrame {
 				Info test = new Info(infoMessage);
 				test.setVisible(true);
 
-				Process process = Runtime.getRuntime().exec("cmd /c statistics.csv");
+				// Process process = Runtime.getRuntime().exec("cmd /c statistics.csv");
 			} else {
 				Process process = Runtime.getRuntime().exec("java statistics");
 				System.exit(0);
