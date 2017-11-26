@@ -20,7 +20,7 @@ class Detail extends JFrame {
 }
 
 class Frame extends JFrame {
-	final int MAX_ARRAY_SIZE = 1000;
+	final int MAX_ARRAY_SIZE = 1079999;
 	final int TABLE_COLUMN_LENGTH = 4;
 
 	public int dataLen = 0, statisticsLen = 0, t = 12, i, j;
