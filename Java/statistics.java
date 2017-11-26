@@ -221,6 +221,30 @@ class Frame extends JFrame {
 		for (int i = 0; i < statisticsLen; i++) {
 			detailContent +=
 			"<div>" +
+				"姓氏：" + statistics[i][0] +
+
+				"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
+				"总人数：" + String.valueOf(Integer.parseInt(statistics[i][1]) +
+					Integer.parseInt(statistics[i][2])) +
+
+				"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
+				"男生：" + statistics[i][1] +
+
+				"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
+				"女生：" + statistics[i][2] +
+			"</div>" + "<br>";
+
+			writer.append(
+				"姓氏：" + statistics[i][0] +
+				",总人数：" + String.valueOf(Integer.parseInt(statistics[i][1]) +
+					Integer.parseInt(statistics[i][2])) +
+				",男生：" + statistics[i][1] +
+				",女生：" + statistics[i][2] + "\n");
+		}
+
+		/*for (int i = 0; i < statisticsLen; i++) {
+			detailContent +=
+			"<div>" +
 				"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
 				"姓氏：" + statistics[i][0] +
 
@@ -275,7 +299,7 @@ class Frame extends JFrame {
 
 			detailContent += "</tbody>" + "</table>" + "</div>" + "<br><br><br>";
 			writer.append("\n\n\n");
-		}
+		}*/
 
 		detailContent += "</html>";
 		writer.flush();
