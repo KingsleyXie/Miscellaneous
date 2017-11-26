@@ -24,6 +24,7 @@ class Frame extends JFrame {
 	final int TABLE_COLUMN_LENGTH = 4;
 
 	public int dataLen = 0, statisticsLen = 0, t = 12, i, j;
+	public long startTime;
 
 	public String
 		statistics[][] = new String[MAX_ARRAY_SIZE][3];
@@ -51,6 +52,17 @@ class Frame extends JFrame {
 		importPrepare();
 	}
 
+	private void resetStartTime() {
+		startTime = System.currentTimeMillis();
+	}
+
+	private void printDurationTime(String Info) {
+		System.out.println(
+			Info + ": " +
+			((long)System.currentTimeMillis() - startTime) + "ms"
+		);
+	}
+
 	public void importPrepare() {
 		importBtn = new JButton("导入统计数据");
 		importBtn.setFont(ft0);
@@ -61,7 +73,7 @@ class Frame extends JFrame {
 		importBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				importBtn.setVisible(false);
-				readData();
+				resetStartTime(); readData(); printDurationTime("Read Data");
 				drawInterface();
 			}
 		});
@@ -137,6 +149,7 @@ class Frame extends JFrame {
 	}
 
 	public void statistics() {
+		resetStartTime();
 		for (i = 0; i < dataLen; i++) {
 			j = 0;
 			while(j < statisticsLen
@@ -154,6 +167,7 @@ class Frame extends JFrame {
 				statisticsLen++;
 			}
 		}
+		printDurationTime("Statistics");
 	}
 
 	public void outputData() {
@@ -204,7 +218,7 @@ class Frame extends JFrame {
 		try {
 			if (choice == JOptionPane.OK_OPTION) {
 				showDetailData();
-				Process process = Runtime.getRuntime().exec("cmd /c statistics.csv");
+				// Process process = Runtime.getRuntime().exec("cmd /c statistics.csv");
 			} else {
 				Process process = Runtime.getRuntime().exec("java statistics");
 				System.exit(0);
@@ -215,6 +229,7 @@ class Frame extends JFrame {
 	}
 
 	public void showDetailData() throws IOException {
+		resetStartTime();
 		String detailContent = "<html>" + "<h1 style='text-align:center'>具体统计信息</h1>" + "<br>";
 		FileWriter writer = new FileWriter("statistics.csv");
 
@@ -305,6 +320,7 @@ class Frame extends JFrame {
 		writer.flush();
 		writer.close();
 
+		printDurationTime("Show Detailed Data");
 		Detail detailFrame = new Detail(detailContent);
 		detailFrame.setVisible(true);
 	}
