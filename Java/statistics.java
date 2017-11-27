@@ -9,14 +9,14 @@ class Global {
 	public static final int
 		MAX_ARRAY_SIZE = 1079999,
 		TABLE_COLUMN_LENGTH = 4,
+		PRE_PROCESS_NUM = 600,
 		STATISTICS_STEP = 100000;
 
 	public static int dataLen = 0, statisticsLen = 0;
 
 	public static String
 		data[][] = new String[MAX_ARRAY_SIZE][TABLE_COLUMN_LENGTH],
-		statistics[][] = new String[MAX_ARRAY_SIZE][3],
-		columnName[] = new String[TABLE_COLUMN_LENGTH];
+		statistics[][] = new String[MAX_ARRAY_SIZE][3];
 
 	public static final Font
 		FZKT_L = new Font("方正卡通简体", Font.PLAIN, 67),
@@ -47,7 +47,6 @@ class Stat implements Runnable {
 			// 		Global.statisticsLen++;
 			// 	}
 			// }
-			System.out.println(start);
 		} finally { status--; }
 	}
 }
@@ -66,7 +65,7 @@ class Detail extends JFrame {
 }
 
 class Frame extends JFrame {
-	public int t = 12, i, j;
+	public String columnName[] = new String[Global.TABLE_COLUMN_LENGTH];
 	public long startTime;
 
 	public JTable table;
@@ -117,7 +116,7 @@ class Frame extends JFrame {
 			String line = null;
 
 			line = reader.readLine();
-			Global.columnName = line.split(",");
+			columnName = line.split(",");
 
 			while((line = reader.readLine()) != null) {
 				String it[] = line.split(",");
@@ -138,11 +137,11 @@ class Frame extends JFrame {
 	public void drawInterface() {
 		table = new JTable(new AbstractTableModel() {
 			public String getColumnName(int column) {
-				return Global.columnName[column];
+				return columnName[column];
 			}
 
 			public int getColumnCount() {
-				return Global.columnName.length;
+				return columnName.length;
 			}
 
 			public int getRowCount() {
@@ -172,17 +171,14 @@ class Frame extends JFrame {
 		add(exportBtn, BorderLayout.NORTH);
 
 		exportBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				statistics();
-				outputData();
-			}
+			public void actionPerformed(ActionEvent e) { statistics(); }
 		});
 	}
 
 	public void statistics() {
 		resetStartTime();
-		for (i = 0; i < Global.dataLen; i++) {
-			j = 0;
+		for (int i = 0; i < Global.PRE_PROCESS_NUM; i++) {
+			int j = 0;
 			while(j < Global.statisticsLen
 				&& !Objects.equals(Character.toString(Global.data[i][1].charAt(0)), Global.statistics[j][0]))
 				j++;
@@ -204,10 +200,7 @@ class Frame extends JFrame {
 		for (int cnt = 0; cnt < Global.dataLen; cnt += Global.STATISTICS_STEP)
 			new Thread(new Stat()).start();
 
-		while(true) if (Stat.status == 0) {
-			System.out.println("End Now");
-			break;
-		}
+		while(true) if (Stat.status == 0) { outputData(); break; }
 	}
 
 	public void outputData() {
