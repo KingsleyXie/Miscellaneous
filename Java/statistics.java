@@ -266,50 +266,28 @@ class Frame extends JFrame {
 			JOptionPane.PLAIN_MESSAGE
 		);
 
-		// try {
-		// 	if (choice == JOptionPane.OK_OPTION) {
-		// 		showDetailData();
-		// 		Process process = Runtime.getRuntime().exec("cmd /c Global.statistics.csv");
-		// 	} else {
-		// 		Process process = Runtime.getRuntime().exec("java Global.statistics");
-		// 		System.exit(0);
-		// 	}
-		// } catch(IOException err) {
-		// 	err.printStackTrace();
-		// }
+		try {
+			if (choice == JOptionPane.OK_OPTION) {
+				showDetailData();
+				// Process process = Runtime.getRuntime().exec("cmd /c Global.statistics.csv");
+			} else {
+				// Process process = Runtime.getRuntime().exec("java Global.statistics");
+				System.exit(0);
+			}
+		} catch(IOException err) {
+			err.printStackTrace();
+		}
 	}
 
-	/*public void showDetailData() throws IOException {
+	public void showDetailData() throws IOException {
 		resetStartTime();
-		String detailContent = "<html>" + "<h1 style='text-align:center'>具体统计信息</h1>" + "<br>";
+		String detailContentHeader = "<html>" + "<h1 style='text-align:center'>具体统计信息</h1>" + "<br>";
 		FileWriter writer = new FileWriter("Global.statistics.csv");
 
+		String detailContent[] = new String[Global.MAX_NAME_SIZE];
 		for (int i = 0; i < Global.statisticsLen; i++) {
-			detailContent +=
-			"<div>" +
-				"姓氏：" + Global.statistics[i][0] +
-
-				"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-				"总人数：" + String.valueOf(Integer.parseInt(Global.statistics[i][1]) +
-					Integer.parseInt(Global.statistics[i][2])) +
-
-				"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-				"男生：" + Global.statistics[i][1] +
-
-				"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-				"女生：" + Global.statistics[i][2] +
-			"</div>" + "<br>";
-
-			writer.append(
-				"姓氏：" + Global.statistics[i][0] +
-				",总人数：" + String.valueOf(Integer.parseInt(Global.statistics[i][1]) +
-					Integer.parseInt(Global.statistics[i][2])) +
-				",男生：" + Global.statistics[i][1] +
-				",女生：" + Global.statistics[i][2] + "\n");
-		}
-
-		for (int i = 0; i < Global.statisticsLen; i++) {
-			detailContent +=
+			resetStartTime();
+			detailContent[i] +=
 			"<div>" +
 				"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
 				"姓氏：" + Global.statistics[i][0] +
@@ -336,45 +314,51 @@ class Frame extends JFrame {
 					"</thead>" +
 					"<tbody>";
 
-			writer.append(
-				"姓氏：" + Global.statistics[i][0] +
-				",总人数：" + String.valueOf(Integer.parseInt(Global.statistics[i][1]) +
-					Integer.parseInt(Global.statistics[i][2])) +
-				",男生：" + Global.statistics[i][1] +
-				",女生：" + Global.statistics[i][2] +
-				"\n\n" + "学号,姓名,性别,籍贯\n");
+			// writer.append(
+			// 	"姓氏：" + Global.statistics[i][0] +
+			// 	",总人数：" + String.valueOf(Integer.parseInt(Global.statistics[i][1]) +
+			// 		Integer.parseInt(Global.statistics[i][2])) +
+			// 	",男生：" + Global.statistics[i][1] +
+			// 	",女生：" + Global.statistics[i][2] +
+			// 	"\n\n" + "学号,姓名,性别,籍贯\n");
 
-			for (int j = 0; j < dataLen; j++) {
-				if (Objects.equals(Character.toString(data[j][1].charAt(0)), Global.statistics[i][0])) {
-					detailContent +=
+			for (int j = 0; j < Global.dataLen; j++) {
+				if (j % 100000 == 0) {
+					printDurationTime(String.valueOf(j));
+					resetStartTime();
+				}
+				if (Objects.equals(
+						Character.toString(Global.data[j][1].charAt(0)),
+						Global.statistics[i][0]
+					)) {
+					detailContent[i] +=
 					"<tr>" +
-						"<td>" + data[j][0] + "</td>" +
-						"<td>" + data[j][1] + "</td>" +
-						"<td>" + data[j][2] + "</td>" +
-						"<td>" + data[j][3] + "</td>" +
+						"<td>" + Global.data[j][0] + "</td>" +
+						"<td>" + Global.data[j][1] + "</td>" +
+						"<td>" + Global.data[j][2] + "</td>" +
+						"<td>" + Global.data[j][3] + "</td>" +
 					"</tr>";
 
-					writer.append(
-						data[j][0] + "," +
-						data[j][1] + "," +
-						data[j][2] + "," +
-						data[j][3] + "\n"
-					);
+					// writer.append(
+					// 	Global.data[j][0] + "," +
+					// 	Global.data[j][1] + "," +
+					// 	Global.data[j][2] + "," +
+					// 	Global.data[j][3] + "\n"
+					// );
 				}
 			}
-
-			detailContent += "</tbody>" + "</table>" + "</div>" + "<br><br><br>";
-			writer.append("\n\n\n");
+			detailContent[i] += "</tbody>" + "</table>" + "</div>" + "<br><br><br>";
+			// writer.append("\n\n\n");
 		}
 
-		detailContent += "</html>";
+		// detailContent += "</html>";
 		writer.flush();
 		writer.close();
 
 		printDurationTime("Show Detailed Data");
-		Detail detailFrame = new Detail(detailContent);
+		Detail detailFrame = new Detail(detailContent[0]);
 		detailFrame.setVisible(true);
-	}*/
+	}
 }
 
 public class statistics {
