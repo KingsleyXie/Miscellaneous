@@ -9,7 +9,7 @@ class Global {
 	public static final int
 		MAX_DATA_SIZE = 1079999,
 		MAX_NAME_SIZE = 100,
-		MAX_THREAD_SIZE = 100,
+		MAX_THREAD_SIZE = 3000,
 		TABLE_COLUMN_LENGTH = 4,
 		PRE_PROCESS_NUM = 600,
 		STATISTICS_STEP = 100000;
@@ -48,7 +48,6 @@ class Stat implements Runnable {
 
 				Global.subStat[pos][j][Objects.equals(Global.data[i][2], "男") ? 1 : 2]++;
 			}
-			System.out.println("Finish: " + start + " - " + end);
 		} finally { finished++; }
 	}
 }
@@ -201,12 +200,17 @@ class Frame extends JFrame {
 
 		int tot = ((Global.dataLen - Global.PRE_PROCESS_NUM) / Global.STATISTICS_STEP) + 1;
 		while(true) if (Stat.finished == tot) {
-			printDurationTime("Multi Threads Statistics");
-			for (int j = 0; j < Global.statisticsLen; j++) {
-				for (int i = 0; i < tot; i++)
-					System.out.printf("%d %d\t", Global.subStat[i][j][1], Global.subStat[i][j][2]);
-				System.out.println();
-			}
+			for (int j = 0; j < Global.statisticsLen; j++)
+				for (int i = 0; i < tot; i++) {
+					Global.statistics[j][1] = String.valueOf(
+						Global.subStat[i][j][1] + Integer.parseInt(Global.statistics[j][1])
+					);
+					Global.statistics[j][2] = String.valueOf(
+						Global.subStat[i][j][2] + Integer.parseInt(Global.statistics[j][2])
+					);
+				}
+
+			printDurationTime("Multi Threads Statistics: ");
 			outputData();
 			break;
 		} else { try { Thread.sleep(10); } catch(Exception e) { e.printStackTrace(); } }
