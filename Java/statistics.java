@@ -134,23 +134,28 @@ class Frame extends JFrame {
 
 				if (Global.dataLen == Global.PRE_PROCESS_NUM) {
 					pending = 0;
-					for (int i = 0; i < Global.PRE_PROCESS_NUM; i++) {
-						int j = 0;
-						while(j < Global.statisticsLen
-							&& !Objects.equals(Character.toString(Global.data[i][1].charAt(0)), Global.statistics[j][0]))
-							j++;
+					Thread preProcess = new Thread() {
+						public synchronized void run() {
+							for (int i = 0; i < Global.PRE_PROCESS_NUM; i++) {
+								int j = 0;
+								while(j < Global.statisticsLen
+									&& !Objects.equals(Character.toString(Global.data[i][1].charAt(0)), Global.statistics[j][0]))
+									j++;
 
-						int id = Objects.equals(Global.data[i][2], "男") ? 1 : 2;
-						if (j < Global.statisticsLen) {
-							Global.statistics[j][id] = String.valueOf(Integer.parseInt(Global.statistics[j][id]) + 1);
-						} else {
-							Global.statistics[Global.statisticsLen][0] = Character.toString(Global.data[i][1].charAt(0));
-							Global.statistics[Global.statisticsLen][id] = "1";
-							Global.statistics[Global.statisticsLen][3 - id] = "0";
+								int id = Objects.equals(Global.data[i][2], "男") ? 1 : 2;
+								if (j < Global.statisticsLen) {
+									Global.statistics[j][id] = String.valueOf(Integer.parseInt(Global.statistics[j][id]) + 1);
+								} else {
+									Global.statistics[Global.statisticsLen][0] = Character.toString(Global.data[i][1].charAt(0));
+									Global.statistics[Global.statisticsLen][id] = "1";
+									Global.statistics[Global.statisticsLen][3 - id] = "0";
 
-							Global.statisticsLen++;
+									Global.statisticsLen++;
+								}
+							}
 						}
-					}
+					};
+					preProcess.start();
 				}
 
 				if (pending > Global.STATISTICS_STEP) {
