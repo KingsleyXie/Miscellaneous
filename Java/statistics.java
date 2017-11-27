@@ -27,12 +27,11 @@ class Global {
 }
 
 class Stat implements Runnable {
-	public static int status = 0;
+	public static int finished = 0;
 	public int start, end;
 
 	public void run() {
 		try {
-			status++;
 			start = (Global.statisticsStart += Global.STATISTICS_STEP);
 			end = start + Global.STATISTICS_STEP;
 			if (end > Global.dataLen) end = Global.dataLen;
@@ -48,7 +47,7 @@ class Stat implements Runnable {
 				);
 			}
 			System.out.println("Finish: " + start + " - " + end);
-		} finally { status++; }
+		} finally { finished++; }
 	}
 }
 
@@ -195,17 +194,15 @@ class Frame extends JFrame {
 			}
 		}
 
-		printDurationTime("Statistics");
-
 		for (int cnt = 0; cnt < Global.dataLen; cnt += Global.STATISTICS_STEP)
 			new Thread(new Stat()).start();
 
-		int terminal = 2 * (((Global.dataLen - Global.PRE_PROCESS_NUM) / Global.STATISTICS_STEP) + 1);
-		while(true) if (Stat.status == terminal) {
-			printDurationTime("Multi Threads");
+		int terminal = ((Global.dataLen - Global.PRE_PROCESS_NUM) / Global.STATISTICS_STEP) + 1;
+		while(true) if (Stat.finished == terminal) {
+			printDurationTime("Multi Threads Statistics");
 			outputData();
 			break;
-		}
+		} else { try { Thread.sleep(10); } catch(Exception e) { e.printStackTrace(); } }
 	}
 
 	public void outputData() {
