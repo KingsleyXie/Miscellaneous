@@ -5,6 +5,45 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.table.*;
 
+class Cons {
+	public static final int
+	MAX_ARRAY_SIZE = 1079999,
+	TABLE_COLUMN_LENGTH = 4,
+	STATISTICS_STEP = 100000;
+}
+
+class Stat implements Runnable {
+	public static int start = -Cons.STATISTICS_STEP, status = 0;
+	public String statistics[][] = new String[Cons.MAX_ARRAY_SIZE][3];
+	public Stat(String s[][]) {
+		statistics = s;
+	}
+
+	public void run() {
+		try {
+			start += Cons.STATISTICS_STEP; status++;
+			// for (i = 0; i < 600; i++) {
+			// 	j = 0;
+			// 	while(j < statisticsLen
+			// 		&& !Objects.equals(Character.toString(data[i][1].charAt(0)), statistics[j][0]))
+			// 		j++;
+
+			// 	int id = Objects.equals(data[i][2], "男") ? 1 : 2;
+			// 	if (j < statisticsLen) {
+			// 		statistics[j][id] = String.valueOf(Integer.parseInt(statistics[j][id]) + 1);
+			// 	} else {
+			// 		statistics[statisticsLen][0] = Character.toString(data[i][1].charAt(0));
+			// 		statistics[statisticsLen][id] = "1";
+			// 		statistics[statisticsLen][3 - id] = "0";
+
+			// 		statisticsLen++;
+			// 	}
+			// }
+			System.out.println(start);
+		} finally { status--; }
+	}
+}
+
 class Detail extends JFrame {
 	public Detail(String html) {
 		JLabel content = new JLabel(html, SwingConstants.CENTER);
@@ -20,18 +59,15 @@ class Detail extends JFrame {
 }
 
 class Frame extends JFrame {
-	final int MAX_ARRAY_SIZE = 1079999;
-	final int TABLE_COLUMN_LENGTH = 4;
-
 	public int dataLen = 0, statisticsLen = 0, t = 12, i, j;
 	public long startTime;
 
 	public String
-		statistics[][] = new String[MAX_ARRAY_SIZE][3];
+		statistics[][] = new String[Cons.MAX_ARRAY_SIZE][3];
 
 	private String
-		columnName[] = new String[TABLE_COLUMN_LENGTH],
-		data[][] = new String[MAX_ARRAY_SIZE][TABLE_COLUMN_LENGTH];
+		columnName[] = new String[Cons.TABLE_COLUMN_LENGTH],
+		data[][] = new String[Cons.MAX_ARRAY_SIZE][Cons.TABLE_COLUMN_LENGTH];
 
 	public Font
 		ft0 = new Font("方正卡通简体", Font.PLAIN, 67),
@@ -150,7 +186,7 @@ class Frame extends JFrame {
 
 	public void statistics() {
 		resetStartTime();
-		for (i = 0; i < dataLen; i++) {
+		for (i = 0; i < 600; i++) {
 			j = 0;
 			while(j < statisticsLen
 				&& !Objects.equals(Character.toString(data[i][1].charAt(0)), statistics[j][0]))
@@ -166,6 +202,14 @@ class Frame extends JFrame {
 
 				statisticsLen++;
 			}
+		}
+
+		for (int cnt = 0; cnt < dataLen; cnt += Cons.STATISTICS_STEP)
+			new Thread(new Stat(statistics)).start();
+
+		while(true) if (Stat.status == 0) {
+			System.out.println("End");
+			break;
 		}
 		printDurationTime("Statistics");
 	}
