@@ -12,7 +12,9 @@ class Global {
 		PRE_PROCESS_NUM = 600,
 		STATISTICS_STEP = 100000;
 
-	public static int dataLen = 0, statisticsLen = 0;
+	public static int
+		dataLen = 0, statisticsLen = 0,
+		statisticsStart = PRE_PROCESS_NUM - STATISTICS_STEP;
 
 	public static String
 		data[][] = new String[MAX_ARRAY_SIZE][TABLE_COLUMN_LENGTH],
@@ -25,11 +27,17 @@ class Global {
 }
 
 class Stat implements Runnable {
-	public static int start = -Global.STATISTICS_STEP, status = 0;
+	public static int status = 0;
+	public int start, end;
 
 	public void run() {
 		try {
-			start += Global.STATISTICS_STEP; status++;
+			status++;
+			start = (Global.statisticsStart += Global.STATISTICS_STEP);
+			end = start + Global.STATISTICS_STEP;
+			if (end > Global.dataLen) end = Global.dataLen;
+
+			System.out.println("Start: " + start + " End: " + end);
 			// for (i = 0; i < 600; i++) {
 			// 	j = 0;
 			// 	while(j < Global.statisticsLen
@@ -47,7 +55,7 @@ class Stat implements Runnable {
 			// 		Global.statisticsLen++;
 			// 	}
 			// }
-		} finally { status--; }
+		} finally { status++; }
 	}
 }
 
@@ -103,13 +111,13 @@ class Frame extends JFrame {
 		importBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				importBtn.setVisible(false);
-				resetStartTime(); readData(); printDurationTime("Read Data");
-				drawInterface();
+				readData(); drawInterface();
 			}
 		});
 	}
 
 	public void readData() {
+		resetStartTime();
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader("data.csv"));
 
@@ -129,9 +137,8 @@ class Frame extends JFrame {
 				Global.dataLen++;
 			}
 			reader.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		} catch (Exception e) { e.printStackTrace(); }
+		printDurationTime("Read Data");
 	}
 
 	public void drawInterface() {
@@ -200,7 +207,12 @@ class Frame extends JFrame {
 		for (int cnt = 0; cnt < Global.dataLen; cnt += Global.STATISTICS_STEP)
 			new Thread(new Stat()).start();
 
-		while(true) if (Stat.status == 0) { outputData(); break; }
+		int terminal = 2 * (((Global.dataLen - Global.PRE_PROCESS_NUM) / Global.STATISTICS_STEP) + 1);
+		while(true) if (Stat.status == terminal) {
+			printDurationTime("Multi Threads");
+			outputData();
+			break;
+		}
 	}
 
 	public void outputData() {
