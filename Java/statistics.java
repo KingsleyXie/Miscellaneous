@@ -7,7 +7,9 @@ import javax.swing.table.*;
 
 class Global {
 	public static final int
-		MAX_ARRAY_SIZE = 1079999,
+		MAX_DATA_SIZE = 1079999,
+		MAX_NAME_SIZE = 100,
+		MAX_THREAD_SIZE = 100,
 		TABLE_COLUMN_LENGTH = 4,
 		PRE_PROCESS_NUM = 600,
 		STATISTICS_STEP = 100000;
@@ -16,9 +18,11 @@ class Global {
 		dataLen = 0, statisticsLen = 0,
 		statisticsStart = PRE_PROCESS_NUM - STATISTICS_STEP;
 
+	public static int subStat[][][] = new int[MAX_THREAD_SIZE][MAX_NAME_SIZE][3];
+
 	public static String
-		data[][] = new String[MAX_ARRAY_SIZE][TABLE_COLUMN_LENGTH],
-		statistics[][] = new String[MAX_ARRAY_SIZE][3];
+		data[][] = new String[MAX_DATA_SIZE][TABLE_COLUMN_LENGTH],
+		statistics[][] = new String[MAX_NAME_SIZE][3];
 
 	public static final Font
 		FZKT_L = new Font("方正卡通简体", Font.PLAIN, 67),
@@ -27,11 +31,12 @@ class Global {
 }
 
 class Stat implements Runnable {
-	public static int finished = 0;
-	public int start, end;
+	public static int started = 0, finished = 0;
+	public int start, end, pos;
 
 	public void run() {
 		try {
+			pos = started; started++;
 			start = (Global.statisticsStart += Global.STATISTICS_STEP);
 			end = start + Global.STATISTICS_STEP;
 			if (end > Global.dataLen) end = Global.dataLen;
@@ -41,10 +46,7 @@ class Stat implements Runnable {
 				while(!Objects.equals(Character.toString(Global.data[i][1].charAt(0)),
 					Global.statistics[j][0])) j++;
 
-				int id = Objects.equals(Global.data[i][2], "男") ? 1 : 2;
-				Global.statistics[j][id] = String.valueOf(
-					Integer.parseInt(Global.statistics[j][id]) + 1
-				);
+				Global.subStat[pos][j][Objects.equals(Global.data[i][2], "男") ? 1 : 2]++;
 			}
 			System.out.println("Finish: " + start + " - " + end);
 		} finally { finished++; }
@@ -197,9 +199,14 @@ class Frame extends JFrame {
 		for (int cnt = 0; cnt < Global.dataLen; cnt += Global.STATISTICS_STEP)
 			new Thread(new Stat()).start();
 
-		int terminal = ((Global.dataLen - Global.PRE_PROCESS_NUM) / Global.STATISTICS_STEP) + 1;
-		while(true) if (Stat.finished == terminal) {
+		int tot = ((Global.dataLen - Global.PRE_PROCESS_NUM) / Global.STATISTICS_STEP) + 1;
+		while(true) if (Stat.finished == tot) {
 			printDurationTime("Multi Threads Statistics");
+			for (int j = 0; j < Global.statisticsLen; j++) {
+				for (int i = 0; i < tot; i++)
+					System.out.printf("%d %d\t", Global.subStat[i][j][1], Global.subStat[i][j][2]);
+				System.out.println();
+			}
 			outputData();
 			break;
 		} else { try { Thread.sleep(10); } catch(Exception e) { e.printStackTrace(); } }
