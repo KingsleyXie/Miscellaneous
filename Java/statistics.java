@@ -5,38 +5,46 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.table.*;
 
-class Cons {
+class Global {
 	public static final int
-	MAX_ARRAY_SIZE = 1079999,
-	TABLE_COLUMN_LENGTH = 4,
-	STATISTICS_STEP = 100000;
+		MAX_ARRAY_SIZE = 1079999,
+		TABLE_COLUMN_LENGTH = 4,
+		STATISTICS_STEP = 100000;
+
+	public static int dataLen = 0, statisticsLen = 0;
+
+	public static String
+		data[][] = new String[MAX_ARRAY_SIZE][TABLE_COLUMN_LENGTH],
+		statistics[][] = new String[MAX_ARRAY_SIZE][3],
+		columnName[] = new String[TABLE_COLUMN_LENGTH];
+
+	public static final Font
+		FZKT_L = new Font("方正卡通简体", Font.PLAIN, 67),
+		FZKT_M = new Font("方正卡通简体", Font.PLAIN, 21),
+		MSYH_S = new Font("微软雅黑", Font.PLAIN, 13);
 }
 
 class Stat implements Runnable {
-	public static int start = -Cons.STATISTICS_STEP, status = 0;
-	public String statistics[][] = new String[Cons.MAX_ARRAY_SIZE][3];
-	public Stat(String s[][]) {
-		statistics = s;
-	}
+	public static int start = -Global.STATISTICS_STEP, status = 0;
 
 	public void run() {
 		try {
-			start += Cons.STATISTICS_STEP; status++;
+			start += Global.STATISTICS_STEP; status++;
 			// for (i = 0; i < 600; i++) {
 			// 	j = 0;
-			// 	while(j < statisticsLen
-			// 		&& !Objects.equals(Character.toString(data[i][1].charAt(0)), statistics[j][0]))
+			// 	while(j < Global.statisticsLen
+			// 		&& !Objects.equals(Character.toString(data[i][1].charAt(0)), Global.statistics[j][0]))
 			// 		j++;
 
 			// 	int id = Objects.equals(data[i][2], "男") ? 1 : 2;
-			// 	if (j < statisticsLen) {
-			// 		statistics[j][id] = String.valueOf(Integer.parseInt(statistics[j][id]) + 1);
+			// 	if (j < Global.statisticsLen) {
+			// 		Global.statistics[j][id] = String.valueOf(Integer.parseInt(Global.statistics[j][id]) + 1);
 			// 	} else {
-			// 		statistics[statisticsLen][0] = Character.toString(data[i][1].charAt(0));
-			// 		statistics[statisticsLen][id] = "1";
-			// 		statistics[statisticsLen][3 - id] = "0";
+			// 		Global.statistics[Global.statisticsLen][0] = Character.toString(data[i][1].charAt(0));
+			// 		Global.statistics[Global.statisticsLen][id] = "1";
+			// 		Global.statistics[Global.statisticsLen][3 - id] = "0";
 
-			// 		statisticsLen++;
+			// 		Global.statisticsLen++;
 			// 	}
 			// }
 			System.out.println(start);
@@ -48,8 +56,7 @@ class Detail extends JFrame {
 	public Detail(String html) {
 		JLabel content = new JLabel(html, SwingConstants.CENTER);
 		JScrollPane detail = new JScrollPane(content);
-		Font ft = new Font("微软雅黑", Font.PLAIN, 13);
-		content.setFont(ft);
+		content.setFont(Global.MSYH_S);
 
 		add(detail);
 		setTitle("姓氏统计具体数据");
@@ -59,20 +66,8 @@ class Detail extends JFrame {
 }
 
 class Frame extends JFrame {
-	public int dataLen = 0, statisticsLen = 0, t = 12, i, j;
+	public int t = 12, i, j;
 	public long startTime;
-
-	public String
-		statistics[][] = new String[Cons.MAX_ARRAY_SIZE][3];
-
-	private String
-		columnName[] = new String[Cons.TABLE_COLUMN_LENGTH],
-		data[][] = new String[Cons.MAX_ARRAY_SIZE][Cons.TABLE_COLUMN_LENGTH];
-
-	public Font
-		ft0 = new Font("方正卡通简体", Font.PLAIN, 67),
-		ft1 = new Font("方正卡通简体", Font.PLAIN, 21),
-		ft2 = new Font("微软雅黑", Font.PLAIN, 13);
 
 	public JTable table;
 	public JButton importBtn, exportBtn;
@@ -101,7 +96,7 @@ class Frame extends JFrame {
 
 	public void importPrepare() {
 		importBtn = new JButton("导入统计数据");
-		importBtn.setFont(ft0);
+		importBtn.setFont(Global.FZKT_L);
 		importBtn.setFocusPainted(false);
 
 		add(importBtn, BorderLayout.CENTER);
@@ -122,17 +117,17 @@ class Frame extends JFrame {
 			String line = null;
 
 			line = reader.readLine();
-			columnName = line.split(",");
+			Global.columnName = line.split(",");
 
 			while((line = reader.readLine()) != null) {
 				String it[] = line.split(",");
 
-				data[dataLen][0] = it[0];
-				data[dataLen][1] = it[1];
-				data[dataLen][2] = it[2];
-				data[dataLen][3] = it[3];
+				Global.data[Global.dataLen][0] = it[0];
+				Global.data[Global.dataLen][1] = it[1];
+				Global.data[Global.dataLen][2] = it[2];
+				Global.data[Global.dataLen][3] = it[3];
 
-				dataLen++;
+				Global.dataLen++;
 			}
 			reader.close();
 		} catch (Exception e) {
@@ -143,19 +138,19 @@ class Frame extends JFrame {
 	public void drawInterface() {
 		table = new JTable(new AbstractTableModel() {
 			public String getColumnName(int column) {
-				return columnName[column];
+				return Global.columnName[column];
 			}
 
 			public int getColumnCount() {
-				return columnName.length;
+				return Global.columnName.length;
 			}
 
 			public int getRowCount() {
-				return dataLen;
+				return Global.dataLen;
 			}
 
 			public Object getValueAt(int row, int col) {
-				return data[row][col];
+				return Global.data[row][col];
 			}
 		});
 
@@ -164,14 +159,14 @@ class Frame extends JFrame {
 		table.setDefaultRenderer(Object.class, tcr);
 
 		table.setAutoCreateRowSorter(true);
-		table.setFont(ft2);
+		table.setFont(Global.MSYH_S);
 		table.setRowHeight(21);
 
 		JScrollPane scrollpane = new JScrollPane(table);
 		add(scrollpane, BorderLayout.CENTER);
 
 		exportBtn = new JButton("导出统计数据");
-		exportBtn.setFont(ft1);
+		exportBtn.setFont(Global.FZKT_M);
 		exportBtn.setFocusPainted(false);
 
 		add(exportBtn, BorderLayout.NORTH);
@@ -186,32 +181,33 @@ class Frame extends JFrame {
 
 	public void statistics() {
 		resetStartTime();
-		for (i = 0; i < 600; i++) {
+		for (i = 0; i < Global.dataLen; i++) {
 			j = 0;
-			while(j < statisticsLen
-				&& !Objects.equals(Character.toString(data[i][1].charAt(0)), statistics[j][0]))
+			while(j < Global.statisticsLen
+				&& !Objects.equals(Character.toString(Global.data[i][1].charAt(0)), Global.statistics[j][0]))
 				j++;
 
-			int id = Objects.equals(data[i][2], "男") ? 1 : 2;
-			if (j < statisticsLen) {
-				statistics[j][id] = String.valueOf(Integer.parseInt(statistics[j][id]) + 1);
+			int id = Objects.equals(Global.data[i][2], "男") ? 1 : 2;
+			if (j < Global.statisticsLen) {
+				Global.statistics[j][id] = String.valueOf(Integer.parseInt(Global.statistics[j][id]) + 1);
 			} else {
-				statistics[statisticsLen][0] = Character.toString(data[i][1].charAt(0));
-				statistics[statisticsLen][id] = "1";
-				statistics[statisticsLen][3 - id] = "0";
+				Global.statistics[Global.statisticsLen][0] = Character.toString(Global.data[i][1].charAt(0));
+				Global.statistics[Global.statisticsLen][id] = "1";
+				Global.statistics[Global.statisticsLen][3 - id] = "0";
 
-				statisticsLen++;
+				Global.statisticsLen++;
 			}
 		}
 
-		for (int cnt = 0; cnt < dataLen; cnt += Cons.STATISTICS_STEP)
-			new Thread(new Stat(statistics)).start();
+		printDurationTime("Statistics");
+
+		for (int cnt = 0; cnt < Global.dataLen; cnt += Global.STATISTICS_STEP)
+			new Thread(new Stat()).start();
 
 		while(true) if (Stat.status == 0) {
-			System.out.println("End");
+			System.out.println("End Now");
 			break;
 		}
-		printDurationTime("Statistics");
 	}
 
 	public void outputData() {
@@ -219,31 +215,31 @@ class Frame extends JFrame {
 			statisticsHeader = "数据统计结果",
 			statisticsMessage =
 			"<html>" +
-			"<h2 style='text-align:center;'>总人数： " + dataLen + "</h2>" + "<hr>" +
+			"<h2 style='text-align:center;'>总人数： " + Global.dataLen + "</h2>" + "<hr>" +
 			"<table style='width:100%;'>" + "<tbody>";
 
 		statisticsMessage += "<tr><td><strong>姓氏</strong></td>";
-		for (int i = 0; i < statisticsLen; i++)
-			statisticsMessage += "<td>" + statistics[i][0] + "</td>";
+		for (int i = 0; i < Global.statisticsLen; i++)
+			statisticsMessage += "<td>" + Global.statistics[i][0] + "</td>";
 		statisticsMessage += "</tr>";
 
 		statisticsMessage += "<tr><td><strong>总人数</strong></td>";
-		for (int i = 0; i < statisticsLen; i++)
+		for (int i = 0; i < Global.statisticsLen; i++)
 			statisticsMessage +=
 			"<td>" +
-				String.format("%3s", Integer.parseInt(statistics[i][1])
-					+ Integer.parseInt(statistics[i][2])) +
+				String.format("%3s", Integer.parseInt(Global.statistics[i][1])
+					+ Integer.parseInt(Global.statistics[i][2])) +
 			"</td>";
 		statisticsMessage += "</tr>";
 
 		statisticsMessage += "<tr><td><strong>男生</strong></td>";
-		for (int i = 0; i < statisticsLen; i++)
-			statisticsMessage += "<td>" + String.format("%3s", statistics[i][1]) + "</td>";
+		for (int i = 0; i < Global.statisticsLen; i++)
+			statisticsMessage += "<td>" + String.format("%3s", Global.statistics[i][1]) + "</td>";
 		statisticsMessage += "</tr>";
 
 		statisticsMessage += "<tr><td><strong>女生</strong></td>";
-		for (int i = 0; i < statisticsLen; i++)
-			statisticsMessage += "<td>" + String.format("%3s", statistics[i][2]) + "</td>";
+		for (int i = 0; i < Global.statisticsLen; i++)
+			statisticsMessage += "<td>" + String.format("%3s", Global.statistics[i][2]) + "</td>";
 		statisticsMessage += "</tr>";
 
 		statisticsMessage +=
@@ -251,7 +247,7 @@ class Frame extends JFrame {
 		"<p style='text-align:center;'>点击 【确定】 后将显示具体数据并自动打开数据导出文件</p>" +
 		"<br>" + "</html>";
 
-		UIManager.put("OptionPane.messageFont", ft2);
+		UIManager.put("OptionPane.messageFont", Global.MSYH_S);
 		int choice = JOptionPane.showConfirmDialog(null,
 			statisticsMessage,
 			statisticsHeader,
@@ -259,63 +255,63 @@ class Frame extends JFrame {
 			JOptionPane.PLAIN_MESSAGE
 		);
 
-		try {
-			if (choice == JOptionPane.OK_OPTION) {
-				showDetailData();
-				// Process process = Runtime.getRuntime().exec("cmd /c statistics.csv");
-			} else {
-				Process process = Runtime.getRuntime().exec("java statistics");
-				System.exit(0);
-			}
-		} catch(IOException err) {
-			err.printStackTrace();
-		}
+		// try {
+		// 	if (choice == JOptionPane.OK_OPTION) {
+		// 		showDetailData();
+		// 		Process process = Runtime.getRuntime().exec("cmd /c Global.statistics.csv");
+		// 	} else {
+		// 		Process process = Runtime.getRuntime().exec("java Global.statistics");
+		// 		System.exit(0);
+		// 	}
+		// } catch(IOException err) {
+		// 	err.printStackTrace();
+		// }
 	}
 
-	public void showDetailData() throws IOException {
+	/*public void showDetailData() throws IOException {
 		resetStartTime();
 		String detailContent = "<html>" + "<h1 style='text-align:center'>具体统计信息</h1>" + "<br>";
-		FileWriter writer = new FileWriter("statistics.csv");
+		FileWriter writer = new FileWriter("Global.statistics.csv");
 
-		for (int i = 0; i < statisticsLen; i++) {
+		for (int i = 0; i < Global.statisticsLen; i++) {
 			detailContent +=
 			"<div>" +
-				"姓氏：" + statistics[i][0] +
+				"姓氏：" + Global.statistics[i][0] +
 
 				"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-				"总人数：" + String.valueOf(Integer.parseInt(statistics[i][1]) +
-					Integer.parseInt(statistics[i][2])) +
+				"总人数：" + String.valueOf(Integer.parseInt(Global.statistics[i][1]) +
+					Integer.parseInt(Global.statistics[i][2])) +
 
 				"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-				"男生：" + statistics[i][1] +
+				"男生：" + Global.statistics[i][1] +
 
 				"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-				"女生：" + statistics[i][2] +
+				"女生：" + Global.statistics[i][2] +
 			"</div>" + "<br>";
 
 			writer.append(
-				"姓氏：" + statistics[i][0] +
-				",总人数：" + String.valueOf(Integer.parseInt(statistics[i][1]) +
-					Integer.parseInt(statistics[i][2])) +
-				",男生：" + statistics[i][1] +
-				",女生：" + statistics[i][2] + "\n");
+				"姓氏：" + Global.statistics[i][0] +
+				",总人数：" + String.valueOf(Integer.parseInt(Global.statistics[i][1]) +
+					Integer.parseInt(Global.statistics[i][2])) +
+				",男生：" + Global.statistics[i][1] +
+				",女生：" + Global.statistics[i][2] + "\n");
 		}
 
-		/*for (int i = 0; i < statisticsLen; i++) {
+		for (int i = 0; i < Global.statisticsLen; i++) {
 			detailContent +=
 			"<div>" +
 				"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-				"姓氏：" + statistics[i][0] +
+				"姓氏：" + Global.statistics[i][0] +
 
 				"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-				"总人数：" + String.valueOf(Integer.parseInt(statistics[i][1]) +
-					Integer.parseInt(statistics[i][2])) +
+				"总人数：" + String.valueOf(Integer.parseInt(Global.statistics[i][1]) +
+					Integer.parseInt(Global.statistics[i][2])) +
 
 				"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-				"男生：" + statistics[i][1] +
+				"男生：" + Global.statistics[i][1] +
 
 				"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-				"女生：" + statistics[i][2] +
+				"女生：" + Global.statistics[i][2] +
 
 				"<hr>" +
 				"<table style='width:300px;'>" +
@@ -330,15 +326,15 @@ class Frame extends JFrame {
 					"<tbody>";
 
 			writer.append(
-				"姓氏：" + statistics[i][0] +
-				",总人数：" + String.valueOf(Integer.parseInt(statistics[i][1]) +
-					Integer.parseInt(statistics[i][2])) +
-				",男生：" + statistics[i][1] +
-				",女生：" + statistics[i][2] +
+				"姓氏：" + Global.statistics[i][0] +
+				",总人数：" + String.valueOf(Integer.parseInt(Global.statistics[i][1]) +
+					Integer.parseInt(Global.statistics[i][2])) +
+				",男生：" + Global.statistics[i][1] +
+				",女生：" + Global.statistics[i][2] +
 				"\n\n" + "学号,姓名,性别,籍贯\n");
 
 			for (int j = 0; j < dataLen; j++) {
-				if (Objects.equals(Character.toString(data[j][1].charAt(0)), statistics[i][0])) {
+				if (Objects.equals(Character.toString(data[j][1].charAt(0)), Global.statistics[i][0])) {
 					detailContent +=
 					"<tr>" +
 						"<td>" + data[j][0] + "</td>" +
@@ -358,7 +354,7 @@ class Frame extends JFrame {
 
 			detailContent += "</tbody>" + "</table>" + "</div>" + "<br><br><br>";
 			writer.append("\n\n\n");
-		}*/
+		}
 
 		detailContent += "</html>";
 		writer.flush();
@@ -367,7 +363,7 @@ class Frame extends JFrame {
 		printDurationTime("Show Detailed Data");
 		Detail detailFrame = new Detail(detailContent);
 		detailFrame.setVisible(true);
-	}
+	}*/
 }
 
 public class statistics {
