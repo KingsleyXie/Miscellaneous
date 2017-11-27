@@ -37,24 +37,17 @@ class Stat implements Runnable {
 			end = start + Global.STATISTICS_STEP;
 			if (end > Global.dataLen) end = Global.dataLen;
 
-			System.out.println("Start: " + start + " End: " + end);
-			// for (i = 0; i < 600; i++) {
-			// 	j = 0;
-			// 	while(j < Global.statisticsLen
-			// 		&& !Objects.equals(Character.toString(data[i][1].charAt(0)), Global.statistics[j][0]))
-			// 		j++;
+			for (int i = start; i < end; i++) {
+				int j = 0;
+				while(!Objects.equals(Character.toString(Global.data[i][1].charAt(0)),
+					Global.statistics[j][0])) j++;
 
-			// 	int id = Objects.equals(data[i][2], "男") ? 1 : 2;
-			// 	if (j < Global.statisticsLen) {
-			// 		Global.statistics[j][id] = String.valueOf(Integer.parseInt(Global.statistics[j][id]) + 1);
-			// 	} else {
-			// 		Global.statistics[Global.statisticsLen][0] = Character.toString(data[i][1].charAt(0));
-			// 		Global.statistics[Global.statisticsLen][id] = "1";
-			// 		Global.statistics[Global.statisticsLen][3 - id] = "0";
-
-			// 		Global.statisticsLen++;
-			// 	}
-			// }
+				int id = Objects.equals(Global.data[i][2], "男") ? 1 : 2;
+				Global.statistics[j][id] = String.valueOf(
+					Integer.parseInt(Global.statistics[j][id]) + 1
+				);
+			}
+			System.out.println("Finish: " + start + " - " + end);
 		} finally { status++; }
 	}
 }
