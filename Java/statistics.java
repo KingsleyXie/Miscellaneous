@@ -15,8 +15,7 @@ class Global {
 		STATISTICS_STEP = 100000;
 
 	public static int
-		dataLen = 0, statisticsLen = 0,
-		statisticsStart = PRE_PROCESS_NUM - STATISTICS_STEP;
+		dataLen = 0, statisticsLen = 0, statisticsStart = PRE_PROCESS_NUM;
 
 	public static int subStat[][][] = new int[MAX_THREAD_SIZE][MAX_NAME_SIZE][3];
 
@@ -25,8 +24,8 @@ class Global {
 		statistics[][] = new String[MAX_NAME_SIZE][3];
 
 	public static final Font
-		FZKT_L = new Font("方正卡通简体", Font.PLAIN, 67),
-		FZKT_M = new Font("方正卡通简体", Font.PLAIN, 21),
+		FZJL_L = new Font("方正静蕾简体", Font.PLAIN, 76),
+		FZJL_M = new Font("方正静蕾简体", Font.PLAIN, 21),
 		MSYH_S = new Font("微软雅黑", Font.PLAIN, 13);
 }
 
@@ -36,9 +35,12 @@ class Stat implements Runnable {
 
 	public void run() {
 		try {
-			pos = started; started++;
-			start = (Global.statisticsStart += Global.STATISTICS_STEP);
+			start = Global.statisticsStart;
 			end = start + Global.STATISTICS_STEP;
+			pos = started; started++;
+
+			Global.statisticsStart += Global.STATISTICS_STEP;
+
 			if (end > Global.dataLen) end = Global.dataLen;
 
 			for (int i = start; i < end; i++) {
@@ -95,8 +97,8 @@ class Frame extends JFrame {
 	}
 
 	public void importPrepare() {
-		importBtn = new JButton("导入统计数据");
-		importBtn.setFont(Global.FZKT_L);
+		importBtn = new JButton("导入并统计数据");
+		importBtn.setFont(Global.FZJL_L);
 		importBtn.setFocusPainted(false);
 
 		add(importBtn, BorderLayout.CENTER);
@@ -115,6 +117,7 @@ class Frame extends JFrame {
 			BufferedReader reader = new BufferedReader(new FileReader("data.csv"));
 
 			String line = null;
+			int pending = 0;
 
 			line = reader.readLine();
 			columnName = line.split(",");
@@ -127,11 +130,37 @@ class Frame extends JFrame {
 				Global.data[Global.dataLen][2] = it[2];
 				Global.data[Global.dataLen][3] = it[3];
 
-				Global.dataLen++;
+				Global.dataLen++; pending++;
+
+				if (Global.dataLen == Global.PRE_PROCESS_NUM) {
+					pending = 0;
+					for (int i = 0; i < Global.PRE_PROCESS_NUM; i++) {
+						int j = 0;
+						while(j < Global.statisticsLen
+							&& !Objects.equals(Character.toString(Global.data[i][1].charAt(0)), Global.statistics[j][0]))
+							j++;
+
+						int id = Objects.equals(Global.data[i][2], "男") ? 1 : 2;
+						if (j < Global.statisticsLen) {
+							Global.statistics[j][id] = String.valueOf(Integer.parseInt(Global.statistics[j][id]) + 1);
+						} else {
+							Global.statistics[Global.statisticsLen][0] = Character.toString(Global.data[i][1].charAt(0));
+							Global.statistics[Global.statisticsLen][id] = "1";
+							Global.statistics[Global.statisticsLen][3 - id] = "0";
+
+							Global.statisticsLen++;
+						}
+					}
+				}
+
+				if (pending > Global.STATISTICS_STEP) {
+					pending = 0; new Thread(new Stat()).start();
+				}
 			}
+			new Thread(new Stat()).start();
 			reader.close();
 		} catch (Exception e) { e.printStackTrace(); }
-		printDurationTime("Read Data");
+		printDurationTime("Read & Statistics");
 	}
 
 	public void drawInterface() {
@@ -165,55 +194,26 @@ class Frame extends JFrame {
 		add(scrollpane, BorderLayout.CENTER);
 
 		exportBtn = new JButton("导出统计数据");
-		exportBtn.setFont(Global.FZKT_M);
+		exportBtn.setFont(Global.FZJL_M);
 		exportBtn.setFocusPainted(false);
 
 		add(exportBtn, BorderLayout.NORTH);
 
 		exportBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) { statistics(); }
-		});
-	}
-
-	public void statistics() {
-		resetStartTime();
-		for (int i = 0; i < Global.PRE_PROCESS_NUM; i++) {
-			int j = 0;
-			while(j < Global.statisticsLen
-				&& !Objects.equals(Character.toString(Global.data[i][1].charAt(0)), Global.statistics[j][0]))
-				j++;
-
-			int id = Objects.equals(Global.data[i][2], "男") ? 1 : 2;
-			if (j < Global.statisticsLen) {
-				Global.statistics[j][id] = String.valueOf(Integer.parseInt(Global.statistics[j][id]) + 1);
-			} else {
-				Global.statistics[Global.statisticsLen][0] = Character.toString(Global.data[i][1].charAt(0));
-				Global.statistics[Global.statisticsLen][id] = "1";
-				Global.statistics[Global.statisticsLen][3 - id] = "0";
-
-				Global.statisticsLen++;
+			public void actionPerformed(ActionEvent e) {
+				int tot = ((Global.dataLen - Global.PRE_PROCESS_NUM) / Global.STATISTICS_STEP) + 1;
+				for (int j = 0; j < Global.statisticsLen; j++)
+					for (int i = 0; i < tot; i++) {
+						Global.statistics[j][1] = String.valueOf(
+							Global.subStat[i][j][1] + Integer.parseInt(Global.statistics[j][1])
+						);
+						Global.statistics[j][2] = String.valueOf(
+							Global.subStat[i][j][2] + Integer.parseInt(Global.statistics[j][2])
+						);
+					}
+				outputData();
 			}
-		}
-
-		for (int cnt = 0; cnt < Global.dataLen; cnt += Global.STATISTICS_STEP)
-			new Thread(new Stat()).start();
-
-		int tot = ((Global.dataLen - Global.PRE_PROCESS_NUM) / Global.STATISTICS_STEP) + 1;
-		while(true) if (Stat.finished == tot) {
-			for (int j = 0; j < Global.statisticsLen; j++)
-				for (int i = 0; i < tot; i++) {
-					Global.statistics[j][1] = String.valueOf(
-						Global.subStat[i][j][1] + Integer.parseInt(Global.statistics[j][1])
-					);
-					Global.statistics[j][2] = String.valueOf(
-						Global.subStat[i][j][2] + Integer.parseInt(Global.statistics[j][2])
-					);
-				}
-
-			printDurationTime("Multi Threads Statistics: ");
-			outputData();
-			break;
-		} else { try { Thread.sleep(10); } catch(Exception e) { e.printStackTrace(); } }
+		});
 	}
 
 	public void outputData() {
