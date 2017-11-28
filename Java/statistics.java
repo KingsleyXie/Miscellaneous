@@ -303,19 +303,26 @@ class mainFrame extends JFrame {
 		exportBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int tot = ((Global.dataLen - Global.PRE_PROCESS_NUM) / Global.STATISTICS_STEP) + 1;
-				while(true) if (Stat.finished == tot) {
-						for (int j = 0; j < Global.statisticsLen; j++)
-								for (int i = 0; i < tot; i++) {
-										Global.statistics[j][1] = String.valueOf(
-												Global.subStat[i][j][1] + Integer.parseInt(Global.statistics[j][1])
-										);
-										Global.statistics[j][2] = String.valueOf(
-												Global.subStat[i][j][2] + Integer.parseInt(Global.statistics[j][2])
-										);
-								}
-						outputData();
-						break;
-				} else { try { Thread.sleep(10); } catch(Exception err) { err.printStackTrace(); } }
+
+				if (Global.mt4statistics) {
+					while(true)
+						if (Stat.finished == tot) { break; }
+						else {
+							try { Thread.sleep(10); }
+							catch(Exception err) { err.printStackTrace(); }
+						}
+				}
+
+				for (int j = 0; j < Global.statisticsLen; j++)
+						for (int i = 0; i < tot; i++) {
+								Global.statistics[j][1] = String.valueOf(
+										Global.subStat[i][j][1] + Integer.parseInt(Global.statistics[j][1])
+								);
+								Global.statistics[j][2] = String.valueOf(
+										Global.subStat[i][j][2] + Integer.parseInt(Global.statistics[j][2])
+								);
+						}
+				outputData();
 			}
 		});
 	}
