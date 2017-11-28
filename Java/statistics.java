@@ -356,7 +356,7 @@ class mainFrame extends JFrame {
 
 	public void showDetailData() throws IOException {
 		resetStartTime();
-		// String detailContentHeader = "<html>" + "<h1 style='text-align:center'>具体统计信息</h1>" + "<br>";
+		String detailStr = "<html>" + "<h1 style='text-align:center'>具体统计信息</h1>" + "<br>";
 		// FileWriter writer = new FileWriter("Tstatistics.csv");
 
 		ExecutorService es = Executors.newCachedThreadPool();
@@ -364,13 +364,14 @@ class mainFrame extends JFrame {
 
 		while(true) if (Detail.finished == Global.statisticsLen) {
 			printDurationTime("Generate Detailed Data(Multi Thread):");
+			for (int i = 0; i < Global.statisticsLen; i++)
+				detailStr += Global.detailContent[i];
 
-			detailFrame dF = new detailFrame(Global.detailContent[1]);
+			detailStr += "</html>";
+			detailFrame dF = new detailFrame(detailStr);
 			dF.setVisible(true);
 			break;
 		} else { try { Thread.sleep(10); } catch(Exception err) { err.printStackTrace(); } }
-
-		// detailContent += "</html>";
 		// writer.flush();
 		// writer.close();
 	}
