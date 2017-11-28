@@ -20,6 +20,11 @@ class Global {
 
 	public static int subStat[][][] = new int[MAX_THREAD_SIZE][MAX_NAME_SIZE][3];
 
+	public static boolean
+		concise = false,
+		mt4statistics = false,
+		mt4detailinfo = false;
+
 	public static String
 		detailContent[][] = new String[MAX_NAME_SIZE][2],
 		data[][] = new String[MAX_DATA_SIZE][TABLE_COLUMN_LENGTH],
@@ -386,10 +391,13 @@ class mainFrame extends JFrame {
 public class statistics {
 	public static void main(String[] args) {
 		for (String opt : args) {
-			if (Objects.equals(opt, "-concise")) System.out.println("concise");
-			if (Objects.equals(opt, "-mt4statistics")) System.out.println("mt4statistics");
-			if (Objects.equals(opt, "-mt4detailinfo")) System.out.println("mt4detailinfo");
+			if (Objects.equals(opt, "-concise")) Global.concise = true;
+			if (Objects.equals(opt, "-mt4statistics")) Global.mt4statistics = true;
+			if (Objects.equals(opt, "-mt4detailinfo")) Global.mt4detailinfo = true;
 		}
+		System.out.println(Global.concise);
+		System.out.println(Global.mt4statistics);
+		System.out.println(Global.mt4detailinfo);
 		// mainFrame frame = new mainFrame();
 		// frame.setVisible(true);
 	}

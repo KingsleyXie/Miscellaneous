@@ -22,11 +22,11 @@ test-mt:
 	@javac statistics.java -encoding utf8
 	@java statistics -concise -mt4statistics -mt4detailinfo
 
-test-mtst:
+test-mt4st:
 	@javac statistics.java -encoding utf8
 	@java statistics -concise -mt4statistics
 
-test-mtde:
+test-mt4de:
 	@javac statistics.java -encoding utf8
 	@java statistics -concise -mt4detailinfo
 
