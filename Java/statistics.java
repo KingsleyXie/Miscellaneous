@@ -21,7 +21,7 @@ class Global {
 	public static int subStat[][][] = new int[MAX_THREAD_SIZE][MAX_NAME_SIZE][3];
 
 	public static String
-		detailContent[] = new String[MAX_NAME_SIZE],
+		detailContent[][] = new String[MAX_NAME_SIZE][2],
 		data[][] = new String[MAX_DATA_SIZE][TABLE_COLUMN_LENGTH],
 		statistics[][] = new String[MAX_NAME_SIZE][3];
 
@@ -64,7 +64,7 @@ class Detail implements Runnable {
 
 	public void run() {
 		try {
-			Global.detailContent[p] =
+			Global.detailContent[p][0] =
 			"<html><div>" +
 				"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
 				"姓氏：" + Global.statistics[p][0] +
@@ -91,20 +91,20 @@ class Detail implements Runnable {
 					"</thead>" +
 					"<tbody>";
 
-			// writer.append(
-			// 	"姓氏：" + Global.statistics[p][0] +
-			// 	",总人数：" + String.valueOf(Integer.parseInt(Global.statistics[p][1]) +
-			// 		Integer.parseInt(Global.statistics[p][2])) +
-			// 	",男生：" + Global.statistics[p][1] +
-			// 	",女生：" + Global.statistics[p][2] +
-			// 	"\n\n" + "学号,姓名,性别,籍贯\n");
+			Global.detailContent[p][1] =
+				"姓氏：" + Global.statistics[p][0] +
+				",总人数：" + String.valueOf(Integer.parseInt(Global.statistics[p][1]) +
+					Integer.parseInt(Global.statistics[p][2])) +
+				",男生：" + Global.statistics[p][1] +
+				",女生：" + Global.statistics[p][2] +
+				"\n\n" + "学号,姓名,性别,籍贯\n";
 
 			for (int j = 0; j < Global.dataLen; j++) {
 				if (Objects.equals(
 						Character.toString(Global.data[j][1].charAt(0)),
 						Global.statistics[p][0]
 					)) {
-					Global.detailContent[p] +=
+					Global.detailContent[p][0] +=
 					"<tr>" +
 						"<td>" + Global.data[j][0] + "</td>" +
 						"<td>" + Global.data[j][1] + "</td>" +
@@ -112,16 +112,15 @@ class Detail implements Runnable {
 						"<td>" + Global.data[j][3] + "</td>" +
 					"</tr>";
 
-					// writer.append(
-					// 	Global.data[j][0] + "," +
-					// 	Global.data[j][1] + "," +
-					// 	Global.data[j][2] + "," +
-					// 	Global.data[j][3] + "\n"
-					// );
+					Global.detailContent[p][1] +=
+						Global.data[j][0] + "," +
+						Global.data[j][1] + "," +
+						Global.data[j][2] + "," +
+						Global.data[j][3] + "\n";
 				}
 			}
-			Global.detailContent[p] += "</tbody>" + "</table>" + "</div>" + "<br><br><br>";
-			// writer.append("\n\n\n");
+			Global.detailContent[p][0] += "</tbody>" + "</table>" + "</div>" + "<br><br><br>";
+			Global.detailContent[p][1] += "\n\n\n";
 		} finally { finished++; }
 	}
 }
@@ -344,9 +343,9 @@ class mainFrame extends JFrame {
 		try {
 			if (choice == JOptionPane.OK_OPTION) {
 				showDetailData();
-				// Process process = Runtime.getRuntime().exec("cmd /c Global.statistics.csv");
+				Process process = Runtime.getRuntime().exec("cmd /c statistics.csv");
 			} else {
-				// Process process = Runtime.getRuntime().exec("java Global.statistics");
+				Process process = Runtime.getRuntime().exec("java statistics");
 				System.exit(0);
 			}
 		} catch(IOException err) {
@@ -356,24 +355,31 @@ class mainFrame extends JFrame {
 
 	public void showDetailData() throws IOException {
 		resetStartTime();
-		String detailStr = "<html>" + "<h1 style='text-align:center'>具体统计信息</h1>" + "<br>";
-		// FileWriter writer = new FileWriter("Tstatistics.csv");
+		FileWriter writer = new FileWriter("statistics.csv");
 
 		ExecutorService es = Executors.newCachedThreadPool();
 		for (int i = 0; i < Global.statisticsLen; i++) es.execute(new Detail(i));
 
 		while(true) if (Detail.finished == Global.statisticsLen) {
-			printDurationTime("Generate Detailed Data(Multi Thread):");
-			for (int i = 0; i < Global.statisticsLen; i++)
-				detailStr += Global.detailContent[i];
+			printDurationTime("Generate Detailed Data(Multi Thread)");
 
+			String detailExp = "", detailStr =
+			"<html>" + "<h1 style='text-align:center'>具体统计信息</h1>" + "<br>";
+			for (int i = 0; i < Global.statisticsLen; i++)
+			{
+				detailStr += Global.detailContent[i][0];
+				detailExp += Global.detailContent[i][1];
+			}
 			detailStr += "</html>";
+
 			detailFrame dF = new detailFrame(detailStr);
 			dF.setVisible(true);
+
+			writer.append(detailExp);
+			writer.flush();
+			writer.close();
 			break;
 		} else { try { Thread.sleep(10); } catch(Exception err) { err.printStackTrace(); } }
-		// writer.flush();
-		// writer.close();
 	}
 }
 
