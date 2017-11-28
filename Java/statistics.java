@@ -13,12 +13,14 @@ class Global {
 		MAX_THREAD_SIZE = 3000,
 		TABLE_COLUMN_LENGTH = 4,
 		PRE_PROCESS_NUM = 600,
-		STATISTICS_STEP = 100000;
+		STATISTICS_STEP = 80000;
 
 	public static int
-		dataLen = 0, statisticsLen = 0, statisticsStart = PRE_PROCESS_NUM;
+		dataLen = 0, statisticsLen = 0,
+		statisticsStart = PRE_PROCESS_NUM;
 
-	public static int subStat[][][] = new int[MAX_THREAD_SIZE][MAX_NAME_SIZE][3];
+	public static int subStat[][][] =
+		new int[MAX_THREAD_SIZE][MAX_NAME_SIZE][3];
 
 	public static boolean
 		concise = false,
@@ -53,10 +55,15 @@ class Stat implements Runnable {
 
 			for (int i = start; i < end; i++) {
 				int j = 0;
-				while(!Objects.equals(Character.toString(Global.data[i][1].charAt(0)),
-					Global.statistics[j][0])) j++;
+				while(!Objects.equals(
+						Character.toString(Global.data[i][1].charAt(0)),
+						Global.statistics[j][0]
+					)
+				) j++;
 
-				Global.subStat[pos][j][Objects.equals(Global.data[i][2], "男") ? 1 : 2]++;
+				Global.subStat[pos][j][
+					Objects.equals(Global.data[i][2], "男") ? 1 : 2
+				]++;
 			}
 		} finally { finished++; }
 	}
@@ -76,8 +83,10 @@ class Detail implements Runnable {
 				"姓氏：" + Global.statistics[p][0] +
 
 				"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-				"总人数：" + String.valueOf(Integer.parseInt(Global.statistics[p][1]) +
-					Integer.parseInt(Global.statistics[p][2])) +
+				"总人数：" + String.valueOf(
+					Integer.parseInt(Global.statistics[p][1]) +
+					Integer.parseInt(Global.statistics[p][2])
+				) +
 
 				"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
 				"男生：" + Global.statistics[p][1] +
@@ -99,8 +108,10 @@ class Detail implements Runnable {
 
 			Global.detailContent[p][1] =
 				"姓氏：" + Global.statistics[p][0] +
-				",总人数：" + String.valueOf(Integer.parseInt(Global.statistics[p][1]) +
-					Integer.parseInt(Global.statistics[p][2])) +
+				",总人数：" + String.valueOf(
+					Integer.parseInt(Global.statistics[p][1]) +
+					Integer.parseInt(Global.statistics[p][2])
+				) +
 				",男生：" + Global.statistics[p][1] +
 				",女生：" + Global.statistics[p][2] +
 				"\n\n" + "学号,姓名,性别,籍贯\n";
@@ -125,7 +136,8 @@ class Detail implements Runnable {
 						Global.data[j][3] + "\n";
 				}
 			}
-			Global.detailContent[p][0] += "</tbody>" + "</table>" + "</div>" + "<br><br><br>";
+			Global.detailContent[p][0] +=
+			"</tbody>" + "</table>" + "</div>" + "<br><br><br>";
 			Global.detailContent[p][1] += "\n\n\n";
 		} finally { finished++; }
 	}
@@ -192,11 +204,14 @@ class mainFrame extends JFrame {
 		resetStartTime();
 		try {
 			if (Global.largetest && Global.mt4statistics)
-				System.out.println("Statistics Thread Step: " + Global.STATISTICS_STEP);
+				System.out.println(
+					"Statistics Thread Step: " +
+					Global.STATISTICS_STEP
+				);
 
-			BufferedReader reader = new BufferedReader(new FileReader(
-				Global.largetest ? "data_larger.csv" : "data.csv"
-			));
+			BufferedReader reader = new BufferedReader(
+				new FileReader(Global.largetest ? "data_larger.csv" : "data.csv")
+			);
 
 			String line = null;
 			int pending = 0;
@@ -219,14 +234,19 @@ class mainFrame extends JFrame {
 					for (int i = 0; i < Global.PRE_PROCESS_NUM; i++) {
 						int j = 0;
 						while(j < Global.statisticsLen
-							&& !Objects.equals(Character.toString(Global.data[i][1].charAt(0)), Global.statistics[j][0]))
-							j++;
+							&& !Objects.equals(Character.toString
+								(Global.data[i][1].charAt(0)), Global.statistics[j][0]
+							)
+						) j++;
 
 						int id = Objects.equals(Global.data[i][2], "男") ? 1 : 2;
 						if (j < Global.statisticsLen) {
-							Global.statistics[j][id] = String.valueOf(Integer.parseInt(Global.statistics[j][id]) + 1);
+							Global.statistics[j][id] = String.valueOf(
+								Integer.parseInt(Global.statistics[j][id]) + 1
+							);
 						} else {
-							Global.statistics[Global.statisticsLen][0] = Character.toString(Global.data[i][1].charAt(0));
+							Global.statistics[Global.statisticsLen][0] =
+								Character.toString(Global.data[i][1].charAt(0));
 							Global.statistics[Global.statisticsLen][id] = "1";
 							Global.statistics[Global.statisticsLen][3 - id] = "0";
 
@@ -240,10 +260,14 @@ class mainFrame extends JFrame {
 					if (!Global.mt4statistics) {
 						for (int i = 0; i < pending; i++) {
 							int j = 0;
-							while(!Objects.equals(Character.toString(Global.data[i][1].charAt(0)),
-								Global.statistics[j][0])) j++;
+							while(!Objects.equals(
+								Character.toString(Global.data[i][1].charAt(0)),
+								Global.statistics[j][0])
+							) j++;
 
-							Global.subStat[Stat.started][j][Objects.equals(Global.data[i][2], "男") ? 1 : 2]++;
+							Global.subStat[Stat.started][j][
+								Objects.equals(Global.data[i][2], "男") ? 1 : 2
+							]++;
 						}
 						Stat.started++;
 					} else {
@@ -255,10 +279,14 @@ class mainFrame extends JFrame {
 			if (!Global.mt4statistics) {
 				for (int i = 0; i < pending; i++) {
 					int j = 0;
-					while(!Objects.equals(Character.toString(Global.data[i][1].charAt(0)),
-						Global.statistics[j][0])) j++;
+					while(!Objects.equals(
+						Character.toString(Global.data[i][1].charAt(0)),
+						Global.statistics[j][0])
+					) j++;
 
-					Global.subStat[Stat.started][j][Objects.equals(Global.data[i][2], "男") ? 1 : 2]++;
+					Global.subStat[Stat.started][j][
+						Objects.equals(Global.data[i][2], "男") ? 1 : 2
+					]++;
 				}
 				Stat.started++;
 			} else {
@@ -308,7 +336,8 @@ class mainFrame extends JFrame {
 
 		exportBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int tot = ((Global.dataLen - Global.PRE_PROCESS_NUM) / Global.STATISTICS_STEP) + 1;
+				int tot = 1 +
+				((Global.dataLen - Global.PRE_PROCESS_NUM) / Global.STATISTICS_STEP);
 
 				if (Global.mt4statistics) {
 					while(true)
@@ -322,10 +351,12 @@ class mainFrame extends JFrame {
 				for (int j = 0; j < Global.statisticsLen; j++)
 						for (int i = 0; i < tot; i++) {
 								Global.statistics[j][1] = String.valueOf(
-										Global.subStat[i][j][1] + Integer.parseInt(Global.statistics[j][1])
+										Global.subStat[i][j][1] +
+										Integer.parseInt(Global.statistics[j][1])
 								);
 								Global.statistics[j][2] = String.valueOf(
-										Global.subStat[i][j][2] + Integer.parseInt(Global.statistics[j][2])
+										Global.subStat[i][j][2] +
+										 Integer.parseInt(Global.statistics[j][2])
 								);
 						}
 				outputData();
@@ -338,12 +369,14 @@ class mainFrame extends JFrame {
 			statisticsHeader = "数据统计结果",
 			statisticsMessage =
 			"<html>" +
-			"<h2 style='text-align:center;'>总人数： " + Global.dataLen + "</h2>" + "<hr>" +
+			"<h2 style='text-align:center;'>总人数： " +
+			Global.dataLen + "</h2>" + "<hr>" +
 			"<table style='width:100%;'>" + "<tbody>";
 
 		statisticsMessage += "<tr><td><strong>姓氏</strong></td>";
 		for (int i = 0; i < Global.statisticsLen; i++)
-			statisticsMessage += "<td>" + Global.statistics[i][0] + "</td>";
+			statisticsMessage +=
+			"<td>" + Global.statistics[i][0] + "</td>";
 		statisticsMessage += "</tr>";
 
 		statisticsMessage += "<tr><td><strong>总人数</strong></td>";
@@ -357,17 +390,20 @@ class mainFrame extends JFrame {
 
 		statisticsMessage += "<tr><td><strong>男生</strong></td>";
 		for (int i = 0; i < Global.statisticsLen; i++)
-			statisticsMessage += "<td>" + Global.statistics[i][1] + "</td>";
+			statisticsMessage +=
+			"<td>" + Global.statistics[i][1] + "</td>";
 		statisticsMessage += "</tr>";
 
 		statisticsMessage += "<tr><td><strong>女生</strong></td>";
 		for (int i = 0; i < Global.statisticsLen; i++)
-			statisticsMessage += "<td>" + Global.statistics[i][2] + "</td>";
+			statisticsMessage +=
+			"<td>" + Global.statistics[i][2] + "</td>";
 		statisticsMessage += "</tr>";
 
 		statisticsMessage +=
 		"</tbody>" + "</table>" + "<hr>" + "<br>" +
-		"<p style='text-align:center;'>点击 【确定】 后将显示具体数据并自动打开数据导出文件</p>" +
+		"<p style='text-align:center;'>" +
+		"点击 【确定】 后将显示具体数据并自动打开数据导出文件</p>" +
 		"<br>" + "</html>";
 
 		UIManager.put("OptionPane.messageFont", Global.MSYH_S);
@@ -398,7 +434,8 @@ class mainFrame extends JFrame {
 
 		if (Global.mt4detailinfo) {
 			ExecutorService es = Executors.newCachedThreadPool();
-			for (int i = 0; i < Global.statisticsLen; i++) es.execute(new Detail(i));
+			for (int i = 0; i < Global.statisticsLen; i++)
+				es.execute(new Detail(i));
 
 			while(true)
 				if (Detail.finished == Global.statisticsLen) { break; }
@@ -414,8 +451,10 @@ class mainFrame extends JFrame {
 					"姓氏：" + Global.statistics[p][0] +
 
 					"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-					"总人数：" + String.valueOf(Integer.parseInt(Global.statistics[p][1]) +
-						Integer.parseInt(Global.statistics[p][2])) +
+					"总人数：" + String.valueOf(
+						Integer.parseInt(Global.statistics[p][1]) +
+						Integer.parseInt(Global.statistics[p][2])
+					) +
 
 					"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
 					"男生：" + Global.statistics[p][1] +
@@ -437,8 +476,10 @@ class mainFrame extends JFrame {
 
 				Global.detailContent[p][1] =
 					"姓氏：" + Global.statistics[p][0] +
-					",总人数：" + String.valueOf(Integer.parseInt(Global.statistics[p][1]) +
-						Integer.parseInt(Global.statistics[p][2])) +
+					",总人数：" + String.valueOf(
+						Integer.parseInt(Global.statistics[p][1]) +
+						Integer.parseInt(Global.statistics[p][2])
+					) +
 					",男生：" + Global.statistics[p][1] +
 					",女生：" + Global.statistics[p][2] +
 					"\n\n" + "学号,姓名,性别,籍贯\n";
@@ -463,7 +504,8 @@ class mainFrame extends JFrame {
 							Global.data[j][3] + "\n";
 					}
 				}
-				Global.detailContent[p][0] += "</tbody>" + "</table>" + "</div>" + "<br><br><br>";
+				Global.detailContent[p][0] +=
+				"</tbody>" + "</table>" + "</div>" + "<br><br><br>";
 				Global.detailContent[p][1] += "\n\n\n";
 			}
 		}
@@ -495,10 +537,14 @@ class mainFrame extends JFrame {
 public class statistics {
 	public static void main(String[] args) {
 		for (String opt : args) {
-			if (Objects.equals(opt, "-concise")) Global.concise = true;
-			if (Objects.equals(opt, "-mt4statistics")) Global.mt4statistics = true;
-			if (Objects.equals(opt, "-mt4detailinfo")) Global.mt4detailinfo = true;
-			if (Objects.equals(opt, "-largetest")) Global.largetest = true;
+			if (Objects.equals(opt, "-concise"))
+				Global.concise = true;
+			if (Objects.equals(opt, "-mt4statistics"))
+				Global.mt4statistics = true;
+			if (Objects.equals(opt, "-mt4detailinfo"))
+				Global.mt4detailinfo = true;
+			if (Objects.equals(opt, "-largetest"))
+				Global.largetest = true;
 		}
 		mainFrame frame = new mainFrame();
 		frame.setVisible(true);
