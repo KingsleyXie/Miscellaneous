@@ -385,7 +385,12 @@ class mainFrame extends JFrame {
 
 public class statistics {
 	public static void main(String[] args) {
-		mainFrame frame = new mainFrame();
-		frame.setVisible(true);
+		for (String opt : args) {
+			if (Objects.equals(opt, "-concise")) System.out.println("concise");
+			if (Objects.equals(opt, "-mt4statistics")) System.out.println("mt4statistics");
+			if (Objects.equals(opt, "-mt4detailinfo")) System.out.println("mt4detailinfo");
+		}
+		// mainFrame frame = new mainFrame();
+		// frame.setVisible(true);
 	}
 }
