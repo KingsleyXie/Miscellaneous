@@ -23,7 +23,8 @@ class Global {
 	public static boolean
 		concise = false,
 		mt4statistics = false,
-		mt4detailinfo = false;
+		mt4detailinfo = false,
+		largetest = false;
 
 	public static String
 		detailContent[][] = new String[MAX_NAME_SIZE][2],
@@ -190,7 +191,12 @@ class mainFrame extends JFrame {
 	public void readAndStat() {
 		resetStartTime();
 		try {
-			BufferedReader reader = new BufferedReader(new FileReader("data.csv"));
+			if (Global.largetest && Global.mt4statistics)
+				System.out.println("Statistics Thread Step: " + Global.STATISTICS_STEP);
+
+			BufferedReader reader = new BufferedReader(new FileReader(
+				Global.largetest ? "data_larger.csv" : "data.csv"
+			));
 
 			String line = null;
 			int pending = 0;
@@ -493,6 +499,7 @@ public class statistics {
 			if (Objects.equals(opt, "-concise")) Global.concise = true;
 			if (Objects.equals(opt, "-mt4statistics")) Global.mt4statistics = true;
 			if (Objects.equals(opt, "-mt4detailinfo")) Global.mt4detailinfo = true;
+			if (Objects.equals(opt, "-largetest")) Global.largetest = true;
 		}
 		mainFrame frame = new mainFrame();
 		frame.setVisible(true);

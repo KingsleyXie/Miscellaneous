@@ -17,22 +17,32 @@ complete-test:
 	@java statistics
 
 test:
-	@echo "=========== Concised test: Multi Thread For None ===========" && echo
+	@echo "=========== Concised test: Multi Threads For None ===========" && echo
 	@javac statistics.java -encoding utf8
 	@java statistics -concise
 
 test-mt4both:
-	@echo "=========== Concised test: Multi Thread For Both ===========" && echo
+	@echo "=========== Concised test: Multi Threads For Both ===========" && echo
 	@javac statistics.java -encoding utf8
 	@java statistics -concise -mt4statistics -mt4detailinfo
 
+test-lg:
+	@echo "=========== Concised test: LargeTest Without Multi Threads ===========" && echo
+	@javac statistics.java -encoding utf8
+	@java statistics -concise -largetest
+
+test-mt4lg:
+	@echo "=========== Concised test: LargeTest With Multi Threads ===========" && echo
+	@javac statistics.java -encoding utf8
+	@java statistics -concise -mt4statistics -largetest
+
 test-mt4st:
-	@echo "=========== Concised test: Multi Thread For Statistics ===========" && echo
+	@echo "=========== Concised test: Multi Threads For Statistics ===========" && echo
 	@javac statistics.java -encoding utf8
 	@java statistics -concise -mt4statistics
 
 test-mt4de:
-	@echo "=========== Concised test: Multi Thread For DetailInfo ===========" && echo
+	@echo "=========== Concised test: Multi Threads For DetailInfo ===========" && echo
 	@javac statistics.java -encoding utf8
 	@java statistics -concise -mt4detailinfo
 
