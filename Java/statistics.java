@@ -57,72 +57,72 @@ class Stat implements Runnable {
 }
 
 class Detail implements Runnable {
+	public static int started = 0, finished = 0;
 	private int p;
-	public Detail(int p) {
-		this.p = p;
-		System.out.println(p);
-	}
+
+	public Detail(int p) { this.p = p; }
 
 	public void run() {
-		Global.detailContent[p] +=
-		"<div>" +
-			"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-			"姓氏：" + Global.statistics[p][0] +
+		try {
+			Global.detailContent[p] =
+			"<html><div>" +
+				"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
+				"姓氏：" + Global.statistics[p][0] +
 
-			"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-			"总人数：" + String.valueOf(Integer.parseInt(Global.statistics[p][1]) +
-				Integer.parseInt(Global.statistics[p][2])) +
+				"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
+				"总人数：" + String.valueOf(Integer.parseInt(Global.statistics[p][1]) +
+					Integer.parseInt(Global.statistics[p][2])) +
 
-			"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-			"男生：" + Global.statistics[p][1] +
+				"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
+				"男生：" + Global.statistics[p][1] +
 
-			"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
-			"女生：" + Global.statistics[p][2] +
+				"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" +
+				"女生：" + Global.statistics[p][2] +
 
-			"<hr>" +
-			"<table style='width:300px;'>" +
-				"<thead>" +
+				"<hr>" +
+				"<table style='width:300px;'>" +
+					"<thead>" +
+						"<tr>" +
+							"<td> 学号 </td>" +
+							"<td> 姓名 </td>" +
+							"<td> 性别 </td>" +
+							"<td> 籍贯 </td>" +
+						"</tr>" +
+					"</thead>" +
+					"<tbody>";
+
+			// writer.append(
+			// 	"姓氏：" + Global.statistics[p][0] +
+			// 	",总人数：" + String.valueOf(Integer.parseInt(Global.statistics[p][1]) +
+			// 		Integer.parseInt(Global.statistics[p][2])) +
+			// 	",男生：" + Global.statistics[p][1] +
+			// 	",女生：" + Global.statistics[p][2] +
+			// 	"\n\n" + "学号,姓名,性别,籍贯\n");
+
+			for (int j = 0; j < Global.dataLen; j++) {
+				if (Objects.equals(
+						Character.toString(Global.data[j][1].charAt(0)),
+						Global.statistics[p][0]
+					)) {
+					Global.detailContent[p] +=
 					"<tr>" +
-						"<td> 学号 </td>" +
-						"<td> 姓名 </td>" +
-						"<td> 性别 </td>" +
-						"<td> 籍贯 </td>" +
-					"</tr>" +
-				"</thead>" +
-				"<tbody>";
+						"<td>" + Global.data[j][0] + "</td>" +
+						"<td>" + Global.data[j][1] + "</td>" +
+						"<td>" + Global.data[j][2] + "</td>" +
+						"<td>" + Global.data[j][3] + "</td>" +
+					"</tr>";
 
-		// writer.append(
-		// 	"姓氏：" + Global.statistics[p][0] +
-		// 	",总人数：" + String.valueOf(Integer.parseInt(Global.statistics[p][1]) +
-		// 		Integer.parseInt(Global.statistics[p][2])) +
-		// 	",男生：" + Global.statistics[p][1] +
-		// 	",女生：" + Global.statistics[p][2] +
-		// 	"\n\n" + "学号,姓名,性别,籍贯\n");
-
-		for (int j = 0; j < Global.dataLen; j++) {
-			if (j % 100000 == 0) System.out.println(j);
-			if (Objects.equals(
-					Character.toString(Global.data[j][1].charAt(0)),
-					Global.statistics[p][0]
-				)) {
-				Global.detailContent[p] +=
-				"<tr>" +
-					"<td>" + Global.data[j][0] + "</td>" +
-					"<td>" + Global.data[j][1] + "</td>" +
-					"<td>" + Global.data[j][2] + "</td>" +
-					"<td>" + Global.data[j][3] + "</td>" +
-				"</tr>";
-
-				// writer.append(
-				// 	Global.data[j][0] + "," +
-				// 	Global.data[j][1] + "," +
-				// 	Global.data[j][2] + "," +
-				// 	Global.data[j][3] + "\n"
-				// );
+					// writer.append(
+					// 	Global.data[j][0] + "," +
+					// 	Global.data[j][1] + "," +
+					// 	Global.data[j][2] + "," +
+					// 	Global.data[j][3] + "\n"
+					// );
+				}
 			}
-		}
-		Global.detailContent[p] += "</tbody>" + "</table>" + "</div>" + "<br><br><br>";
-		// writer.append("\n\n\n");
+			Global.detailContent[p] += "</tbody>" + "</table>" + "</div>" + "<br><br><br>";
+			// writer.append("\n\n\n");
+		} finally { finished++; }
 	}
 }
 
@@ -279,16 +279,19 @@ class mainFrame extends JFrame {
 		exportBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int tot = ((Global.dataLen - Global.PRE_PROCESS_NUM) / Global.STATISTICS_STEP) + 1;
-				for (int j = 0; j < Global.statisticsLen; j++)
-					for (int i = 0; i < tot; i++) {
-						Global.statistics[j][1] = String.valueOf(
-							Global.subStat[i][j][1] + Integer.parseInt(Global.statistics[j][1])
-						);
-						Global.statistics[j][2] = String.valueOf(
-							Global.subStat[i][j][2] + Integer.parseInt(Global.statistics[j][2])
-						);
-					}
-				outputData();
+				while(true) if (Stat.finished == tot) {
+						for (int j = 0; j < Global.statisticsLen; j++)
+								for (int i = 0; i < tot; i++) {
+										Global.statistics[j][1] = String.valueOf(
+												Global.subStat[i][j][1] + Integer.parseInt(Global.statistics[j][1])
+										);
+										Global.statistics[j][2] = String.valueOf(
+												Global.subStat[i][j][2] + Integer.parseInt(Global.statistics[j][2])
+										);
+								}
+						outputData();
+						break;
+				} else { try { Thread.sleep(10); } catch(Exception err) { err.printStackTrace(); } }
 			}
 		});
 	}
@@ -352,23 +355,24 @@ class mainFrame extends JFrame {
 	}
 
 	public void showDetailData() throws IOException {
-		// resetStartTime();
+		resetStartTime();
 		// String detailContentHeader = "<html>" + "<h1 style='text-align:center'>具体统计信息</h1>" + "<br>";
 		// FileWriter writer = new FileWriter("Tstatistics.csv");
 
 		ExecutorService es = Executors.newCachedThreadPool();
 		for (int i = 0; i < Global.statisticsLen; i++) es.execute(new Detail(i));
-		try {
-			while(!es.awaitTermination(1, TimeUnit.MINUTES));
-		} catch (Exception e) { e.printStackTrace(); }
-		System.out.println("???");
+
+		while(true) if (Detail.finished == Global.statisticsLen) {
+			printDurationTime("Generate Detailed Data(Multi Thread):");
+
+			detailFrame dF = new detailFrame(Global.detailContent[1]);
+			dF.setVisible(true);
+			break;
+		} else { try { Thread.sleep(10); } catch(Exception err) { err.printStackTrace(); } }
+
 		// detailContent += "</html>";
 		// writer.flush();
 		// writer.close();
-
-		// printDurationTime("Show Detailed Data");
-		// detailFrame dF = new detailFrame(detailContent[0]);
-		// dF.setVisible(true);
 	}
 }
 
