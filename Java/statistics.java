@@ -350,19 +350,19 @@ class mainFrame extends JFrame {
 		for (int i = 0; i < Global.statisticsLen; i++)
 			statisticsMessage +=
 			"<td>" +
-				String.format("%3s", Integer.parseInt(Global.statistics[i][1])
-					+ Integer.parseInt(Global.statistics[i][2])) +
+				(Integer.parseInt(Global.statistics[i][1]) +
+				Integer.parseInt(Global.statistics[i][2])) +
 			"</td>";
 		statisticsMessage += "</tr>";
 
 		statisticsMessage += "<tr><td><strong>男生</strong></td>";
 		for (int i = 0; i < Global.statisticsLen; i++)
-			statisticsMessage += "<td>" + String.format("%3s", Global.statistics[i][1]) + "</td>";
+			statisticsMessage += "<td>" + Global.statistics[i][1] + "</td>";
 		statisticsMessage += "</tr>";
 
 		statisticsMessage += "<tr><td><strong>女生</strong></td>";
 		for (int i = 0; i < Global.statisticsLen; i++)
-			statisticsMessage += "<td>" + String.format("%3s", Global.statistics[i][2]) + "</td>";
+			statisticsMessage += "<td>" + Global.statistics[i][2] + "</td>";
 		statisticsMessage += "</tr>";
 
 		statisticsMessage +=
@@ -379,18 +379,16 @@ class mainFrame extends JFrame {
 		);
 
 		try {
-			if (choice == JOptionPane.OK_OPTION) {
-				showDetailData();
-				if (!Global.concise) {
-					Process process = Runtime.getRuntime().exec("cmd /c statistics.csv");
-				}
-			} else {
-				if (!Global.concise) {
-					Process process = Runtime.getRuntime().exec("java statistics");
-				}
-				System.exit(0);
+			if (choice == JOptionPane.OK_OPTION) showDetailData();
+
+			if (!Global.concise) {
+				Process process = Runtime.getRuntime().exec(
+					choice == JOptionPane.OK_OPTION ?
+					"cmd /c statistics.csv" :
+					"java statistics"
+				);
 			}
-		} catch(IOException err) {
+		} catch(Exception err) {
 			err.printStackTrace();
 		}
 	}
@@ -482,6 +480,7 @@ class mainFrame extends JFrame {
 			}
 			detailStr += "</html>";
 
+			// This Frame Really Costs Lots Of Time...
 			detailFrame dF = new detailFrame(detailStr);
 			dF.setVisible(true);
 
