@@ -4,29 +4,35 @@
 # 	Java(TM) SE Runtime Environment (build 1.8.0_121-b13)
 # 	Java HotSpot(TM) 64-Bit Server VM (build 25.121-b13, mixed mode)
 
-compile-only:
+compile:
 	@javac statistics.java -encoding utf8
 
-run:
+
+
+complete-test:
+	@echo "Note: This test case need time for JFrame's Render"
+	@echo "For concise test instead please run command:    make test"
+	@echo
 	@javac statistics.java -encoding utf8
 	@java statistics
 
 test:
-	@echo "Note: This test case is concised to save the JFrame's Render time"
-	@echo "For complete test instead please run command:    make run"
-	@echo
+	@echo "=========== Concised test: Multi Thread For None ===========" && echo
 	@javac statistics.java -encoding utf8
 	@java statistics -concise
 
-test-mt:
+test-mt4both:
+	@echo "=========== Concised test: Multi Thread For Both ===========" && echo
 	@javac statistics.java -encoding utf8
 	@java statistics -concise -mt4statistics -mt4detailinfo
 
 test-mt4st:
+	@echo "=========== Concised test: Multi Thread For Statistics ===========" && echo
 	@javac statistics.java -encoding utf8
 	@java statistics -concise -mt4statistics
 
 test-mt4de:
+	@echo "=========== Concised test: Multi Thread For DetailInfo ===========" && echo
 	@javac statistics.java -encoding utf8
 	@java statistics -concise -mt4detailinfo
 
