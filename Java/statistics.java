@@ -348,9 +348,13 @@ class mainFrame extends JFrame {
 		try {
 			if (choice == JOptionPane.OK_OPTION) {
 				showDetailData();
-				Process process = Runtime.getRuntime().exec("cmd /c statistics.csv");
+				if (!Global.concise) {
+					Process process = Runtime.getRuntime().exec("cmd /c statistics.csv");
+				}
 			} else {
-				Process process = Runtime.getRuntime().exec("java statistics");
+				if (!Global.concise) {
+					Process process = Runtime.getRuntime().exec("java statistics");
+				}
 				System.exit(0);
 			}
 		} catch(IOException err) {
@@ -360,29 +364,31 @@ class mainFrame extends JFrame {
 
 	public void showDetailData() throws IOException {
 		resetStartTime();
-		FileWriter writer = new FileWriter("statistics.csv");
 
 		ExecutorService es = Executors.newCachedThreadPool();
 		for (int i = 0; i < Global.statisticsLen; i++) es.execute(new Detail(i));
 
 		while(true) if (Detail.finished == Global.statisticsLen) {
-			printDurationTime("Generate Detailed Data(Multi Thread)");
+			printDurationTime("Generate Detailed Data");
 
-			String detailExp = "", detailStr =
-			"<html>" + "<h1 style='text-align:center'>具体统计信息</h1>" + "<br>";
-			for (int i = 0; i < Global.statisticsLen; i++)
-			{
-				detailStr += Global.detailContent[i][0];
-				detailExp += Global.detailContent[i][1];
+			if (!Global.concise) {
+				String detailExp = "", detailStr =
+				"<html>" + "<h1 style='text-align:center'>具体统计信息</h1>" + "<br>";
+				for (int i = 0; i < Global.statisticsLen; i++)
+				{
+					detailStr += Global.detailContent[i][0];
+					detailExp += Global.detailContent[i][1];
+				}
+				detailStr += "</html>";
+
+				detailFrame dF = new detailFrame(detailStr);
+				dF.setVisible(true);
+
+				FileWriter writer = new FileWriter("statistics.csv");
+				writer.append(detailExp);
+				writer.flush();
+				writer.close();
 			}
-			detailStr += "</html>";
-
-			detailFrame dF = new detailFrame(detailStr);
-			dF.setVisible(true);
-
-			writer.append(detailExp);
-			writer.flush();
-			writer.close();
 			break;
 		} else { try { Thread.sleep(10); } catch(Exception err) { err.printStackTrace(); } }
 	}
@@ -395,10 +401,7 @@ public class statistics {
 			if (Objects.equals(opt, "-mt4statistics")) Global.mt4statistics = true;
 			if (Objects.equals(opt, "-mt4detailinfo")) Global.mt4detailinfo = true;
 		}
-		System.out.println(Global.concise);
-		System.out.println(Global.mt4statistics);
-		System.out.println(Global.mt4detailinfo);
-		// mainFrame frame = new mainFrame();
-		// frame.setVisible(true);
+		mainFrame frame = new mainFrame();
+		frame.setVisible(true);
 	}
 }
