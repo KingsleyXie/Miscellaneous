@@ -3,18 +3,17 @@ import java.net.*;
 
 class Global {
 	public static final String CLOSE_FLAG = "Bye";
-	public static final int PORT = 2333;
+	public static final int PORT = 2333, START_ID = 1000;
 	public static ServerSocket server;
 }
 
 class multiServer extends Thread {
+	public static int count = Global.START_ID;
+	private int id;
+
 	private Socket socket;
 	private BufferedReader in;
 	private PrintWriter out;
-
-	public static int count = 0;
-	private int id;
-
 
 	public multiServer(Socket s) throws IOException {
 		socket = s; id = count++;
@@ -28,13 +27,19 @@ class multiServer extends Thread {
 	}
 
 	public void run() {
-		System.out.println(
-			"\nEstablished connection with client " + id + "\n"
-		);
-
 		try {
+			String str = in.readLine();
+			out.println(
+				"Hello " + str + ", your client ID is " + id
+			);
+
+			System.out.println(
+				"\nEstablished connection with client " +
+				id + "(" + str + ")\n"
+			);
+
 			while (true) {
-				String str = in.readLine();
+				str = in.readLine();
 				if (str.equals(Global.CLOSE_FLAG)) break;
 
 				System.out.println(
@@ -48,7 +53,7 @@ class multiServer extends Thread {
 			);
 			socket.close(); count--;
 
-			if (count == 0) {
+			if (count == Global.START_ID) {
 				System.out.println(
 					"All clients are terminated, closing socket server..."
 				);

@@ -20,9 +20,14 @@ public class client {
 
 		Scanner scanner = new Scanner(System.in);
 
+		System.out.printf("Please input your username > ");
+		String msg= scanner.nextLine();
+		out.println(msg);
+		System.out.println("\t" + in.readLine() + "\n");
+
 		while (true) {
 			System.out.printf("Send some message to server > ");
-			String msg= scanner.nextLine();
+			msg= scanner.nextLine();
 			out.println(msg);
 
 			if (msg.equals(Global.CLOSE_FLAG)) break;
