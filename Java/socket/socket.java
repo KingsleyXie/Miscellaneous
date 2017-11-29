@@ -117,13 +117,20 @@ class client {
 	}
 }
 
-class socket {
+public class socket {
 	public static void main(String[] args) {
 		try {
 			if (args.length == 1 && args[0].equals("-server")) new server();
 			if (args.length == 1 && args[0].equals("-client")) new client();
 		} catch (Exception e) {
-			e.printStackTrace();
+			if (e.toString().equals(
+				"java.net.ConnectException: Connection refused: connect"
+				)
+			) {
+				System.out.println("\n\tError: Socket server not running at port " + Global.PORT);
+				System.exit(0);
+			}
+			else e.printStackTrace();
 		}
 
 		System.out.println(
