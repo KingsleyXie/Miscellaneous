@@ -1,15 +1,23 @@
 import java.io.*;
 import java.net.*;
 
+class Global {
+	public static final String CLOSE_FLAG = "Bye";
+	public static final int PORT = 2333;
+	public static ServerSocket server;
+}
+
 class multiServer extends Thread {
 	private Socket socket;
 	private BufferedReader in;
 	private PrintWriter out;
 
-	public static final String closeFlag = "Bye";
+	public static int count = 0;
+	private int id;
+
 
 	public multiServer(Socket s) throws IOException {
-		socket = s;
+		socket = s; id = count++;
 		in = new BufferedReader(
 			new InputStreamReader(socket.getInputStream())
 		);
@@ -20,37 +28,51 @@ class multiServer extends Thread {
 	}
 
 	public void run() {
-		System.out.println("Established connection with client\n");
+		System.out.println(
+			"\nEstablished connection with client " + id + "\n"
+		);
+
 		try {
 			while (true) {
-					String str = in.readLine();
-					if (str.equals(closeFlag)) break;
+				String str = in.readLine();
+				if (str.equals(Global.CLOSE_FLAG)) break;
 
-					System.out.println("\tReceived: " + str + "\n");
-					out.println("I have received your message: " + str);
+				System.out.println(
+					"\tReceived \"" + str + "\" from client " + id
+				);
+				out.println("I have received your message \"" + str + "\"");
 			}
-			System.out.println("Terminated connection with client\n");
-			socket.close();
+
+			System.out.println(
+				"\nTerminated connection with client " + id + "\n"
+			);
+			socket.close(); count--;
+
+			if (count == 0) {
+				System.out.println(
+					"All clients are terminated, closing socket server..."
+				);
+				Global.server.close();
+				System.exit(0);
+			}
 		} catch (Exception e) { e.printStackTrace(); }
 	}
 }
 
 public class server {
-	public static final int PORT = 2333;
+	public static void main(String[] args) {
+		try {
+			Global.server = new ServerSocket(Global.PORT);
+			System.out.println(
+				"Socket server started at port " + Global.PORT
+			);
 
-	public static void main(String[] args) throws IOException {
-		ServerSocket s = new ServerSocket(PORT);
-		System.out.println("Socket server started at port " + PORT);
-
-		while (true) {
-			Socket socket = s.accept();
-			try {
+			while (true) {
+				Socket socket = Global.server.accept();
 				new multiServer(socket).start();
-			} catch (Exception e) {
-				e.printStackTrace(); break;
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		s.close();
-		System.out.println("Socket server closed");
 	}
 }

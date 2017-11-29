@@ -7,7 +7,7 @@ public class client {
 		InetAddress addr = InetAddress.getByName(null);
 		System.out.println("Socket client started");
 
-		Socket socket = new Socket(addr, server.PORT);
+		Socket socket = new Socket(addr, Global.PORT);
 		System.out.println("Established connection with server\n");
 
 		BufferedReader in = new BufferedReader(
@@ -21,11 +21,11 @@ public class client {
 		Scanner scanner = new Scanner(System.in);
 
 		while (true) {
-			System.out.printf("Input your data to server >\t");
+			System.out.printf("Send some message to server > ");
 			String msg= scanner.nextLine();
 			out.println(msg);
 
-			if (msg.equals(server.closeFlag)) break;
+			if (msg.equals(Global.CLOSE_FLAG)) break;
 			System.out.println("\tReceived from server:\t" + in.readLine() + "\n");
 		}
 
