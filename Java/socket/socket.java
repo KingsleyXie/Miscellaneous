@@ -7,19 +7,6 @@ class Global {
 	public static final String CLOSE_FLAG = "Bye";
 	public static final int PORT = 2333, START_ID = 1000;
 	public static ServerSocket server;
-	public static JFrame frame;
-	public static JLabel label;
-	public static JScrollPane content;
-
-	public static void append(String html) {
-		boolean m = html.indexOf("Received") == 0;
-		label.setText(
-			label.getText() +
-			(m ? "" : "<br>***************************************************") +
-			"<p>" + html + "</p>" +
-			(m ? "" : "***************************************************<br>")
-		);
-	}
 }
 
 class multiServer extends Thread {
@@ -48,7 +35,7 @@ class multiServer extends Thread {
 				"Hello " + str + ", your client ID is " + id
 			);
 
-			Global.append(
+			server.append(
 				"Established connection with client "
 				+ id + "(" + str + ")"
 			);
@@ -57,32 +44,46 @@ class multiServer extends Thread {
 				str = in.readLine();
 				if (str.equals(Global.CLOSE_FLAG)) break;
 
-				Global.append("Received \"" + str + "\" from client " + id);
+				server.append("Received \"" + str + "\" from client " + id);
 				out.println("I have received your message \"" + str + "\"");
 			}
 
-			Global.append("Terminated connection with client " + id);
+			server.append("Terminated connection with client " + id);
 			socket.close(); count--;
 		} catch (Exception e) { e.printStackTrace(); }
 	}
 }
 
 class server {
+	public static JFrame frame;
+	public static JLabel label;
+	public static JScrollPane content;
+
+	public static void append(String html) {
+		boolean m = html.indexOf("Received") == 0;
+		label.setText(
+			label.getText() +
+			(m ? "" : "<br>***************************************************") +
+			"<p>" + html + "</p>" +
+			(m ? "" : "***************************************************<br>")
+		);
+	}
+
 	server() throws Exception {
 		Global.server = new ServerSocket(Global.PORT);
-		Global.label = new JLabel(
+		label = new JLabel(
 			"<html>Socket server started at port " +
 			Global.PORT + "<br>",
 			SwingConstants.CENTER
 		);
-		Global.content = new JScrollPane(Global.label);
+		content = new JScrollPane(label);
 
-		Global.frame = new JFrame();
-		Global.frame.add(Global.content);
-		Global.frame.setTitle("Socket Server");
-		Global.frame.setLocation(430,70);
-		Global.frame.setSize(475,600);
-		Global.frame.setVisible(true);
+		frame = new JFrame();
+		frame.add(content);
+		frame.setTitle("Socket Server");
+		frame.setLocation(430,70);
+		frame.setSize(475,600);
+		frame.setVisible(true);
 
 		while (true) {
 			Socket socket = Global.server.accept();
@@ -158,7 +159,7 @@ public class socket {
 					e.printStackTrace();
 			}
 		}
-		Global.append(
+		server.append(
 			"All clients are terminated, closing socket server..."
 		);
 		try { Global.server.close(); } catch (Exception e) {}
