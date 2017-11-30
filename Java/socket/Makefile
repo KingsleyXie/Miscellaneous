@@ -11,7 +11,7 @@ compile:
 
 test:
 	@javac socket.java -encoding utf8
-	@java socket -server
+	@CMD /C start java socket -server
 	@java socket -client
 
 start-server:

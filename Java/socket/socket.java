@@ -1,11 +1,15 @@
 import java.io.*;
 import java.net.*;
+import javax.swing.*;
 import java.util.Scanner;
 
 class Global {
 	public static final String CLOSE_FLAG = "Bye";
 	public static final int PORT = 2333, START_ID = 1000;
 	public static ServerSocket server;
+	public static JFrame frame;
+	public static JLabel label;
+	public static JScrollPane content;
 }
 
 class multiServer extends Thread {
@@ -46,6 +50,9 @@ class multiServer extends Thread {
 				System.out.println(
 					"\tReceived \"" + str + "\" from client " + id
 				);
+				Global.label.setText(Global.label.getText() +
+					"<p>Received \"" + str + "\" from client " + id + "</p><br>"
+				);
 				out.println("I have received your message \"" + str + "\"");
 			}
 
@@ -58,6 +65,7 @@ class multiServer extends Thread {
 				System.out.println(
 					"All clients are terminated, closing socket server..."
 				);
+				Global.frame.setVisible(false);
 				Global.server.close();
 				System.exit(0);
 			}
@@ -67,6 +75,16 @@ class multiServer extends Thread {
 
 class server {
 	server() throws Exception {
+		Global.label = new JLabel("<html>", SwingConstants.CENTER);
+		Global.content = new JScrollPane(Global.label);
+
+		Global.frame = new JFrame();
+		Global.frame.add(Global.content);
+		Global.frame.setTitle("Socket Server");
+		Global.frame.setLocation(430,70);
+		Global.frame.setSize(475,600);
+		Global.frame.setVisible(true);
+
 		Global.server = new ServerSocket(Global.PORT);
 		System.out.println(
 			"Socket server started at port " + Global.PORT
@@ -122,6 +140,11 @@ public class socket {
 		try {
 			if (args.length == 1 && args[0].equals("-server")) new server();
 			if (args.length == 1 && args[0].equals("-client")) new client();
+			System.out.println(
+				"usage:\n" +
+				"    java socket -server      Run as socket server\n" +
+				"    java socket -client      Run as socket client"
+			);
 		} catch (Exception e) {
 			if (e.toString().equals(
 				"java.net.ConnectException: Connection refused: connect"
@@ -132,11 +155,5 @@ public class socket {
 			}
 			else e.printStackTrace();
 		}
-
-		System.out.println(
-			"usage:\n" +
-			"    java socket -server      Run as socket server\n" +
-			"    java socket -client      Run as socket client"
-		);
 	}
 }
