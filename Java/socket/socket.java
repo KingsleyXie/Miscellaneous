@@ -10,6 +10,16 @@ class Global {
 	public static JFrame frame;
 	public static JLabel label;
 	public static JScrollPane content;
+
+	public static void append(String html) {
+		boolean m = html.indexOf("Received") == 0;
+		label.setText(
+			label.getText() +
+			(m ? "" : "<br>***************************************************") +
+			"<p>" + html + "</p>" +
+			(m ? "" : "***************************************************<br>")
+		);
+	}
 }
 
 class multiServer extends Thread {
@@ -38,44 +48,33 @@ class multiServer extends Thread {
 				"Hello " + str + ", your client ID is " + id
 			);
 
-			System.out.println(
-				"\nEstablished connection with client " +
-				id + "(" + str + ")\n"
+			Global.append(
+				"Established connection with client "
+				+ id + "(" + str + ")"
 			);
 
 			while (true) {
 				str = in.readLine();
 				if (str.equals(Global.CLOSE_FLAG)) break;
 
-				System.out.println(
-					"\tReceived \"" + str + "\" from client " + id
-				);
-				Global.label.setText(Global.label.getText() +
-					"<p>Received \"" + str + "\" from client " + id + "</p><br>"
-				);
+				Global.append("Received \"" + str + "\" from client " + id);
 				out.println("I have received your message \"" + str + "\"");
 			}
 
-			System.out.println(
-				"\nTerminated connection with client " + id + "\n"
-			);
+			Global.append("Terminated connection with client " + id);
 			socket.close(); count--;
-
-			if (count == Global.START_ID) {
-				System.out.println(
-					"All clients are terminated, closing socket server..."
-				);
-				Global.frame.setVisible(false);
-				Global.server.close();
-				System.exit(0);
-			}
 		} catch (Exception e) { e.printStackTrace(); }
 	}
 }
 
 class server {
 	server() throws Exception {
-		Global.label = new JLabel("<html>", SwingConstants.CENTER);
+		Global.server = new ServerSocket(Global.PORT);
+		Global.label = new JLabel(
+			"<html>Socket server started at port " +
+			Global.PORT + "<br>",
+			SwingConstants.CENTER
+		);
 		Global.content = new JScrollPane(Global.label);
 
 		Global.frame = new JFrame();
@@ -84,11 +83,6 @@ class server {
 		Global.frame.setLocation(430,70);
 		Global.frame.setSize(475,600);
 		Global.frame.setVisible(true);
-
-		Global.server = new ServerSocket(Global.PORT);
-		System.out.println(
-			"Socket server started at port " + Global.PORT
-		);
 
 		while (true) {
 			Socket socket = Global.server.accept();
@@ -146,14 +140,27 @@ public class socket {
 				"    java socket -client      Run as socket client"
 			);
 		} catch (Exception e) {
-			if (e.toString().equals(
-				"java.net.ConnectException: Connection refused: connect"
-				)
-			) {
-				System.out.println("\n\tError: Socket server not running at port " + Global.PORT);
-				System.exit(0);
+			switch (e.toString()) {
+				case "java.net.ConnectException: Connection refused: connect":
+					System.out.println(
+						"\n\tError: Socket server not running at port " +
+						Global.PORT
+					);
+					break;
+
+				case "java.net.BindException: Address already in use: JVM_Bind":
+					System.out.println(
+						"\n\tError: Port " + Global.PORT + " already in use"
+					);
+					break;
+
+				default:
+					e.printStackTrace();
 			}
-			else e.printStackTrace();
 		}
+		Global.append(
+			"All clients are terminated, closing socket server..."
+		);
+		try { Global.server.close(); } catch (Exception e) {}
 	}
 }
