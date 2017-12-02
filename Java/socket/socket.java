@@ -38,27 +38,27 @@ class multiServer extends Thread {
 			String str = in.readLine();
 
 			server.append(
-				"Hello " + str + ", your client ID is " +
-				id, server.msgType.OUTCOME
+				str + "，你已成功与服务端建立连接，你的 ID 是 " + id,
+				server.msgType.OUTCOME
 			);
 			out.println(
-				"Hello " + str + ", your client ID is " + id
+				str + "，你已成功与服务端建立连接，你的 ID 是 " + id
 			);
 
 			server.append(
-				"Established connection with client "
-				+ id + "(" + str + ")", server.msgType.SYSTEM
+				"成功与客户端 " + id + "（" + str + "）建立连接",
+				server.msgType.SYSTEM
 			);
 
 			while (true) {
 				str = in.readLine();
 				if (str.equals(Global.CLOSE_FLAG)) break;
-				server.append("Received \"" + str + "\" from client " + id, server.msgType.INCOME);
-				out.println("I have received your message \"" + str + "\"");
-				server.append("I have received your message \"" + str + "\"", server.msgType.OUTCOME);
+				server.append(id + "： " + str, server.msgType.INCOME);
+				out.println("已收到信息：" + str);
+				server.append("已收到信息：" + str, server.msgType.OUTCOME);
 			}
 
-			server.append("Terminated connection with client " + id, server.msgType.SYSTEM);
+			server.append("结束与客户端 " + id + " 的会话", server.msgType.SYSTEM);
 			socket.close(); count--;
 		} catch (Exception e) { e.printStackTrace(); }
 	}
@@ -73,32 +73,38 @@ class server {
 
 	public static void append(String text, msgType mt) {
 		JTextPane output = new JTextPane();
-		output.setText(text);
 		output.setEditable(false);
 
 		SimpleAttributeSet attribs = new SimpleAttributeSet();
 		switch (mt) {
 			case SYSTEM:
-				output.setBorder(new TextBubbleBorder(new Color(0, 176, 255),2,16,0));
+				text = "【系统消息】 " + text;
+				output.setBorder(new TextBubbleBorder(new Color(176, 190, 197), 2, 10, 0));
 				StyleConstants.setAlignment(attribs, StyleConstants.ALIGN_CENTER);
 				break;
 
 			case INCOME:
-				output.setBorder(new TextBubbleBorder(new Color(255, 145, 0),2,16,0));
+				output.setBorder(new TextBubbleBorder(new Color(255, 145, 0), 2, 10, 5));
 				StyleConstants.setAlignment(attribs, StyleConstants.ALIGN_LEFT);
 				break;
 
 			case OUTCOME:
-				output.setBorder(new TextBubbleBorder(new Color(24, 255, 255),2,16,0));
+				output.setBorder(new TextBubbleBorder(new Color(0, 176, 255), 2, 10, 0));
 				StyleConstants.setAlignment(attribs, StyleConstants.ALIGN_RIGHT);
 				break;
 		}
 
+		output.setText(text);
 		output.setParagraphAttributes(attribs, false);
 		pane.add(output);
 
 		JTextPane gap = new JTextPane();
-		gap.setText(" "); pane.add(gap);
+		gap.setPreferredSize(
+			new Dimension(
+				frame.getWidth() > 500 ? frame.getWidth() : 500, 5
+			)
+		);
+		pane.add(gap);
 
 		frame.pack();
 		frame.setSize(
@@ -122,7 +128,7 @@ class server {
 		frame.add(scrollpane);
 
 		Global.server = new ServerSocket(Global.PORT);
-		append("Socket server started at port " + Global.PORT, msgType.SYSTEM);
+		append("服务端正在运行中，端口号：" + Global.PORT, msgType.SYSTEM);
 
 		frame.setVisible(true);
 
@@ -136,10 +142,7 @@ class server {
 class client {
 	client() throws Exception {
 		InetAddress addr = InetAddress.getByName(null);
-		System.out.println("Socket client started");
-
 		Socket socket = new Socket(addr, Global.PORT);
-		System.out.println("Established connection with server\n");
 
 		BufferedReader in = new BufferedReader(
 			new InputStreamReader(socket.getInputStream())
@@ -151,22 +154,22 @@ class client {
 
 		Scanner scanner = new Scanner(System.in);
 
-		System.out.printf("Please input your username > ");
+		System.out.printf("请输入你的用户名 > ");
 		String msg= scanner.nextLine();
 		out.println(msg);
 		System.out.println("\t" + in.readLine() + "\n");
 
 		while (true) {
-			System.out.printf("Send some message to server > ");
+			System.out.printf("向服务端发送信息 > ");
 			msg= scanner.nextLine();
 			out.println(msg);
 
 			if (msg.equals(Global.CLOSE_FLAG)) break;
-			System.out.println("\tReceived from server:\t" + in.readLine() + "\n");
+			System.out.println("\t收到来自服务端的消息：\t" + in.readLine() + "\n");
 		}
 
 		socket.close();
-		System.out.println("Socket Closed");
+		System.out.println("会话结束");
 		System.exit(0);
 	}
 }
