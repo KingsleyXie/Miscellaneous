@@ -31,6 +31,14 @@ class multiServer extends Thread {
 		out = new PrintWriter(new BufferedWriter(
 			new OutputStreamWriter(socket.getOutputStream())
 		), true);
+
+		server.frame.btn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JTextArea t = server.frame.textArea;
+				out.println(t.getText());
+				t.setText("");
+			}
+		});
 	}
 
 	public void run() {
@@ -157,6 +165,9 @@ public class socket {
 
 class chatFrame extends JFrame {
 	public Container pane;
+	public JTextArea textArea;
+	public JButton btn;
+
 	public static enum msgType {
 		SYSTEM, INCOME, OUTCOME
 	};
@@ -174,8 +185,8 @@ class chatFrame extends JFrame {
 		chatContent.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		add(chatContent, BorderLayout.CENTER);
 
-		JTextArea textArea = new JTextArea(2, 50);
-		JButton btn = new JButton("发送");
+		textArea = new JTextArea(2, 50);
+		btn = new JButton("发送");
 		btn.setBackground(new Color(3, 155, 229));
 		btn.setForeground(Color.WHITE);
 
@@ -184,13 +195,6 @@ class chatFrame extends JFrame {
 		bottom.add(btn);
 
 		add(bottom, BorderLayout.SOUTH);
-		btn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				System.out.println(textArea.getText());
-				textArea.setText("");
-			}
-		});
-
 		setVisible(true);
 	}
 
