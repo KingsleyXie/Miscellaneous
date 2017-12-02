@@ -1,8 +1,9 @@
 import java.io.*;
 import java.net.*;
 import java.awt.*;
+import java.awt.geom.*;
 import javax.swing.*;
-import javax.swing.*;
+import javax.swing.border.*;
 import javax.swing.text.*;
 import javax.imageio.*;
 import java.util.Scanner;
@@ -66,31 +67,36 @@ class server {
 	};
 
 	public static void append(String text, msgType mt) {
+		JTextPane output = new JTextPane();
+		output.setText(text);
+		output.setEditable(false);
+
 		SimpleAttributeSet attribs = new SimpleAttributeSet();
 		switch (mt) {
 			case SYSTEM:
+				output.setBorder(new TextBubbleBorder(Color.CYAN,2,16,0));
 				StyleConstants.setAlignment(attribs, StyleConstants.ALIGN_CENTER);
 				break;
 
 			case INCOME:
+				output.setBorder(new TextBubbleBorder(new Color(255, 145, 0),2,16,0));
 				StyleConstants.setAlignment(attribs, StyleConstants.ALIGN_LEFT);
 				break;
 
 			case OUTCOME:
+				output.setBackground(new Color(24, 255, 255));
 				StyleConstants.setAlignment(attribs, StyleConstants.ALIGN_RIGHT);
 				break;
 		}
 
-		JTextPane output = new JTextPane();
-
 		output.setParagraphAttributes(attribs, false);
-		output.setAlignmentX(Component.CENTER_ALIGNMENT);
-		output.setText(text);
-		output.setEditable(false);
-
 		pane.add(output);
+
+		JLabel gap = new JLabel();
+		gap.setPreferredSize(new Dimension(500, 10));
+		pane.add(gap);
+
 		frame.pack();
-		frame.setSize(500,700);
 	}
 
 	server() throws Exception {
@@ -184,5 +190,107 @@ public class socket {
 			"All clients are terminated, closing socket server...", server.msgType.SYSTEM
 		);
 		try { Global.server.close(); } catch (Exception e) {}
+	}
+}
+
+
+
+
+
+// Class Modified From:
+//   https://stackoverflow.com/questions/15025092/border-with-rounded-corners-transparency
+class TextBubbleBorder extends AbstractBorder {
+	private Color color;
+	private int thickness = 4;
+	private int radii = 8;
+	private int pointerSize = 7;
+	private Insets insets = null;
+	private BasicStroke stroke = null;
+	private int strokePad;
+	private int pointerPad = 4;
+	RenderingHints hints;
+
+	TextBubbleBorder(Color color) {
+		new TextBubbleBorder(color, 4, 8, 7);
+	}
+
+	TextBubbleBorder(Color color, int thickness, int radii, int pointerSize) {
+		this.thickness = thickness;
+		this.radii = radii;
+		this.pointerSize = pointerSize;
+		this.color = color;
+
+		stroke = new BasicStroke(thickness);
+		strokePad = thickness / 2;
+
+		hints = new RenderingHints(
+			RenderingHints.KEY_ANTIALIASING,
+			RenderingHints.VALUE_ANTIALIAS_ON
+		);
+
+		int pad = radii + strokePad;
+		int bottomPad = pad + pointerSize + strokePad;
+		insets = new Insets(pad, pad, bottomPad, pad);
+	}
+
+	@Override
+	public Insets getBorderInsets(Component c) {
+		return insets;
+	}
+
+	@Override
+	public Insets getBorderInsets(Component c, Insets insets) {
+		return getBorderInsets(c);
+	}
+
+	@Override
+	public void paintBorder(
+			Component c,
+			Graphics g,
+			int x, int y,
+			int width, int height) {
+
+		Graphics2D g2 = (Graphics2D) g;
+
+		int bottomLineY = height - thickness - pointerSize;
+
+		RoundRectangle2D.Double bubble =
+			new RoundRectangle2D.Double(
+				0 + strokePad,
+				0 + strokePad,
+				width - thickness,
+				bottomLineY,
+				radii,
+				radii
+			);
+
+		Polygon pointer = new Polygon();
+
+		pointer.addPoint(
+				strokePad + radii + pointerPad,
+				bottomLineY);
+
+		pointer.addPoint(
+				strokePad + radii + pointerPad + pointerSize,
+				bottomLineY);
+
+		pointer.addPoint(
+				strokePad + radii + pointerPad + (pointerSize / 2),
+				height - strokePad);
+
+		Area area = new Area(bubble);
+		area.add(new Area(pointer));
+
+		g2.setRenderingHints(hints);
+
+		Area spareSpace = new Area(new Rectangle(0, 0, width, height));
+		spareSpace.subtract(area);
+		g2.setClip(spareSpace);
+		g2.clearRect(0, 0, width, height);
+		g2.setClip(null);
+
+		g2.setColor(color);
+		g2.setStroke(stroke);
+		g2.draw(area);
 	}
 }
