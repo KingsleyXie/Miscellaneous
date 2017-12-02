@@ -1,6 +1,10 @@
 import java.io.*;
 import java.net.*;
+import java.awt.*;
 import javax.swing.*;
+import javax.swing.*;
+import javax.swing.text.*;
+import javax.imageio.*;
 import java.util.Scanner;
 
 class Global {
@@ -37,18 +41,17 @@ class multiServer extends Thread {
 
 			server.append(
 				"Established connection with client "
-				+ id + "(" + str + ")"
+				+ id + "(" + str + ")", server.msgType.SYSTEM
 			);
 
 			while (true) {
 				str = in.readLine();
 				if (str.equals(Global.CLOSE_FLAG)) break;
-
-				server.append("Received \"" + str + "\" from client " + id);
+				server.append("Received \"" + str + "\" from client " + id, server.msgType.INCOME);
 				out.println("I have received your message \"" + str + "\"");
 			}
 
-			server.append("Terminated connection with client " + id);
+			server.append("Terminated connection with client " + id, server.msgType.SYSTEM);
 			socket.close(); count--;
 		} catch (Exception e) { e.printStackTrace(); }
 	}
@@ -56,33 +59,51 @@ class multiServer extends Thread {
 
 class server {
 	public static JFrame frame;
-	public static JLabel label;
+	public static Container pane;
 	public static JScrollPane content;
+	public static enum msgType {
+		SYSTEM, INCOME, OUTCOME
+	};
 
-	public static void append(String html) {
-		boolean m = html.indexOf("Received") == 0;
-		label.setText(
-			label.getText() +
-			(m ? "" : "<br>***************************************************") +
-			"<p>" + html + "</p>" +
-			(m ? "" : "***************************************************<br>")
-		);
+	public static void append(String text, msgType mt) {
+		SimpleAttributeSet attribs = new SimpleAttributeSet();
+		switch (mt) {
+			case SYSTEM:
+				StyleConstants.setAlignment(attribs, StyleConstants.ALIGN_CENTER);
+				break;
+
+			case INCOME:
+				StyleConstants.setAlignment(attribs, StyleConstants.ALIGN_LEFT);
+				break;
+
+			case OUTCOME:
+				StyleConstants.setAlignment(attribs, StyleConstants.ALIGN_RIGHT);
+				break;
+		}
+
+		JTextPane output = new JTextPane();
+
+		output.setParagraphAttributes(attribs, false);
+		output.setAlignmentX(Component.CENTER_ALIGNMENT);
+		output.setText(text);
+		output.setEditable(false);
+
+		pane.add(output);
+		frame.pack();
+		frame.setSize(500,700);
 	}
 
 	server() throws Exception {
-		Global.server = new ServerSocket(Global.PORT);
-		label = new JLabel(
-			"<html>Socket server started at port " +
-			Global.PORT + "<br>",
-			SwingConstants.CENTER
-		);
-		content = new JScrollPane(label);
-
 		frame = new JFrame();
-		frame.add(content);
 		frame.setTitle("Socket Server");
-		frame.setLocation(430,70);
-		frame.setSize(475,600);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setLocation(450,10);
+
+		pane = frame.getContentPane();
+		pane.setLayout(new BoxLayout(pane, BoxLayout.Y_AXIS));
+
+		Global.server = new ServerSocket(Global.PORT);
+		append("Socket server started at port " + Global.PORT, msgType.SYSTEM);
 		frame.setVisible(true);
 
 		while (true) {
@@ -160,7 +181,7 @@ public class socket {
 			}
 		}
 		server.append(
-			"All clients are terminated, closing socket server..."
+			"All clients are terminated, closing socket server...", server.msgType.SYSTEM
 		);
 		try { Global.server.close(); } catch (Exception e) {}
 	}
