@@ -38,16 +38,16 @@ class multiServer extends Thread {
 			String str = in.readLine();
 
 			server.append(
-				str + "，你已成功与服务端建立连接，你的 ID 是 " + id,
-				server.msgType.OUTCOME
+				"成功与客户端 " + id + "（" + str + "）建立连接",
+				server.msgType.SYSTEM
 			);
+
 			out.println(
 				str + "，你已成功与服务端建立连接，你的 ID 是 " + id
 			);
-
 			server.append(
-				"成功与客户端 " + id + "（" + str + "）建立连接",
-				server.msgType.SYSTEM
+				str + "，你已成功与服务端建立连接，你的 ID 是 " + id,
+				server.msgType.OUTCOME
 			);
 
 			while (true) {
@@ -79,17 +79,23 @@ class server {
 		switch (mt) {
 			case SYSTEM:
 				text = "【系统消息】 " + text;
-				output.setBorder(new TextBubbleBorder(new Color(176, 190, 197), 2, 10, 0));
+				output.setBorder(new TextBubbleBorder(
+					new Color(66, 66, 66), 1, 6, 0, false)
+				);
 				StyleConstants.setAlignment(attribs, StyleConstants.ALIGN_CENTER);
 				break;
 
 			case INCOME:
-				output.setBorder(new TextBubbleBorder(new Color(255, 145, 0), 2, 10, 5));
+				output.setBorder(new TextBubbleBorder(
+					new Color(255, 145, 0), 2, 10, 6, false)
+				);
 				StyleConstants.setAlignment(attribs, StyleConstants.ALIGN_LEFT);
 				break;
 
 			case OUTCOME:
-				output.setBorder(new TextBubbleBorder(new Color(0, 176, 255), 2, 10, 0));
+				output.setBorder(new TextBubbleBorder(
+					new Color(0, 176, 255), 2, 10, 6, true)
+				);
 				StyleConstants.setAlignment(attribs, StyleConstants.ALIGN_RIGHT);
 				break;
 		}
@@ -101,7 +107,7 @@ class server {
 		JTextPane gap = new JTextPane();
 		gap.setPreferredSize(
 			new Dimension(
-				frame.getWidth() > 500 ? frame.getWidth() : 500, 5
+				frame.getWidth() < 500 ? frame.getWidth() : 500, 9
 			)
 		);
 		pane.add(gap);
@@ -221,17 +227,23 @@ class TextBubbleBorder extends AbstractBorder {
 	private int thickness;
 	private int radii;
 	private int pointerSize;
+	private boolean rightPointer;
 	private Insets insets = null;
 	private BasicStroke stroke = null;
 	private int strokePad;
 	private int pointerPad;
 	RenderingHints hints;
 
-	TextBubbleBorder(Color color, int thickness, int radii, int pointerSize) {
+	TextBubbleBorder(
+		Color color,
+		int thickness, int radii, int pointerSize,
+		boolean rightPointer
+	) {
 		this.thickness = thickness;
 		this.radii = radii;
 		this.pointerSize = pointerSize;
 		this.color = color;
+		this.rightPointer = rightPointer;
 
 		stroke = new BasicStroke(thickness);
 		strokePad = thickness / 2;
@@ -278,18 +290,35 @@ class TextBubbleBorder extends AbstractBorder {
 			);
 
 		Polygon pointer = new Polygon();
+		if (this.rightPointer) {
+			int offset =
+				server.frame.getWidth() -
+				2 * ((Integer)UIManager.get("ScrollBar.width")).intValue();
 
-		pointer.addPoint(
-				strokePad + radii + pointerPad,
-				bottomLineY);
+			pointer.addPoint(
+					offset - (strokePad + radii + pointerPad),
+					bottomLineY);
 
-		pointer.addPoint(
-				strokePad + radii + pointerPad + pointerSize,
-				bottomLineY);
+			pointer.addPoint(
+					offset - (strokePad + radii + pointerPad + pointerSize),
+					bottomLineY);
 
-		pointer.addPoint(
-				strokePad + radii + pointerPad + (pointerSize / 2),
-				height - strokePad);
+			pointer.addPoint(
+					offset - (strokePad + radii + pointerPad + (pointerSize / 2)),
+					height - strokePad);
+		} else {
+			pointer.addPoint(
+					strokePad + radii + pointerPad,
+					bottomLineY);
+
+			pointer.addPoint(
+					strokePad + radii + pointerPad + pointerSize,
+					bottomLineY);
+
+			pointer.addPoint(
+					strokePad + radii + pointerPad + (pointerSize / 2),
+					height - strokePad);
+		}
 
 		Area area = new Area(bubble);
 		area.add(new Area(pointer));
