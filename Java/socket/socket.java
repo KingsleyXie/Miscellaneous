@@ -2,6 +2,7 @@ import java.io.*;
 import java.net.*;
 import java.awt.*;
 import java.awt.geom.*;
+import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.text.*;
@@ -163,15 +164,32 @@ class chatFrame extends JFrame {
 	chatFrame(String tit) {
 		setTitle(tit);
 		setLocation(50, 10);
+		setLayout(new BorderLayout());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		pane = new JPanel();
 		pane.setLayout(new BoxLayout(pane, BoxLayout.Y_AXIS));
-		add(pane);
 
-		JScrollPane scrollpane = new JScrollPane(pane);
-		scrollpane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		add(scrollpane);
+		JScrollPane chatContent = new JScrollPane(pane);
+		chatContent.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		add(chatContent, BorderLayout.CENTER);
+
+		JTextArea textArea = new JTextArea(2, 50);
+		JButton btn = new JButton("发送");
+		btn.setBackground(new Color(3, 155, 229));
+		btn.setForeground(Color.WHITE);
+
+		JPanel bottom = new JPanel();
+		bottom.add(new JScrollPane(textArea));
+		bottom.add(btn);
+
+		add(bottom, BorderLayout.SOUTH);
+		btn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.out.println(textArea.getText());
+				textArea.setText("");
+			}
+		});
 
 		setVisible(true);
 	}
