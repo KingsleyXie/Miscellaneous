@@ -36,6 +36,11 @@ class multiServer extends Thread {
 	public void run() {
 		try {
 			String str = in.readLine();
+
+			server.append(
+				"Hello " + str + ", your client ID is " +
+				id, server.msgType.OUTCOME
+			);
 			out.println(
 				"Hello " + str + ", your client ID is " + id
 			);
@@ -50,6 +55,7 @@ class multiServer extends Thread {
 				if (str.equals(Global.CLOSE_FLAG)) break;
 				server.append("Received \"" + str + "\" from client " + id, server.msgType.INCOME);
 				out.println("I have received your message \"" + str + "\"");
+				server.append("I have received your message \"" + str + "\"", server.msgType.OUTCOME);
 			}
 
 			server.append("Terminated connection with client " + id, server.msgType.SYSTEM);
@@ -74,7 +80,7 @@ class server {
 		SimpleAttributeSet attribs = new SimpleAttributeSet();
 		switch (mt) {
 			case SYSTEM:
-				output.setBorder(new TextBubbleBorder(Color.CYAN,2,16,0));
+				output.setBorder(new TextBubbleBorder(new Color(0, 176, 255),2,16,0));
 				StyleConstants.setAlignment(attribs, StyleConstants.ALIGN_CENTER);
 				break;
 
@@ -84,7 +90,7 @@ class server {
 				break;
 
 			case OUTCOME:
-				output.setBackground(new Color(24, 255, 255));
+				output.setBorder(new TextBubbleBorder(new Color(24, 255, 255),2,16,0));
 				StyleConstants.setAlignment(attribs, StyleConstants.ALIGN_RIGHT);
 				break;
 		}
@@ -97,6 +103,7 @@ class server {
 		pane.add(gap);
 
 		frame.pack();
+		if (frame.getHeight() >= 700) frame.setSize(500, 700);
 	}
 
 	server() throws Exception {
@@ -110,6 +117,7 @@ class server {
 
 		Global.server = new ServerSocket(Global.PORT);
 		append("Socket server started at port " + Global.PORT, msgType.SYSTEM);
+
 		frame.setVisible(true);
 
 		while (true) {
@@ -201,18 +209,14 @@ public class socket {
 //   https://stackoverflow.com/questions/15025092/border-with-rounded-corners-transparency
 class TextBubbleBorder extends AbstractBorder {
 	private Color color;
-	private int thickness = 4;
-	private int radii = 8;
-	private int pointerSize = 7;
+	private int thickness;
+	private int radii;
+	private int pointerSize;
 	private Insets insets = null;
 	private BasicStroke stroke = null;
 	private int strokePad;
-	private int pointerPad = 4;
+	private int pointerPad;
 	RenderingHints hints;
-
-	TextBubbleBorder(Color color) {
-		new TextBubbleBorder(color, 4, 8, 7);
-	}
 
 	TextBubbleBorder(Color color, int thickness, int radii, int pointerSize) {
 		this.thickness = thickness;
