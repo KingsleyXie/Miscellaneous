@@ -67,7 +67,6 @@ class multiServer extends Thread {
 class server {
 	public static JFrame frame;
 	public static Container pane;
-	public static JScrollPane content;
 	public static enum msgType {
 		SYSTEM, INCOME, OUTCOME
 	};
@@ -98,22 +97,29 @@ class server {
 		output.setParagraphAttributes(attribs, false);
 		pane.add(output);
 
-		JLabel gap = new JLabel();
-		gap.setPreferredSize(new Dimension(500, 10));
-		pane.add(gap);
+		JTextPane gap = new JTextPane();
+		gap.setText(" "); pane.add(gap);
 
 		frame.pack();
-		if (frame.getHeight() >= 700) frame.setSize(500, 700);
+		frame.setSize(
+			frame.getWidth() > 500 ? frame.getWidth() : 500,
+			frame.getHeight() < 700 ? frame.getHeight() : 700
+		);
 	}
 
 	server() throws Exception {
 		frame = new JFrame();
 		frame.setTitle("Socket Server");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setLocation(450,10);
+		frame.setLocation(50, 10);
 
-		pane = frame.getContentPane();
+		pane = new JPanel();
 		pane.setLayout(new BoxLayout(pane, BoxLayout.Y_AXIS));
+		frame.add(pane);
+
+		JScrollPane scrollpane = new JScrollPane(pane);
+		scrollpane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		frame.add(scrollpane);
 
 		Global.server = new ServerSocket(Global.PORT);
 		append("Socket server started at port " + Global.PORT, msgType.SYSTEM);
