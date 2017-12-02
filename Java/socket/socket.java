@@ -5,7 +5,6 @@ import java.awt.geom.*;
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.text.*;
-import javax.imageio.*;
 import java.util.Scanner;
 
 class Global {
@@ -37,106 +36,40 @@ class multiServer extends Thread {
 		try {
 			String str = in.readLine();
 
-			server.append(
+			server.frame.append(
 				"成功与客户端 " + id + "（" + str + "）建立连接",
-				server.msgType.SYSTEM
+				chatFrame.msgType.SYSTEM
 			);
 
 			out.println(
 				str + "，你已成功与服务端建立连接，你的 ID 是 " + id
 			);
-			server.append(
+			server.frame.append(
 				str + "，你已成功与服务端建立连接，你的 ID 是 " + id,
-				server.msgType.OUTCOME
+				chatFrame.msgType.OUTCOME
 			);
 
 			while (true) {
 				str = in.readLine();
 				if (str.equals(Global.CLOSE_FLAG)) break;
-				server.append(id + "： " + str, server.msgType.INCOME);
+				server.frame.append(id + "： " + str, chatFrame.msgType.INCOME);
 				out.println("已收到信息：" + str);
-				server.append("已收到信息：" + str, server.msgType.OUTCOME);
+				server.frame.append("已收到信息：" + str, chatFrame.msgType.OUTCOME);
 			}
 
-			server.append("结束与客户端 " + id + " 的会话", server.msgType.SYSTEM);
+			server.frame.append("结束与客户端 " + id + " 的会话", chatFrame.msgType.SYSTEM);
 			socket.close(); count--;
 		} catch (Exception e) { e.printStackTrace(); }
 	}
 }
 
 class server {
-	public static JFrame frame;
-	public static Container pane;
-	public static enum msgType {
-		SYSTEM, INCOME, OUTCOME
-	};
-
-	public static void append(String text, msgType mt) {
-		JTextPane output = new JTextPane();
-		output.setEditable(false);
-
-		SimpleAttributeSet attribs = new SimpleAttributeSet();
-		switch (mt) {
-			case SYSTEM:
-				text = "【系统消息】 " + text;
-				output.setBorder(new TextBubbleBorder(
-					new Color(66, 66, 66), 1, 6, 0, false)
-				);
-				StyleConstants.setAlignment(attribs, StyleConstants.ALIGN_CENTER);
-				break;
-
-			case INCOME:
-				output.setBorder(new TextBubbleBorder(
-					new Color(255, 145, 0), 2, 10, 6, false)
-				);
-				StyleConstants.setAlignment(attribs, StyleConstants.ALIGN_LEFT);
-				break;
-
-			case OUTCOME:
-				output.setBorder(new TextBubbleBorder(
-					new Color(0, 176, 255), 2, 10, 6, true)
-				);
-				StyleConstants.setAlignment(attribs, StyleConstants.ALIGN_RIGHT);
-				break;
-		}
-
-		output.setText(text);
-		output.setParagraphAttributes(attribs, false);
-		pane.add(output);
-
-		JTextPane gap = new JTextPane();
-		gap.setPreferredSize(
-			new Dimension(
-				frame.getWidth() < 500 ? frame.getWidth() : 500, 9
-			)
-		);
-		pane.add(gap);
-
-		frame.pack();
-		frame.setSize(
-			frame.getWidth() > 500 ? frame.getWidth() : 500,
-			frame.getHeight() < 700 ? frame.getHeight() : 700
-		);
-	}
-
+	public static chatFrame frame;
 	server() throws Exception {
-		frame = new JFrame();
-		frame.setTitle("Socket Server");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setLocation(50, 10);
-
-		pane = new JPanel();
-		pane.setLayout(new BoxLayout(pane, BoxLayout.Y_AXIS));
-		frame.add(pane);
-
-		JScrollPane scrollpane = new JScrollPane(pane);
-		scrollpane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		frame.add(scrollpane);
+		frame = new chatFrame("Socket Server");
 
 		Global.server = new ServerSocket(Global.PORT);
-		append("服务端正在运行中，端口号：" + Global.PORT, msgType.SYSTEM);
-
-		frame.setVisible(true);
+		frame.append("服务端正在运行中，端口号：" + Global.PORT, chatFrame.msgType.SYSTEM);
 
 		while (true) {
 			Socket socket = Global.server.accept();
@@ -146,6 +79,9 @@ class server {
 }
 
 class client {
+	private JFrame frame;
+	private Container pane;
+
 	client() throws Exception {
 		InetAddress addr = InetAddress.getByName(null);
 		Socket socket = new Socket(addr, Global.PORT);
@@ -209,10 +145,83 @@ public class socket {
 					e.printStackTrace();
 			}
 		}
-		server.append(
-			"All clients are terminated, closing socket server...", server.msgType.SYSTEM
+		server.frame.append(
+			"All clients are terminated, closing socket server...", chatFrame.msgType.SYSTEM
 		);
 		try { Global.server.close(); } catch (Exception e) {}
+	}
+}
+
+
+
+class chatFrame extends JFrame {
+	public Container pane;
+	public static enum msgType {
+		SYSTEM, INCOME, OUTCOME
+	};
+
+	chatFrame(String tit) {
+		setTitle(tit);
+		setLocation(50, 10);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+		pane = new JPanel();
+		pane.setLayout(new BoxLayout(pane, BoxLayout.Y_AXIS));
+		add(pane);
+
+		JScrollPane scrollpane = new JScrollPane(pane);
+		scrollpane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		add(scrollpane);
+
+		setVisible(true);
+	}
+
+	public void append(String text, msgType mt) {
+		JTextPane output = new JTextPane();
+		output.setEditable(false);
+
+		SimpleAttributeSet attribs = new SimpleAttributeSet();
+		switch (mt) {
+			case SYSTEM:
+				text = "【系统消息】 " + text;
+				output.setBorder(new TextBubbleBorder(
+					new Color(66, 66, 66), 1, 6, 0, false)
+				);
+				StyleConstants.setAlignment(attribs, StyleConstants.ALIGN_CENTER);
+				break;
+
+			case INCOME:
+				output.setBorder(new TextBubbleBorder(
+					new Color(255, 145, 0), 2, 10, 6, false)
+				);
+				StyleConstants.setAlignment(attribs, StyleConstants.ALIGN_LEFT);
+				break;
+
+			case OUTCOME:
+				output.setBorder(new TextBubbleBorder(
+					new Color(0, 176, 255), 2, 10, 6, true)
+				);
+				StyleConstants.setAlignment(attribs, StyleConstants.ALIGN_RIGHT);
+				break;
+		}
+
+		output.setText(text);
+		output.setParagraphAttributes(attribs, false);
+		pane.add(output);
+
+		JTextPane gap = new JTextPane();
+		gap.setPreferredSize(
+			new Dimension(
+				getWidth() < 500 ? getWidth() : 500, 9
+			)
+		);
+		pane.add(gap);
+
+		pack();
+		setSize(
+			getWidth() > 500 ? getWidth() : 500,
+			getHeight() < 700 ? getHeight() : 700
+		);
 	}
 }
 
