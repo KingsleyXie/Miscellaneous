@@ -19,6 +19,7 @@ class listen implements Runnable {
 	private Socket socket;
 	private BufferedReader in;
 	private int id;
+	private boolean isServer = true, running = true;
 
 	public listen(
 		chatFrame frm, Socket socket,
@@ -26,21 +27,29 @@ class listen implements Runnable {
 	) {
 		this.frm = frm; this.socket = socket;
 		this.in = in; this.id = id;
+		if (id == 0) isServer = false;
 		new Thread(this).start();
 	}
 
 	public void run() {
 		try {
-			while (true) {
+			while (running) {
 				String str = in.readLine();
-				if (str.equals(Global.CLOSE_FLAG)) {
+				if (isServer && str.equals(Global.CLOSE_FLAG)) {
 					socket.close(); multiServer.count--;
-					frm.append("结束与客户端 " + id + " 的会话", chatFrame.msgType.SYSTEM);
+					frm.append("已结束与客户端 " + id + " 的会话", chatFrame.msgType.SYSTEM);
 					break;
 				}
-				frm.append(id + ": " + str, chatFrame.msgType.INCOME);
+				frm.append(
+					(isServer ? (id + ": ") : "") +
+					str, chatFrame.msgType.INCOME
+				);
 			}
 		} catch (Exception e) { e.printStackTrace(); }
+	}
+
+	public void kill() {
+		running = false;
 	}
 }
 
@@ -97,6 +106,7 @@ class server {
 	public static chatFrame frame;
 	server() throws Exception {
 		frame = new chatFrame("Socket Server");
+		frame.setVisible(true);
 
 		Global.server = new ServerSocket(Global.PORT);
 		frame.append("服务端正在运行中，端口号：" + Global.PORT, chatFrame.msgType.SYSTEM);
@@ -124,30 +134,28 @@ class client {
 		), true);
 
 		frame = new chatFrame("Socket Client");
-		new listen(frame, socket, in, 1000);
+		listen lsn = new listen(frame, socket, in, 0);
 
 		out.println(JOptionPane.showInputDialog(null,
 			"请输入你的用户名﻿",
 			"进入聊天室",
 			JOptionPane.PLAIN_MESSAGE)
 		);
+		frame.setVisible(true);
 
 		frame.btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JTextArea t = frame.textArea;
 				String msg = t.getText();
+				out.println(msg);
 				t.setText("");
 
 				if (msg.equals(Global.CLOSE_FLAG)) {
-					try { socket.close(); }
-					catch (Exception fuck) { fuck.printStackTrace(); }
-
-					t.setEditable(false);
-					frame.append("会话结束", chatFrame.msgType.SYSTEM);
-				} else {
-					frame.append(msg, chatFrame.msgType.OUTCOME);
-					out.println(msg);
+					lsn.kill();
+					frame.append("已结束与服务端的会话", chatFrame.msgType.SYSTEM);
 				}
+				else
+					frame.append(msg, chatFrame.msgType.OUTCOME);
 			}
 		});
 	}
@@ -223,7 +231,6 @@ class chatFrame extends JFrame {
 		bottom.add(btn);
 
 		add(bottom, BorderLayout.SOUTH);
-		setVisible(true);
 	}
 
 	public void append(String text, msgType mt) {
