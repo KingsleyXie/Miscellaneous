@@ -109,8 +109,7 @@ class server {
 }
 
 class client {
-	private JFrame frame;
-	private Container pane;
+	private chatFrame frame;
 
 	client() throws Exception {
 		InetAddress addr = InetAddress.getByName(null);
@@ -124,25 +123,29 @@ class client {
 			new OutputStreamWriter(socket.getOutputStream())
 		), true);
 
-		Scanner scanner = new Scanner(System.in);
+		frame = new chatFrame("Socket Client");
+		new listen(frame, socket, in, 1000);
 
-		System.out.printf("请输入你的用户名 > ");
-		String msg= scanner.nextLine();
-		out.println(msg);
-		System.out.println("\t" + in.readLine() + "\n");
+		frame.append("请输入你的用户名", chatFrame.msgType.INCOME);
+		out.println("Kingsley");
 
-		while (true) {
-			System.out.printf("向服务端发送信息 > ");
-			msg= scanner.nextLine();
-			out.println(msg);
+		frame.btn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JTextArea t = frame.textArea;
+				String msg = t.getText();
+				t.setText("");
 
-			if (msg.equals(Global.CLOSE_FLAG)) break;
-			// System.out.println("\t收到来自服务端的消息：\t" + in.readLine() + "\n");
-		}
+				if (msg.equals(Global.CLOSE_FLAG)) {
+					try { socket.close(); }
+					catch (Exception fuck) { fuck.printStackTrace(); }
 
-		socket.close();
-		System.out.println("会话结束");
-		System.exit(0);
+					t.setEditable(false);
+					frame.append("会话结束", chatFrame.msgType.SYSTEM);
+				} else {
+					out.println(msg);
+				}
+			}
+		});
 	}
 }
 
