@@ -11,10 +11,12 @@ import java.util.Scanner;
 class Global {
 	public static final String
 		CLOSE_FLAG = "Bye",
-		SYSTEM_MSG = "SYS:";
+		SYSTEM_MSG = "SYS:",
+		USER_MSG = "USR:";
 	public static final int
 		PORT = 2333,
-		START_ID = 1000;
+		START_ID = 1000,
+		PREFIX_LEN = USER_MSG.length() + 4;
 	public static ServerSocket server;
 }
 
@@ -44,23 +46,24 @@ class listen implements Runnable {
 				if (isServer) {
 					if (str.equals(Global.CLOSE_FLAG)) {
 						socket.close(); multiServer.count--;
-						frm.append("已结束与客户端 " + name + " 的会话", chatFrame.msgType.SYSTEM);
-						server.broadcast("已结束与客户端 " + name + " 的会话", true);
+						frm.append(name + " 退出了聊天室", chatFrame.msgType.SYSTEM);
+						server.broadcast(name + " 退出了聊天室", true);
 						break;
 					}
-					server.broadcast(name + ": " + str);
+					server.broadcast(Global.USER_MSG + id + name + ": " + str);
 				}
 
+				String t = isServer ? (name + ": ") : "";
 				if (str.indexOf(Global.SYSTEM_MSG) == 0) {
 					frm.append(
-						(isServer ? (name + ": ") : "") +
-						str.replace(Global.SYSTEM_MSG, ""),
+						t + str.replace(Global.SYSTEM_MSG, ""),
 						chatFrame.msgType.SYSTEM
 					);
-				} else {
+				}
+				if (str.indexOf(Global.USER_MSG) == 0) {
 					frm.append(
-						(isServer ? (name + ": ") : "") +
-						str, chatFrame.msgType.INCOME
+						t + str.substring(Global.PREFIX_LEN),
+						chatFrame.msgType.INCOME
 					);
 				}
 			}
@@ -94,7 +97,8 @@ class multiServer extends Thread {
 		server.frame.btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
 				String s = server.frame.textArea.getText();
-				out.println(s);
+				if (s.indexOf(Global.USER_MSG + String.valueOf(id)) != 0)
+					out.println(s);
 				// server.frame.append(s, chatFrame.msgType.OUTCOME);
 			}
 		});
@@ -105,21 +109,10 @@ class multiServer extends Thread {
 			name = in.readLine();
 
 			server.frame.append(
-				"成功与客户端 " + id + "（" + name + "）建立连接",
+				name + " 加入了聊天室",
 				chatFrame.msgType.SYSTEM
 			);
-			server.broadcast(
-				"成功与客户端 " + id + "（" + name + "）建立连接",
-				true
-			);
-
-			out.println(
-				name + "，你已成功与服务端建立连接，你的 ID 是 " + id
-			);
-			server.frame.append(
-				name + "，你已成功与服务端建立连接，你的 ID 是 " + id,
-				chatFrame.msgType.OUTCOME
-			);
+			server.broadcast(name + " 加入了聊天室", true);
 
 			new listen(server.frame, socket, in, id, name);
 		} catch (Exception e) { e.printStackTrace(); }
