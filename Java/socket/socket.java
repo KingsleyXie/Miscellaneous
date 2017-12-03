@@ -207,7 +207,7 @@ class chatFrame extends JFrame {
 			case SYSTEM:
 				text = "【系统消息】 " + text;
 				output.setBorder(new TextBubbleBorder(
-					new Color(66, 66, 66), 1, 6, 0, false)
+					new Color(66, 66, 66), 2, 10, 6, false)
 				);
 				StyleConstants.setAlignment(attribs, StyleConstants.ALIGN_CENTER);
 				break;
