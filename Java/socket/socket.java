@@ -9,8 +9,12 @@ import javax.swing.text.*;
 import java.util.Scanner;
 
 class Global {
-	public static final String CLOSE_FLAG = "Bye";
-	public static final int PORT = 2333, START_ID = 1000;
+	public static final String
+		CLOSE_FLAG = "Bye",
+		SYSTEM_MSG = "SYS:";
+	public static final int
+		PORT = 2333,
+		START_ID = 1000;
 	public static ServerSocket server;
 }
 
@@ -40,10 +44,19 @@ class listen implements Runnable {
 					frm.append("已结束与客户端 " + id + " 的会话", chatFrame.msgType.SYSTEM);
 					break;
 				}
-				frm.append(
-					(isServer ? (id + ": ") : "") +
-					str, chatFrame.msgType.INCOME
-				);
+
+				if (str.indexOf(Global.SYSTEM_MSG) == 0) {
+					frm.append(
+						(isServer ? (id + ": ") : "") +
+						str.replace(Global.SYSTEM_MSG, ""),
+						chatFrame.msgType.SYSTEM
+					);
+				} else {
+					frm.append(
+						(isServer ? (id + ": ") : "") +
+						str, chatFrame.msgType.INCOME
+					);
+				}
 			}
 		} catch (Exception e) { e.printStackTrace(); }
 	}
