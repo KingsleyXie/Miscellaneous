@@ -127,8 +127,8 @@ class client {
 		new listen(frame, socket, in, 1000);
 
 		out.println(JOptionPane.showInputDialog(null,
-			"请输入用户名以进入聊天室",
-			"聊天室",
+			"请输入你的用户名﻿",
+			"进入聊天室",
 			JOptionPane.PLAIN_MESSAGE)
 		);
 
@@ -145,7 +145,7 @@ class client {
 					t.setEditable(false);
 					frame.append("会话结束", chatFrame.msgType.SYSTEM);
 				} else {
-					// frame.append(msg, chatFrame.msgType.OUTCOME);
+					frame.append(msg, chatFrame.msgType.OUTCOME);
 					out.println(msg);
 				}
 			}
@@ -158,12 +158,12 @@ public class socket {
 		try {
 			if (args.length == 1 && args[0].equals("-server")) new server();
 			if (args.length == 1 && args[0].equals("-client")) new client();
+		} catch (Exception e) {
 			System.out.println(
 				"usage:\n" +
 				"    java socket -server      Run as socket server\n" +
 				"    java socket -client      Run as socket client"
 			);
-		} catch (Exception e) {
 			switch (e.toString()) {
 				case "java.net.ConnectException: Connection refused: connect":
 					System.out.println(
@@ -182,10 +182,10 @@ public class socket {
 					e.printStackTrace();
 			}
 		}
-		server.frame.append(
-			"All clients are terminated, closing socket server...", chatFrame.msgType.SYSTEM
-		);
-		try { Global.server.close(); } catch (Exception e) {}
+		// server.frame.append(
+		// 	"All clients are terminated, closing socket server...", chatFrame.msgType.SYSTEM
+		// );
+		// try { Global.server.close(); } catch (Exception e) {}
 	}
 }
 
@@ -235,21 +235,21 @@ class chatFrame extends JFrame {
 			case SYSTEM:
 				text = "【系统消息】 " + text;
 				output.setBorder(new TextBubbleBorder(
-					new Color(66, 66, 66), 2, 10, 6, false)
+					new Color(66, 66, 66), 2, 10, 6, false, this)
 				);
 				StyleConstants.setAlignment(attribs, StyleConstants.ALIGN_CENTER);
 				break;
 
 			case INCOME:
 				output.setBorder(new TextBubbleBorder(
-					new Color(255, 145, 0), 2, 10, 6, false)
+					new Color(255, 145, 0), 2, 10, 6, false, this)
 				);
 				StyleConstants.setAlignment(attribs, StyleConstants.ALIGN_LEFT);
 				break;
 
 			case OUTCOME:
 				output.setBorder(new TextBubbleBorder(
-					new Color(0, 176, 255), 2, 10, 6, true)
+					new Color(0, 176, 255), 2, 10, 6, true, this)
 				);
 				StyleConstants.setAlignment(attribs, StyleConstants.ALIGN_RIGHT);
 				break;
@@ -283,26 +283,21 @@ class chatFrame extends JFrame {
 //   https://stackoverflow.com/questions/15025092/border-with-rounded-corners-transparency
 class TextBubbleBorder extends AbstractBorder {
 	private Color color;
-	private int thickness;
-	private int radii;
-	private int pointerSize;
-	private boolean rightPointer;
 	private Insets insets = null;
 	private BasicStroke stroke = null;
-	private int strokePad;
-	private int pointerPad;
+	private int thickness, radii, pointerSize, strokePad, pointerPad;
+	private boolean rightPointer;
+	private chatFrame frame;
 	RenderingHints hints;
 
 	TextBubbleBorder(
 		Color color,
 		int thickness, int radii, int pointerSize,
-		boolean rightPointer
+		boolean rightPointer, chatFrame frame
 	) {
-		this.thickness = thickness;
-		this.radii = radii;
-		this.pointerSize = pointerSize;
-		this.color = color;
-		this.rightPointer = rightPointer;
+		this.color = color; this.thickness = thickness;
+		this.radii = radii; this.pointerSize = pointerSize;
+		this.rightPointer = rightPointer; this.frame = frame;
 
 		stroke = new BasicStroke(thickness);
 		strokePad = thickness / 2;
@@ -351,7 +346,7 @@ class TextBubbleBorder extends AbstractBorder {
 		Polygon pointer = new Polygon();
 		if (this.rightPointer) {
 			int offset =
-				server.frame.getWidth() -
+				frame.getWidth() -
 				2 * ((Integer)UIManager.get("ScrollBar.width")).intValue();
 
 			pointer.addPoint(
