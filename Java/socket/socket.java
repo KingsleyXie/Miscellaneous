@@ -100,10 +100,6 @@ class multiServer extends Thread {
 				String s = server.frame.textArea.getText();
 				switch (s.substring(0, Math.min(s.length(), 4))) {
 					case Global.SYSTEM_MSG:
-						server.frame.append(
-							s.replace(Global.SYSTEM_MSG, ""),
-							chatFrame.msgType.SYSTEM
-						);
 						out.println(s);
 						break;
 
@@ -111,18 +107,10 @@ class multiServer extends Thread {
 						if (s.indexOf(
 							Global.USER_MSG + String.valueOf(id)
 						) != 0) out.println(s);
-
-						server.frame.append(
-							s.substring(Global.PREFIX_LEN),
-							chatFrame.msgType.INCOME
-						);
 						break;
 
 					default:
 						out.println(Global.SYSTEM_MSG + s);
-						server.frame.append(
-							s, chatFrame.msgType.OUTCOME
-						);
 						break;
 				}
 			}
@@ -146,6 +134,33 @@ class server {
 
 		Global.server = new ServerSocket(Global.PORT);
 		frame.append("服务端正在运行中，端口号：" + Global.PORT, chatFrame.msgType.SYSTEM);
+
+		frame.btn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				String s = server.frame.textArea.getText();
+				switch (s.substring(0, Math.min(s.length(), 4))) {
+					case Global.SYSTEM_MSG:
+						server.frame.append(
+							s.replace(Global.SYSTEM_MSG, ""),
+							chatFrame.msgType.SYSTEM
+						);
+						break;
+
+					case Global.USER_MSG:
+						server.frame.append(
+							s.substring(Global.PREFIX_LEN),
+							chatFrame.msgType.INCOME
+						);
+						break;
+
+					default:
+						server.frame.append(
+							s, chatFrame.msgType.OUTCOME
+						);
+						break;
+				}
+			}
+		});
 
 		frame.textArea.addMouseListener(new MouseListener() {
 			public void mouseClicked(MouseEvent e) {
@@ -205,8 +220,11 @@ class client {
 				out.println(msg);
 				t.setText("");
 
-				if (msg.equals(Global.CLOSE_FLAG))
+				if (msg.equals(Global.CLOSE_FLAG)) {
 					lsn.stop();
+					t.setEditable(false);
+					frame.btn.setEnabled(false);
+				}
 				else
 					frame.append(msg, chatFrame.msgType.OUTCOME);
 			}
