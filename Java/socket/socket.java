@@ -39,10 +39,14 @@ class listen implements Runnable {
 		try {
 			while (running) {
 				String str = in.readLine();
-				if (isServer && str.equals(Global.CLOSE_FLAG)) {
-					socket.close(); multiServer.count--;
-					frm.append("已结束与客户端 " + id + " 的会话", chatFrame.msgType.SYSTEM);
-					break;
+				if (isServer) {
+					if (str.equals(Global.CLOSE_FLAG)) {
+						socket.close(); multiServer.count--;
+						frm.append("已结束与客户端 " + id + " 的会话", chatFrame.msgType.SYSTEM);
+						server.broadcast("已结束与客户端 " + id + " 的会话", true);
+						break;
+					}
+					server.broadcast(id + ": " + str);
 				}
 
 				if (str.indexOf(Global.SYSTEM_MSG) == 0) {
@@ -88,15 +92,6 @@ class multiServer extends Thread {
 			public void actionPerformed(ActionEvent evt) {
 				JTextArea t = server.frame.textArea;
 				out.println(t.getText());
-				t.addMouseListener(new MouseListener() {
-					public void mouseClicked(MouseEvent e) {
-						t.setText("");
-					}
-					public void mousePressed(MouseEvent e) {};
-					public void mouseReleased(MouseEvent e) {};
-					public void mouseEntered(MouseEvent e) {};
-					public void mouseExited(MouseEvent e) {};
-				});
 			}
 		});
 	}
@@ -108,6 +103,10 @@ class multiServer extends Thread {
 			server.frame.append(
 				"成功与客户端 " + id + "（" + str + "）建立连接",
 				chatFrame.msgType.SYSTEM
+			);
+			server.broadcast(
+				"成功与客户端 " + id + "（" + str + "）建立连接",
+				true
 			);
 
 			out.println(
@@ -132,10 +131,29 @@ class server {
 		Global.server = new ServerSocket(Global.PORT);
 		frame.append("服务端正在运行中，端口号：" + Global.PORT, chatFrame.msgType.SYSTEM);
 
+		frame.textArea.addMouseListener(new MouseListener() {
+			public void mouseClicked(MouseEvent e) {
+				frame.textArea.setText(Global.SYSTEM_MSG);
+			}
+			public void mousePressed(MouseEvent e) {};
+			public void mouseReleased(MouseEvent e) {};
+			public void mouseEntered(MouseEvent e) {};
+			public void mouseExited(MouseEvent e) {};
+		});
+
 		while (true) {
 			Socket socket = Global.server.accept();
 			new multiServer(socket).start();
 		}
+	}
+
+	public static void broadcast(String s) {
+		broadcast(s, false);
+	}
+
+	public static void broadcast(String s, boolean sys) {
+		frame.textArea.setText((sys ? Global.SYSTEM_MSG : "") + s);
+		frame.btn.doClick();
 	}
 }
 
