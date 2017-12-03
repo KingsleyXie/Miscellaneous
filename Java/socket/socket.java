@@ -16,10 +16,16 @@ class Global {
 
 class listen implements Runnable {
 	private chatFrame frm;
+	private Socket socket;
 	private BufferedReader in;
 	private int id;
-	public listen(chatFrame frm, BufferedReader in, int id) {
-		this.frm = frm; this.in = in; this.id = id;
+
+	public listen(
+		chatFrame frm, Socket socket,
+		BufferedReader in, int id
+	) {
+		this.frm = frm; this.socket = socket;
+		this.in = in; this.id = id;
 		new Thread(this).start();
 	}
 
@@ -27,10 +33,14 @@ class listen implements Runnable {
 		try {
 			while (true) {
 				String str = in.readLine();
-				if (str.equals(Global.CLOSE_FLAG)) break;
+				if (str.equals(Global.CLOSE_FLAG)) {
+					socket.close(); multiServer.count--;
+					frm.append("结束与客户端 " + id + " 的会话", chatFrame.msgType.SYSTEM);
+					break;
+				}
 				frm.append(id + ": " + str, chatFrame.msgType.INCOME);
 			}
-		} catch (Exception e) {}
+		} catch (Exception e) { e.printStackTrace(); }
 	}
 }
 
@@ -78,17 +88,7 @@ class multiServer extends Thread {
 				chatFrame.msgType.OUTCOME
 			);
 
-			new listen(server.frame, in, id);
-			while (true) {
-				str = in.readLine();
-				if (str.equals(Global.CLOSE_FLAG)) break;
-				server.frame.append(id + "： " + str, chatFrame.msgType.INCOME);
-				out.println("已收到信息：" + str);
-				server.frame.append("已收到信息：" + str, chatFrame.msgType.OUTCOME);
-			}
-
-			server.frame.append("结束与客户端 " + id + " 的会话", chatFrame.msgType.SYSTEM);
-			socket.close(); count--;
+			new listen(server.frame, socket, in, id);
 		} catch (Exception e) { e.printStackTrace(); }
 	}
 }
