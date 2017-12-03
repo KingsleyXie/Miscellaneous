@@ -17,6 +17,7 @@ class Global {
 		PORT = 2333,
 		START_ID = 1000,
 		PREFIX_LEN = USER_MSG.length() + 4;
+
 	public static ServerSocket server;
 }
 
@@ -68,7 +69,11 @@ class listen implements Runnable {
 					}
 				}
 			}
-		} catch (Exception e) { e.printStackTrace(); }
+		} catch (Exception e) {
+			if (e.toString() !=
+				"java.net.SocketException: Connection reset"
+			) e.printStackTrace();
+		}
 	}
 
 	public void stop() {
@@ -130,7 +135,7 @@ class multiServer extends Thread {
 class server {
 	public static chatFrame frame;
 	server() throws Exception {
-		frame = new chatFrame("Socket Server");
+		frame = new chatFrame("Socket Server", true);
 
 		Global.server = new ServerSocket(Global.PORT);
 		frame.append("服务端正在运行中，端口号：" + Global.PORT, chatFrame.msgType.SYSTEM);
@@ -209,7 +214,8 @@ class client {
 			"进入聊天室",
 			JOptionPane.PLAIN_MESSAGE
 		);
-		frame = new chatFrame("Socket Client");
+
+		frame = new chatFrame(name, false);
 		listen lsn = new listen(frame, socket, in, 0, name);
 		out.println(name);
 
@@ -233,16 +239,32 @@ class client {
 }
 
 public class socket {
+	private static void showInfo() {
+		System.out.println(
+			"usage:\n" +
+			"    java socket -server      Run as socket server\n" +
+			"    java socket -client      Run as socket client"
+		);
+	}
+
 	public static void main(String[] args) {
 		try {
-			if (args.length == 1 && args[0].equals("-server")) new server();
-			if (args.length == 1 && args[0].equals("-client")) new client();
+			if (args.length == 1) {
+				switch (args[0]) {
+					case "-server":
+						new server();
+						break;
+
+					case "-client":
+						new client();
+						break;
+
+					default:
+						showInfo();
+						break;
+				}
+			} else { showInfo(); }
 		} catch (Exception e) {
-			System.out.println(
-				"usage:\n" +
-				"    java socket -server      Run as socket server\n" +
-				"    java socket -client      Run as socket client"
-			);
 			switch (e.toString()) {
 				case "java.net.ConnectException: Connection refused: connect":
 					System.out.println(
@@ -257,14 +279,13 @@ public class socket {
 					);
 					break;
 
+				case "java.net.SocketException: socket closed":
+					break;
+
 				default:
 					e.printStackTrace();
 			}
 		}
-		// server.frame.append(
-		// 	"All clients are terminated, closing socket server...", chatFrame.msgType.SYSTEM
-		// );
-		// try { Global.server.close(); } catch (Exception e) {}
 	}
 }
 
@@ -279,11 +300,22 @@ class chatFrame extends JFrame {
 		SYSTEM, INCOME, OUTCOME
 	};
 
-	chatFrame(String tit) {
+	chatFrame(String tit, boolean isServer) {
 		setTitle(tit);
 		setLocation(50, 10);
 		setLayout(new BorderLayout());
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent evt) {
+				if (isServer) {
+					try { Global.server.close(); }
+					catch (Exception e) { e.printStackTrace(); }
+				} else {
+					textArea.setText(Global.CLOSE_FLAG);
+					btn.doClick();
+				}
+				System.exit(0);
+			}
+		});
 
 		pane = new JPanel();
 		pane.setLayout(new BoxLayout(pane, BoxLayout.Y_AXIS));
