@@ -72,10 +72,18 @@ class multiServer extends Thread {
 		), true);
 
 		server.frame.btn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent evt) {
 				JTextArea t = server.frame.textArea;
 				out.println(t.getText());
-				t.setText("");
+				t.addMouseListener(new MouseListener() {
+					public void mouseClicked(MouseEvent e) {
+						t.setText("");
+					}
+					public void mousePressed(MouseEvent e) {};
+					public void mouseReleased(MouseEvent e) {};
+					public void mouseEntered(MouseEvent e) {};
+					public void mouseExited(MouseEvent e) {};
+				});
 			}
 		});
 	}
