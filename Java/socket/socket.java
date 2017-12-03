@@ -22,15 +22,17 @@ class listen implements Runnable {
 	private chatFrame frm;
 	private Socket socket;
 	private BufferedReader in;
+	private String name;
 	private int id;
 	private boolean isServer = true, running = true;
 
 	public listen(
 		chatFrame frm, Socket socket,
-		BufferedReader in, int id
+		BufferedReader in,
+		int id, String name
 	) {
 		this.frm = frm; this.socket = socket;
-		this.in = in; this.id = id;
+		this.in = in; this.id = id; this.name = name;
 		if (id == 0) isServer = false;
 		new Thread(this).start();
 	}
@@ -42,22 +44,22 @@ class listen implements Runnable {
 				if (isServer) {
 					if (str.equals(Global.CLOSE_FLAG)) {
 						socket.close(); multiServer.count--;
-						frm.append("已结束与客户端 " + id + " 的会话", chatFrame.msgType.SYSTEM);
-						server.broadcast("已结束与客户端 " + id + " 的会话", true);
+						frm.append("已结束与客户端 " + name + " 的会话", chatFrame.msgType.SYSTEM);
+						server.broadcast("已结束与客户端 " + name + " 的会话", true);
 						break;
 					}
-					server.broadcast(id + ": " + str);
+					server.broadcast(name + ": " + str);
 				}
 
 				if (str.indexOf(Global.SYSTEM_MSG) == 0) {
 					frm.append(
-						(isServer ? (id + ": ") : "") +
+						(isServer ? (name + ": ") : "") +
 						str.replace(Global.SYSTEM_MSG, ""),
 						chatFrame.msgType.SYSTEM
 					);
 				} else {
 					frm.append(
-						(isServer ? (id + ": ") : "") +
+						(isServer ? (name + ": ") : "") +
 						str, chatFrame.msgType.INCOME
 					);
 				}
@@ -72,6 +74,7 @@ class listen implements Runnable {
 
 class multiServer extends Thread {
 	public static int count = Global.START_ID;
+	private String name;
 	private int id;
 
 	private Socket socket;
@@ -90,34 +93,35 @@ class multiServer extends Thread {
 
 		server.frame.btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
-				JTextArea t = server.frame.textArea;
-				out.println(t.getText());
+				String s = server.frame.textArea.getText();
+				out.println(s);
+				// server.frame.append(s, chatFrame.msgType.OUTCOME);
 			}
 		});
 	}
 
 	public void run() {
 		try {
-			String str = in.readLine();
+			name = in.readLine();
 
 			server.frame.append(
-				"成功与客户端 " + id + "（" + str + "）建立连接",
+				"成功与客户端 " + id + "（" + name + "）建立连接",
 				chatFrame.msgType.SYSTEM
 			);
 			server.broadcast(
-				"成功与客户端 " + id + "（" + str + "）建立连接",
+				"成功与客户端 " + id + "（" + name + "）建立连接",
 				true
 			);
 
 			out.println(
-				str + "，你已成功与服务端建立连接，你的 ID 是 " + id
+				name + "，你已成功与服务端建立连接，你的 ID 是 " + id
 			);
 			server.frame.append(
-				str + "，你已成功与服务端建立连接，你的 ID 是 " + id,
+				name + "，你已成功与服务端建立连接，你的 ID 是 " + id,
 				chatFrame.msgType.OUTCOME
 			);
 
-			new listen(server.frame, socket, in, id);
+			new listen(server.frame, socket, in, id, name);
 		} catch (Exception e) { e.printStackTrace(); }
 	}
 }
@@ -126,7 +130,6 @@ class server {
 	public static chatFrame frame;
 	server() throws Exception {
 		frame = new chatFrame("Socket Server");
-		frame.setVisible(true);
 
 		Global.server = new ServerSocket(Global.PORT);
 		frame.append("服务端正在运行中，端口号：" + Global.PORT, chatFrame.msgType.SYSTEM);
@@ -159,6 +162,7 @@ class server {
 
 class client {
 	private chatFrame frame;
+	private String name;
 
 	client() throws Exception {
 		InetAddress addr = InetAddress.getByName(null);
@@ -172,15 +176,14 @@ class client {
 			new OutputStreamWriter(socket.getOutputStream())
 		), true);
 
-		frame = new chatFrame("Socket Client");
-		listen lsn = new listen(frame, socket, in, 0);
-
-		out.println(JOptionPane.showInputDialog(null,
+		name = JOptionPane.showInputDialog(null,
 			"请输入你的用户名﻿",
 			"进入聊天室",
-			JOptionPane.PLAIN_MESSAGE)
+			JOptionPane.PLAIN_MESSAGE
 		);
-		frame.setVisible(true);
+		frame = new chatFrame("Socket Client");
+		listen lsn = new listen(frame, socket, in, 0, name);
+		out.println(name);
 
 		frame.btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -270,6 +273,7 @@ class chatFrame extends JFrame {
 		bottom.add(btn);
 
 		add(bottom, BorderLayout.SOUTH);
+		setVisible(true);
 	}
 
 	public void append(String text, msgType mt) {
