@@ -14,6 +14,26 @@ class Global {
 	public static ServerSocket server;
 }
 
+class listen implements Runnable {
+	private chatFrame frm;
+	private BufferedReader in;
+	private int id;
+	public listen(chatFrame frm, BufferedReader in, int id) {
+		this.frm = frm; this.in = in; this.id = id;
+		new Thread(this).start();
+	}
+
+	public void run() {
+		try {
+			while (true) {
+				String str = in.readLine();
+				if (str.equals(Global.CLOSE_FLAG)) break;
+				frm.append(id + ": " + str, chatFrame.msgType.INCOME);
+			}
+		} catch (Exception e) {}
+	}
+}
+
 class multiServer extends Thread {
 	public static int count = Global.START_ID;
 	private int id;
@@ -58,6 +78,7 @@ class multiServer extends Thread {
 				chatFrame.msgType.OUTCOME
 			);
 
+			new listen(server.frame, in, id);
 			while (true) {
 				str = in.readLine();
 				if (str.equals(Global.CLOSE_FLAG)) break;
@@ -116,7 +137,7 @@ class client {
 			out.println(msg);
 
 			if (msg.equals(Global.CLOSE_FLAG)) break;
-			System.out.println("\t收到来自服务端的消息：\t" + in.readLine() + "\n");
+			// System.out.println("\t收到来自服务端的消息：\t" + in.readLine() + "\n");
 		}
 
 		socket.close();
