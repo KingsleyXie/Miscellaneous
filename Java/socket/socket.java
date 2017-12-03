@@ -126,8 +126,11 @@ class client {
 		frame = new chatFrame("Socket Client");
 		new listen(frame, socket, in, 1000);
 
-		frame.append("请输入你的用户名", chatFrame.msgType.INCOME);
-		out.println("Kingsley");
+		out.println(JOptionPane.showInputDialog(null,
+			"请输入用户名以进入聊天室",
+			"聊天室",
+			JOptionPane.PLAIN_MESSAGE)
+		);
 
 		frame.btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -142,6 +145,7 @@ class client {
 					t.setEditable(false);
 					frame.append("会话结束", chatFrame.msgType.SYSTEM);
 				} else {
+					// frame.append(msg, chatFrame.msgType.OUTCOME);
 					out.println(msg);
 				}
 			}
