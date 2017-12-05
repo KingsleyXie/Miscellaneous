@@ -69,11 +69,9 @@ class listen implements Runnable {
 					}
 				}
 			}
-		} catch (Exception e) {
-			if (e.toString() !=
-				"java.net.SocketException: Connection reset"
-			) e.printStackTrace();
-		}
+		} catch (SocketException e) {
+			//L46: Always waiting for new incoming messages
+		} catch (Exception e) { e.printStackTrace(); }
 	}
 
 	public void stop() {
@@ -262,27 +260,19 @@ public class socket {
 					showInfo();
 					break;
 			}
+		} catch (ConnectException e) {
+			System.out.println(
+				"\n\tError: Socket server not running at port " +
+				Global.PORT
+			);
+		} catch (BindException e) {
+			System.out.println(
+				"\n\tError: Port " + Global.PORT + " already in use"
+			);
+		} catch (SocketException e) {
+			//L176: Always waiting for new connection
 		} catch (Exception e) {
-			switch (e.toString()) {
-				case "java.net.ConnectException: Connection refused: connect":
-					System.out.println(
-						"\n\tError: Socket server not running at port " +
-						Global.PORT
-					);
-					break;
-
-				case "java.net.BindException: Address already in use: JVM_Bind":
-					System.out.println(
-						"\n\tError: Port " + Global.PORT + " already in use"
-					);
-					break;
-
-				case "java.net.SocketException: socket closed":
-					break;
-
-				default:
-					e.printStackTrace();
-			}
+			e.printStackTrace();
 		}
 	}
 
