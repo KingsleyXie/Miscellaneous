@@ -240,19 +240,24 @@ public class socket {
 	private static void showInfo() {
 		System.out.println(
 			"Usage:\n" +
-			"\tjava socket -server|-client [-p|-port PORT_NO]\n" +
-			"\t(Run as socket server or client [at port PORT_NO])"
+			"\tjava socket -s|--server [-p|--port p]\n" +
+			"\t(Run as socket server at port 2333 or p)\n" +
+			"\n" +
+			"\tjava socket -c|--client [-n|--number n] [-p|--port p]\n" +
+			"\t(Run 1 or n socket client at port 2333 or p)"
 		);
 	}
 
 	public static void shunt(String cmd) {
 		try {
 			switch (cmd) {
-				case "-server":
+				case "-s":
+				case "--server":
 					new server();
 					break;
 
-				case "-client":
+				case "-c":
+				case "--client":
 					new client();
 					break;
 
@@ -283,15 +288,57 @@ public class socket {
 				break;
 
 			case 3:
-				if (args[1].equals("-port")
-					|| args[1].equals("-p")) {
-					try {
-						Global.PORT = Integer.parseInt(args[2]);
+				switch (args[1]) {
+					case "-p":
+					case "--port":
+						try {
+							Global.PORT = Integer.parseInt(args[2]);
+							shunt(args[0]);
+						} catch (NumberFormatException e) {
+							System.out.println("\tPlease Input A Correct Port Number!");
+						}
+						break;
+
+					case "-n":
+					case "--number":
+						try {
+							for (int i = 0; i < Integer.parseInt(args[2]); i++)
+								shunt(args[0]);
+						} catch (NumberFormatException e) {
+							System.out.println("\tPlease Input A Correct Client Number!");
+						}
+						break;
+
+					default:
+						showInfo();
+						break;
+				}
+				break;
+
+			case 5:
+				if (!((args[0].equals("--client")
+						|| args[0].equals("-c"))
+					&& (args[1].equals("--number")
+						|| args[1].equals("-n"))
+					&& (args[3].equals("--port")
+						|| args[3].equals("-p"))
+				)) {
+					showInfo();
+					break;
+				}
+
+				try {
+					Global.PORT = Integer.parseInt(args[4]);
+				} catch (NumberFormatException e) {
+					System.out.println("\tPlease Input A Correct Port Number!");
+				}
+
+				try {
+					for (int i = 0; i < Integer.parseInt(args[2]); i++)
 						shunt(args[0]);
-					} catch (NumberFormatException e) {
-						System.out.println("\tPlease Input A Correct Port Number!");
-					}
-				} else { showInfo(); }
+				} catch (NumberFormatException e) {
+					System.out.println("\tPlease Input A Correct Client Number!");
+				}
 				break;
 
 			default:
