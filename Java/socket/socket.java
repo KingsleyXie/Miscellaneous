@@ -248,6 +248,25 @@ public class socket {
 		);
 	}
 
+	public static void customizePort(String p) {
+		try {
+			Global.PORT = Integer.parseInt(p);
+		} catch (NumberFormatException e) {
+			System.out.println("\tPlease Input A Correct Port Number!");
+			System.exit(0);
+		}
+	}
+
+	public static void multiClients(String n) {
+		try {
+			for (int i = 0; i < Integer.parseInt(n); i++)
+				shunt("-c");
+		} catch (NumberFormatException e) {
+			System.out.println("\tPlease Input A Correct Client Number!");
+			System.exit(0);
+		}
+	}
+
 	public static void shunt(String cmd) {
 		try {
 			switch (cmd) {
@@ -270,6 +289,7 @@ public class socket {
 				"\n\tError: Socket server not running at port " +
 				Global.PORT
 			);
+			System.exit(0);
 		} catch (BindException e) {
 			System.out.println(
 				"\n\tError: Port " + Global.PORT + " already in use"
@@ -291,22 +311,13 @@ public class socket {
 				switch (args[1]) {
 					case "-p":
 					case "--port":
-						try {
-							Global.PORT = Integer.parseInt(args[2]);
-							shunt(args[0]);
-						} catch (NumberFormatException e) {
-							System.out.println("\tPlease Input A Correct Port Number!");
-						}
+						customizePort(args[2]);
+						shunt(args[0]);
 						break;
 
 					case "-n":
 					case "--number":
-						try {
-							for (int i = 0; i < Integer.parseInt(args[2]); i++)
-								shunt(args[0]);
-						} catch (NumberFormatException e) {
-							System.out.println("\tPlease Input A Correct Client Number!");
-						}
+						multiClients(args[2]);
 						break;
 
 					default:
@@ -326,19 +337,8 @@ public class socket {
 					showInfo();
 					break;
 				}
-
-				try {
-					Global.PORT = Integer.parseInt(args[4]);
-				} catch (NumberFormatException e) {
-					System.out.println("\tPlease Input A Correct Port Number!");
-				}
-
-				try {
-					for (int i = 0; i < Integer.parseInt(args[2]); i++)
-						shunt(args[0]);
-				} catch (NumberFormatException e) {
-					System.out.println("\tPlease Input A Correct Client Number!");
-				}
+				customizePort(args[4]);
+				multiClients(args[2]);
 				break;
 
 			default:
