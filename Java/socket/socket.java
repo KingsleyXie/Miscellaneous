@@ -14,10 +14,10 @@ class Global {
 		SYSTEM_MSG = "SYS:",
 		USER_MSG = "USR:";
 	public static final int
-		PORT = 2333,
 		START_ID = 1000,
 		PREFIX_LEN = USER_MSG.length() + 4;
 
+	public static int PORT = 2333;
 	public static ServerSocket server;
 }
 
@@ -241,29 +241,27 @@ class client {
 public class socket {
 	private static void showInfo() {
 		System.out.println(
-			"usage:\n" +
-			"    java socket -server      Run as socket server\n" +
-			"    java socket -client      Run as socket client"
+			"Usage:\n" +
+			"\tjava socket -server|-client [-p|-port PORT_NO]\n" +
+			"\t(Run as socket server or client [at port PORT_NO])"
 		);
 	}
 
-	public static void main(String[] args) {
+	public static void shunt(String cmd) {
 		try {
-			if (args.length == 1) {
-				switch (args[0]) {
-					case "-server":
-						new server();
-						break;
+			switch (cmd) {
+				case "-server":
+					new server();
+					break;
 
-					case "-client":
-						new client();
-						break;
+				case "-client":
+					new client();
+					break;
 
-					default:
-						showInfo();
-						break;
-				}
-			} else { showInfo(); }
+				default:
+					showInfo();
+					break;
+			}
 		} catch (Exception e) {
 			switch (e.toString()) {
 				case "java.net.ConnectException: Connection refused: connect":
@@ -285,6 +283,30 @@ public class socket {
 				default:
 					e.printStackTrace();
 			}
+		}
+	}
+
+	public static void main(String[] args) {
+		switch (args.length) {
+			case 1:
+				shunt(args[0]);
+				break;
+
+			case 3:
+				if (args[1].equals("-port")
+					|| args[1].equals("-p")) {
+					try {
+						Global.PORT = Integer.parseInt(args[2]);
+						shunt(args[0]);
+					} catch (NumberFormatException e) {
+						System.out.println("\tPlease Input A Correct Port Number!");
+					}
+				} else { showInfo(); }
+				break;
+
+			default:
+				showInfo();
+				break;
 		}
 	}
 }
