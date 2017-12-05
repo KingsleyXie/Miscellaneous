@@ -135,9 +135,8 @@ class multiServer extends Thread {
 class server {
 	public static chatFrame frame;
 	server() throws Exception {
-		frame = new chatFrame("Socket Server", true);
-
 		Global.server = new ServerSocket(Global.PORT);
+		frame = new chatFrame("Socket Server", true);
 		frame.append("服务端正在运行中，端口号：" + Global.PORT, chatFrame.msgType.SYSTEM);
 
 		frame.btn.addActionListener(new ActionListener() {
@@ -198,6 +197,13 @@ class client {
 	private String name;
 
 	client() throws Exception {
+		name = JOptionPane.showInputDialog(null,
+			"请输入你的用户名﻿",
+			"进入聊天室",
+			JOptionPane.PLAIN_MESSAGE
+		);
+		if (name == null) System.exit(0);
+
 		InetAddress addr = InetAddress.getByName(null);
 		Socket socket = new Socket(addr, Global.PORT);
 
@@ -208,12 +214,6 @@ class client {
 		PrintWriter out = new PrintWriter(new BufferedWriter(
 			new OutputStreamWriter(socket.getOutputStream())
 		), true);
-
-		name = JOptionPane.showInputDialog(null,
-			"请输入你的用户名﻿",
-			"进入聊天室",
-			JOptionPane.PLAIN_MESSAGE
-		);
 
 		frame = new chatFrame(name, false);
 		listen lsn = new listen(frame, socket, in, 0, name);
