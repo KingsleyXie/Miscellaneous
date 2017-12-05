@@ -14,10 +14,11 @@ class Global {
 		SYSTEM_MSG = "SYS:",
 		USER_MSG = "USR:";
 	public static final int
+		DEFAULT_PORT = 2333,
 		START_ID = 1000,
 		PREFIX_LEN = USER_MSG.length() + 4;
 
-	public static int PORT = 2333;
+	public static int port = DEFAULT_PORT;
 	public static ServerSocket server;
 }
 
@@ -133,9 +134,9 @@ class multiServer extends Thread {
 class server {
 	public static chatFrame frame;
 	server() throws Exception {
-		Global.server = new ServerSocket(Global.PORT);
+		Global.server = new ServerSocket(Global.port);
 		frame = new chatFrame("Socket Server", true);
-		frame.append("服务端正在运行中，端口号：" + Global.PORT, chatFrame.msgType.SYSTEM);
+		frame.append("服务端正在运行中，端口号：" + Global.port, chatFrame.msgType.SYSTEM);
 
 		frame.btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
@@ -191,6 +192,7 @@ class server {
 }
 
 class client {
+	public static int clientN = 1;
 	private chatFrame frame;
 	private String name;
 
@@ -203,7 +205,7 @@ class client {
 		if (name == null) System.exit(0);
 
 		InetAddress addr = InetAddress.getByName(null);
-		Socket socket = new Socket(addr, Global.PORT);
+		Socket socket = new Socket(addr, Global.port);
 
 		BufferedReader in = new BufferedReader(
 			new InputStreamReader(socket.getInputStream())
@@ -250,7 +252,7 @@ public class socket {
 
 	public static void customizePort(String p) {
 		try {
-			Global.PORT = Integer.parseInt(p);
+			Global.port = Integer.parseInt(p);
 		} catch (NumberFormatException e) {
 			System.out.println("\tPlease Input A Correct Port Number!");
 			System.exit(0);
@@ -259,7 +261,9 @@ public class socket {
 
 	public static void multiClients(String n) {
 		try {
-			for (int i = 0; i < Integer.parseInt(n); i++)
+			int num = Integer.parseInt(n);
+			client.clientN = num;
+			for (int i = 0; i < num; i++)
 				shunt("-c");
 		} catch (NumberFormatException e) {
 			System.out.println("\tPlease Input A Correct Client Number!");
@@ -287,12 +291,12 @@ public class socket {
 		} catch (ConnectException e) {
 			System.out.println(
 				"\n\tError: Socket server not running at port " +
-				Global.PORT
+				Global.port
 			);
 			System.exit(0);
 		} catch (BindException e) {
 			System.out.println(
-				"\n\tError: Port " + Global.PORT + " already in use"
+				"\n\tError: Port " + Global.port + " already in use"
 			);
 		} catch (SocketException e) {
 			//L176: Always waiting for new connection
@@ -317,7 +321,11 @@ public class socket {
 
 					case "-n":
 					case "--number":
-						multiClients(args[2]);
+						if (!(args[0].equals("--client")
+							|| args[0].equals("-c")))
+							showInfo();
+						else
+							multiClients(args[2]);
 						break;
 
 					default:
@@ -366,13 +374,21 @@ class chatFrame extends JFrame {
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent evt) {
 				if (isServer) {
-					try { Global.server.close(); }
-					catch (Exception e) { e.printStackTrace(); }
+					try {
+						Global.server.close();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+
+					System.exit(0);
 				} else {
 					textArea.setText(Global.CLOSE_FLAG);
 					btn.doClick();
+
+					client.clientN--;
+					if (client.clientN == 0)
+						System.exit(0);
 				}
-				System.exit(0);
 			}
 		});
 

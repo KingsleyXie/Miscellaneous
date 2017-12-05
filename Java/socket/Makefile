@@ -11,16 +11,16 @@ compile:
 
 test:
 	@javac socket.java -encoding utf8
-	@CMD /C start java socket -server
-	@java socket -client
+	@CMD /C start java socket -s
+	@java socket -c -n 3
 
-start-server:
+server:
 	@javac socket.java -encoding utf8
-	@java socket -server
+	@java socket -s
 
-start-client:
+client:
 	@javac socket.java -encoding utf8
-	@java socket -client
+	@java socket -c
 
 
 
