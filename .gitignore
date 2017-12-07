@@ -1,2 +1,5 @@
 #Compiled Java Class
 *.class
+
+#Database Configuration File
+Java/servlet/database/config.xml

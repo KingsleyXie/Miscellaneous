@@ -1,0 +1,7 @@
+<?xml version = "1.0"?>
+<!-- <note>This is just a sample file, modify the configuration below and rename it as "config.xml" instead of "config.example.xml"</note> -->
+<config>
+	<database>DATABASE_NAME</database>
+	<username>DATABASE_USERNAME</username>
+	<password>DATABASE_PASSWORD</password>
+</config>
