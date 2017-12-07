@@ -4,6 +4,7 @@
 <%@ page import="javax.servlet.http.*,javax.servlet.*" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/sql" prefix="sql"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -22,6 +23,7 @@
 		<th>ID</th>
 		<th>昵称</th>
 		<th>留言</th>
+		<th>发布日期</th>
 		<th>发布时间</th>
 	</tr>
 	<c:forEach var="row" items="${result.rows}">
@@ -29,7 +31,8 @@
 		<td><c:out value="${row.id}"/></td>
 		<td><c:out value="${row.nickname}"/></td>
 		<td><c:out value="${row.message}"/></td>
-		<td><c:out value="${row.postTime}"/></td>
+		<td><fmt:formatDate pattern="yyyy-MM-dd" value="${row.postTime}"/></td>
+		<td><fmt:formatDate pattern="HH:mm:ss" value="${row.postTime}"/></td>
 	</tr>
 	</c:forEach>
 	</table>
