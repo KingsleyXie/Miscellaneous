@@ -67,7 +67,7 @@
 					<h3 class="modal-title" id="leave-msg-label">发表留言</h3>
 				</div>
 
-				<form class="form-horizontal" id="leave-msg">
+				<form class="form-horizontal" id="leave-msg" method="POST" action="insert.jsp">
 					<div class="modal-body">
 						<div class="col-md-12 form-group">
 							<label>昵称</label>
