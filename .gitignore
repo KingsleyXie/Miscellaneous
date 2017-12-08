@@ -2,4 +2,4 @@
 *.class
 
 #Database Configuration File
-Java/servlet/database/config.xml
+Java/servlet/General/database/config.xml
