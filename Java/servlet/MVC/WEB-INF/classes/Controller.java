@@ -10,32 +10,34 @@ public class Controller extends HttpServlet {
 		HttpServletRequest req,
 		HttpServletResponse res
 	) throws ServletException, IOException {
-		req.setCharacterEncoding("UTF8");
-		res.setCharacterEncoding("UTF8");
-		PrintWriter out = res.getWriter();
+		if (req.getParameter("operation").equals("insert")) {
+			req.setCharacterEncoding("UTF8");
+			res.setCharacterEncoding("UTF8");
+			PrintWriter out = res.getWriter();
 
-		try {
-			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-			DocumentBuilder db = dbf.newDocumentBuilder();
-			Document config = db.parse(new File(
-				req.getServletContext().getRealPath("/config.xml")
-			));
+			try {
+				DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+				DocumentBuilder db = dbf.newDocumentBuilder();
+				Document config = db.parse(new File(
+					req.getServletContext().getRealPath("/config.xml")
+				));
 
-			Bean bean = new Bean();
-			String result = bean.insert(
-				config.getElementsByTagName("database").item(0).getTextContent(),
-				config.getElementsByTagName("username").item(0).getTextContent(),
-				config.getElementsByTagName("password").item(0).getTextContent(),
+				Bean bean = new Bean();
+				String result = bean.insert(
+					config.getElementsByTagName("database").item(0).getTextContent(),
+					config.getElementsByTagName("username").item(0).getTextContent(),
+					config.getElementsByTagName("password").item(0).getTextContent(),
 
-				req.getParameter("nickname"),
-				req.getParameter("message")
-			);
+					req.getParameter("nickname"),
+					req.getParameter("message")
+				);
 
-			if (result.equals("OK")) {
-				res.sendRedirect("./success.jsp");
-			} else out.println(result);
-		} catch (Exception e) {
-			out.println(e.getMessage());
+				if (result.equals("OK")) {
+					res.sendRedirect("./success.jsp");
+				} else out.println(result);
+			} catch (Exception e) {
+				out.println(e.getMessage());
+			}
 		}
 	}
 
@@ -43,12 +45,30 @@ public class Controller extends HttpServlet {
 		HttpServletRequest req,
 		HttpServletResponse res
 	) throws ServletException, IOException {
-		req.setCharacterEncoding("UTF8");
-		res.setCharacterEncoding("UTF8");
-		PrintWriter out = res.getWriter();
-
 		if (req.getParameter("operation").equals("list")) {
-			out.println("Get Request!");
+			req.setCharacterEncoding("UTF8");
+			res.setCharacterEncoding("UTF8");
+			PrintWriter out = res.getWriter();
+
+			try {
+				DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+				DocumentBuilder db = dbf.newDocumentBuilder();
+				Document config = db.parse(new File(
+					req.getServletContext().getRealPath("/config.xml")
+				));
+				Bean bean = new Bean();
+				String result = bean.getAllMsg(
+					config.getElementsByTagName("database").item(0).getTextContent(),
+					config.getElementsByTagName("username").item(0).getTextContent(),
+					config.getElementsByTagName("password").item(0).getTextContent()
+				);
+
+				if (result.equals("OK")) {
+					out.println("DONE");
+				} else out.println(result);
+			} catch (Exception e) {
+				out.println(e.getMessage());
+			}
 		}
 	}
 }

@@ -1,6 +1,6 @@
 package Model;
 import java.sql.*;
-import java.util.ArrayList;
+import java.util.Vector;
 
 class Msg {
 	public int id;
@@ -17,7 +17,7 @@ class Msg {
 }
 
 public class Bean {
-	public ArrayList<Msg> messages;
+	public Vector<Msg> messages;
 
 	public String insert(
 		String database, String username, String password,
@@ -57,15 +57,15 @@ public class Bean {
 
 			Statement s = con.createStatement();
 			ResultSet rs = s.executeQuery("SELECT * FROM forum");
-			while (rs.next()) {
-				Msg m = new Msg(
+
+			messages = new Vector<Msg>();
+			while (rs.next())
+				messages.add(new Msg(
 					rs.getInt("ID"),
 					rs.getDate("postTime"),
 					rs.getString("nickname"),
 					rs.getString("message")
-				);
-				messages.add(m);
-			}
+				));
 
 			s.close(); con.close();
 		} catch (Exception e) {
