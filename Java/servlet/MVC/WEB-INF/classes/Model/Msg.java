@@ -1,21 +1,26 @@
 package Model;
-import java.util.Date;
+import java.sql.Timestamp;
 
 public class Msg {
 	public int id;
-	public Date postTime;
-	public String nickname, message;
+	public String nickname;
+	public String message;
+	public Timestamp postTime;
 
 	public Msg(
-		int id, Date postTime,
-		String nickname, String message
+		int id,
+		String nickname,
+		String message,
+		Timestamp postTime
 	) {
-		this.id = id; this.postTime = postTime;
-		this.nickname = nickname; this.message = message;
+		this.id = id;
+		this.nickname = nickname;
+		this.message = message;
+		this.postTime = postTime;
 	}
 
 	public int getId() { return id; }
-	public Date getPostTime() { return postTime; }
 	public String getNickname() { return nickname; }
 	public String getMessage() { return message; }
+	public Timestamp getPostTime() { return postTime; }
 }

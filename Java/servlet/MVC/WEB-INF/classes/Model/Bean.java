@@ -48,9 +48,9 @@ public class Bean {
 			while (rs.next())
 				messages.add(new Msg(
 					rs.getInt("ID"),
-					rs.getDate("postTime"),
 					rs.getString("nickname"),
-					rs.getString("message")
+					rs.getString("message"),
+					rs.getTimestamp("postTime")
 				));
 
 			s.close(); con.close();
