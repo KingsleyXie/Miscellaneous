@@ -13,4 +13,9 @@ public class Msg {
 		this.id = id; this.postTime = postTime;
 		this.nickname = nickname; this.message = message;
 	}
+
+	public int getId() { return id; }
+	public Date getPostTime() { return postTime; }
+	public String getNickname() { return nickname; }
+	public String getMessage() { return message; }
 }
