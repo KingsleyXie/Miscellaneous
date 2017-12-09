@@ -13,4 +13,15 @@
 		<servlet-name>Controller</servlet-name>
 		<url-pattern>/Controller</url-pattern>
 	</servlet-mapping>
+
+	<jsp-config>
+		<taglib>
+			<taglib-uri>http://java.sun.com/jstl/core</taglib-uri>
+			<taglib-location>/WEB-INF/c.tld</taglib-location>
+		</taglib>
+		<taglib>
+			<taglib-uri>http://java.sun.com/jstl/fmt</taglib-uri>
+			<taglib-location>/WEB-INF/fmt.tld</taglib-location>
+		</taglib>
+	</jsp-config>
 </web-app>

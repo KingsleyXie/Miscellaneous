@@ -64,7 +64,9 @@ public class Controller extends HttpServlet {
 				);
 
 				if (result.equals("OK")) {
-					out.println(bean.messages.elementAt(0).nickname);
+					req.setAttribute("messages", bean.messages);
+					getServletConfig().getServletContext()
+					.getRequestDispatcher("/messages.jsp").forward(req, res);
 				} else out.println(result);
 			} catch (Exception e) {
 				out.println(e.getMessage());
