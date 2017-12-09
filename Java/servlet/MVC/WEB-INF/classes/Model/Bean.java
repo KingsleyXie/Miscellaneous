@@ -13,13 +13,13 @@ public class Bean {
 				"?useUnicode=true&characterEncoding=UTF-8";
 			Connection con = DriverManager.getConnection(conURL, username, password);
 
-			Statement s = con.createStatement();
-			String query =
+			PreparedStatement s = con.prepareStatement(
 				"INSERT INTO " +
-					"`forum` (`nickname`, `message`)" +
-				"VALUES" +
-					"('" + nickname + "', '" + message + "')";
-			s.executeUpdate(query);
+					"forum (nickname, message)" +
+				"VALUES (?, ?)"
+			);
+			s.setString(1, nickname); s.setString(2, message);
+			s.executeUpdate();
 
 			s.close(); con.close();
 		} catch (Exception e) {
