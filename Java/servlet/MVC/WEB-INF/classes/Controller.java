@@ -38,4 +38,17 @@ public class Controller extends HttpServlet {
 			out.println(e.getMessage());
 		}
 	}
+
+	protected void doGet(
+		HttpServletRequest req,
+		HttpServletResponse res
+	) throws ServletException, IOException {
+		req.setCharacterEncoding("UTF8");
+		res.setCharacterEncoding("UTF8");
+		PrintWriter out = res.getWriter();
+
+		if (req.getParameter("operation").equals("list")) {
+			out.println("Get Request!");
+		}
+	}
 }

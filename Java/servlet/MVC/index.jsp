@@ -49,6 +49,7 @@
 							<label>留言内容</label>
 							<textarea class="form-control" rows="3" name="message" placeholder="请输入留言内容" required></textarea>
 						</div>
+						<input name="operation" value="insert" hidden>
 					</div>
 					<div class="clearfix"></div>
 
@@ -59,6 +60,10 @@
 			</div>
 		</div>
 	</div>
+
+	<jsp:include page="/Controller">
+		<jsp:param name="operation" value="list"></jsp:param>
+	</jsp:include>
 
 	<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
 	<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
