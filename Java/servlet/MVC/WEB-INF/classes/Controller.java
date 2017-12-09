@@ -64,7 +64,7 @@ public class Controller extends HttpServlet {
 				);
 
 				if (result.equals("OK")) {
-					out.println("DONE");
+					out.println(bean.messages.elementAt(0).nickname);
 				} else out.println(result);
 			} catch (Exception e) {
 				out.println(e.getMessage());

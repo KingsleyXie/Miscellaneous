@@ -2,20 +2,6 @@ package Model;
 import java.sql.*;
 import java.util.Vector;
 
-class Msg {
-	public int id;
-	public Date postTime;
-	public String nickname, message;
-
-	public Msg(
-		int id, Date postTime,
-		String nickname, String message
-	) {
-		this.id = id; this.postTime = postTime;
-		this.nickname = nickname; this.message = message;
-	}
-}
-
 public class Bean {
 	public Vector<Msg> messages;
 
