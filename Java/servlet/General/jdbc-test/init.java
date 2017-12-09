@@ -22,18 +22,18 @@ public class init {
 
 			Statement s = con.createStatement();
 			String query =
-				"CREATE TABLE `forum`(" +
-					"`ID` INTEGER NOT NULL AUTO_INCREMENT," +
-					"`nickname` VARCHAR(30) NOT NULL," +
-					"`message` VARCHAR(200) NOT NULL," +
-					"`postTime` TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL," +
-					"PRIMARY KEY(`ID`)" +
+				"CREATE TABLE forum (" +
+					"ID INTEGER NOT NULL AUTO_INCREMENT," +
+					"nickname VARCHAR(30) NOT NULL," +
+					"message VARCHAR(200) NOT NULL," +
+					"postTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL," +
+					"PRIMARY KEY(ID)" +
 				") ENGINE = InnoDB DEFAULT CHARSET = utf8;";
 			s.executeUpdate(query);
 
 			query =
 				"INSERT INTO " +
-					"`forum` (`nickname`, `message`)" +
+					"forum (nickname, message)" +
 				"VALUES" +
 					"('香港记者', '江主席，你觉得董先生连任，好不好啊？')," +
 					"('江主席', '吼蛙')," +

@@ -2,7 +2,7 @@ import java.io.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
-public class test extends HttpServlet {
+public class testServlet extends HttpServlet {
 	protected void doGet(
 		HttpServletRequest req,
 		HttpServletResponse res

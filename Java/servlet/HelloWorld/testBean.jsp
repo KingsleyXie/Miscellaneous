@@ -1,12 +1,13 @@
+<%@ page import = "tb.testBean" %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>JavaBean</title>
+	<title>Java Bean Test</title>
 </head>
 
 <body>
-	<%@ page import = "tb.testBean" %>
 	<% testBean name = new testBean("Naive"); %>
 	The Name Is: <%= name.get() %>
 

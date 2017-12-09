@@ -6,11 +6,11 @@
 	http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
 	<servlet>
 		<servlet-name>servlet</servlet-name>
-		<servlet-class>test</servlet-class>
+		<servlet-class>testServlet</servlet-class>
 	</servlet>
 
 	<servlet-mapping>
 		<servlet-name>servlet</servlet-name>
-		<url-pattern>/testServlet</url-pattern>
+		<url-pattern>/helloServlet</url-pattern>
 	</servlet-mapping>
 </web-app>
