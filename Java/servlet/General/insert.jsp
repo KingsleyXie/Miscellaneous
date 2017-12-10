@@ -1,14 +1,26 @@
 <%@page import="java.sql.*,java.util.*"%>
+<%@page import="java.io.File"%>
+<%@page import="javax.xml.parsers.*,org.w3c.dom.*"%>
+
 <%
 	request.setCharacterEncoding("UTF8");
 	String nickname = request.getParameter("nickname");
 	String message = request.getParameter("message");
 
 	try {
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		DocumentBuilder db = dbf.newDocumentBuilder();
+		Document configXML = db.parse(new File(
+			request.getServletContext().getRealPath("/WEB-INF/config.xml")
+		));
+
 		Class.forName("com.mysql.jdbc.Driver");
 		Connection con = DriverManager.getConnection(
-			"jdbc:mysql://localhost:3306/servlet?useUnicode=true&characterEncoding=UTF-8",
-			"DATABASE_USERNAME", "DATABASE_PASSWORD"
+			"jdbc:mysql://localhost:3306/" +
+			configXML.getElementsByTagName("database").item(0).getTextContent() +
+			"?useUnicode=true&characterEncoding=UTF-8",
+			configXML.getElementsByTagName("username").item(0).getTextContent(),
+			configXML.getElementsByTagName("password").item(0).getTextContent()
 		);
 
 		Statement st = con.createStatement();
