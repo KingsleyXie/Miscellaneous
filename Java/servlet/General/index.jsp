@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="java.io.*,java.util.*,java.sql.*"%>
-<%@ page import="javax.servlet.http.*,javax.servlet.*" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/xml" prefix="x"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/sql" prefix="sql"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
@@ -88,7 +87,20 @@
 		</div>
 	</div>
 
-	<sql:setDataSource var="snapshot" driver="com.mysql.jdbc.Driver" url="jdbc:mysql://localhost:3306/servlet?useUnicode=true&characterEncoding=utf-8" user="DATABASE_USERNAME" password="DATABASE_PASSWORD"/>
+	<c:import var="XMLfile" url="/WEB-INF/config.xml"/>
+	<x:parse xml="${XMLfile}" var="configXML"/>
+
+	<c:set var="url">
+		jdbc:mysql://localhost:3306/<x:out select="$configXML/config/database"/>?useUnicode=true&characterEncoding=utf-8
+	</c:set>
+	<c:set var="username">
+		<x:out select="$configXML/config/username"/>
+	</c:set>
+	<c:set var="password">
+		<x:out select="$configXML/config/password"/>
+	</c:set>
+
+	<sql:setDataSource var="snapshot" driver="com.mysql.jdbc.Driver" url="${url}" user="${username}" password="${password}"/>
 	<sql:query dataSource="${snapshot}" var="result">SELECT * from forum;</sql:query>
 
 	<c:forEach items="${result.rows}" var="row">
