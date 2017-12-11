@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
@@ -6,7 +6,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-	<title>MVC TEST</title>
+	<title>MVC DB List</title>
 	<link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<style>
 		.panel-default > .panel-heading {
@@ -85,27 +85,27 @@
 	</div>
 
 	<c:forEach items="${messages}" var="message">
-	<div class="container">
-		<div class="row clearfix">
-			<div class="col-md-12 column">
-				<div class="panel panel-default">
-					<div class="panel-heading msg-heading">
-						<div class="panel-title">
-							<div class="pull-left msg-no">#<c:out value="${message.id}"/></div>
-							<div class="pull-left"><c:out value="${message.nickname}"/></div>
-							<div class="pull-right msg-time">
-								<i class="fa fa-calendar"></i> <fmt:formatDate pattern="yyyy-MM-dd" value="${message.postTime}"/> <i class="fa fa-clock-o"></i> <fmt:formatDate pattern="HH:mm:ss" value="${message.postTime}"/>
+		<div class="container">
+			<div class="row clearfix">
+				<div class="col-md-12 column">
+					<div class="panel panel-default">
+						<div class="panel-heading msg-heading">
+							<div class="panel-title">
+								<div class="pull-left msg-no">#<c:out value="${message.id}"/></div>
+								<div class="pull-left"><c:out value="${message.nickname}"/></div>
+								<div class="pull-right msg-time">
+									<i class="fa fa-calendar"></i> <fmt:formatDate pattern="yyyy-MM-dd" value="${message.postTime}"/> <i class="fa fa-clock-o"></i> <fmt:formatDate pattern="HH:mm:ss" value="${message.postTime}"/>
+								</div>
 							</div>
 						</div>
-					</div>
 
-					<div class="row panel-body">
-						<div class="col-md-9 msg"><c:out value="${message.message}"/></div>
+						<div class="row panel-body">
+							<div class="col-md-9 msg"><c:out value="${message.message}"/></div>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-	</div>
 	</c:forEach>
 
 	<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>

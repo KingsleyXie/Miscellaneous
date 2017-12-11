@@ -11,9 +11,8 @@ public class Controller extends HttpServlet {
 		HttpServletResponse res
 	) throws ServletException, IOException {
 		if (req.getParameter("operation").equals("insert")) {
-			req.setCharacterEncoding("UTF8");
-			res.setCharacterEncoding("UTF8");
-			PrintWriter out = res.getWriter();
+			req.setCharacterEncoding("UTF-8");
+			res.setCharacterEncoding("UTF-8");
 
 			try {
 				DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -28,8 +27,12 @@ public class Controller extends HttpServlet {
 					config.getElementsByTagName("username").item(0).getTextContent(),
 					config.getElementsByTagName("password").item(0).getTextContent(),
 
-					req.getParameter("nickname"),
-					req.getParameter("message")
+					new String(
+						req.getParameter("nickname").getBytes("ISO-8859-1"), "UTF-8"
+					),
+					new String(
+						req.getParameter("message").getBytes("ISO-8859-1"), "UTF-8"
+					)
 				);
 
 				if (result.equals("OK")) {
@@ -52,9 +55,8 @@ public class Controller extends HttpServlet {
 		HttpServletResponse res
 	) throws ServletException, IOException {
 		if (req.getParameter("operation").equals("list")) {
-			req.setCharacterEncoding("UTF8");
-			res.setCharacterEncoding("UTF8");
-			PrintWriter out = res.getWriter();
+			req.setCharacterEncoding("UTF-8");
+			res.setCharacterEncoding("UTF-8");
 
 			try {
 				DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
