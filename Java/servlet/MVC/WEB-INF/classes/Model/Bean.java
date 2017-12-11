@@ -26,7 +26,7 @@ public class Bean {
 
 			s.close(); con.close();
 		} catch (Exception e) {
-			return e.getMessage();
+			return e.toString();
 		}
 		return "OK";
 	}
@@ -55,7 +55,7 @@ public class Bean {
 
 			s.close(); con.close();
 		} catch (Exception e) {
-			return e.getMessage();
+			return e.toString();
 		}
 		return "OK";
 	}

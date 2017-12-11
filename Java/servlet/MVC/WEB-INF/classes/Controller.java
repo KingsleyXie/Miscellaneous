@@ -19,7 +19,7 @@ public class Controller extends HttpServlet {
 				DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 				DocumentBuilder db = dbf.newDocumentBuilder();
 				Document config = db.parse(new File(
-					req.getServletContext().getRealPath("/config.xml")
+					req.getServletContext().getRealPath("/WEB-INF/config.xml")
 				));
 
 				Bean bean = new Bean();
@@ -33,10 +33,16 @@ public class Controller extends HttpServlet {
 				);
 
 				if (result.equals("OK")) {
-					res.sendRedirect("./success.jsp");
-				} else out.println(result);
+					res.sendRedirect("./result.jsp");
+				} else {
+					req.setAttribute("fail", result);
+					getServletConfig().getServletContext()
+					.getRequestDispatcher("/result.jsp").forward(req, res);
+				}
 			} catch (Exception e) {
-				out.println(e.getMessage());
+				req.setAttribute("fail", e.toString());
+				getServletConfig().getServletContext()
+				.getRequestDispatcher("/result.jsp").forward(req, res);
 			}
 		}
 	}
@@ -54,7 +60,7 @@ public class Controller extends HttpServlet {
 				DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 				DocumentBuilder db = dbf.newDocumentBuilder();
 				Document config = db.parse(new File(
-					req.getServletContext().getRealPath("/config.xml")
+					req.getServletContext().getRealPath("/WEB-INF/config.xml")
 				));
 				Bean bean = new Bean();
 				String result = bean.getAllMsg(
@@ -67,9 +73,15 @@ public class Controller extends HttpServlet {
 					req.setAttribute("messages", bean.messages);
 					getServletConfig().getServletContext()
 					.getRequestDispatcher("/messages.jsp").forward(req, res);
-				} else out.println(result);
+				} else {
+					req.setAttribute("fail", result);
+					getServletConfig().getServletContext()
+					.getRequestDispatcher("/result.jsp").forward(req, res);
+				}
 			} catch (Exception e) {
-				out.println(e.getMessage());
+				req.setAttribute("fail", e.toString());
+				getServletConfig().getServletContext()
+				.getRequestDispatcher("/result.jsp").forward(req, res);
 			}
 		}
 	}

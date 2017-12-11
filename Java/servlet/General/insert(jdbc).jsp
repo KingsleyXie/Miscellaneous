@@ -85,7 +85,7 @@
 				"$(\"#msg\").html(" +
 				"'<h4>操作出现异常，信息如下：</h4>'+" +
 				"'<h5 class=\"text-left\">'+" +
-					"'" + e.getMessage().replaceAll("'", "\\\\'") + "'+" +
+					"'" + e.toString().replaceAll("'", "\\\\'") + "'+" +
 				"'</h5>'" +
 				");" +
 			"</script>"
