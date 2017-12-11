@@ -1,6 +1,7 @@
-<%@page import="java.sql.*,java.util.*"%>
-<%@page import="java.io.File"%>
-<%@page import="javax.xml.parsers.*,org.w3c.dom.*"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="java.sql.*,java.util.*"%>
+<%@ page import="java.io.File"%>
+<%@ page import="javax.xml.parsers.*,org.w3c.dom.*"%>
 
 <%
 	try {
@@ -19,7 +20,7 @@
 			configXML.getElementsByTagName("password").item(0).getTextContent()
 		);
 
-		request.setCharacterEncoding("UTF8");
+		request.setCharacterEncoding("UTF-8");
 		PreparedStatement s = con.prepareStatement(
 			"INSERT INTO " +
 				"forum (nickname, message)" +
@@ -29,9 +30,14 @@
 		s.setString(2, request.getParameter("message"));
 		s.executeUpdate();
 
-		out.println("<h1>Data is successfully inserted!</h1>");
+		out.println(
+			"<h1>Data is successfully inserted!</h1>" +
+			"<br><a href='./index.jsp'>Return</a>"
+		);
 	} catch(Exception e) {
-		out.println(e.getMessage());
+		out.println(
+			"<h3>操作出现异常，信息如下：<br>" +
+			e.getMessage() + "</h3>"
+		);
 	}
-	out.println("<br><a href='./index.jsp'>Return</a>");
 %>
