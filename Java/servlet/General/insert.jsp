@@ -1,36 +1,25 @@
-<%@page import="java.sql.*,java.util.*"%>
-<%@page import="java.io.File"%>
-<%@page import="javax.xml.parsers.*,org.w3c.dom.*"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/xml" prefix="x"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/sql" prefix="sql"%>
 
-<%
-	request.setCharacterEncoding("UTF8");
-	String nickname = request.getParameter("nickname");
-	String message = request.getParameter("message");
+<c:import var="XMLfile" url="/WEB-INF/config.xml"/>
+<x:parse xml="${XMLfile}" var="configXML"/>
 
-	try {
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		DocumentBuilder db = dbf.newDocumentBuilder();
-		Document configXML = db.parse(new File(
-			request.getServletContext().getRealPath("/WEB-INF/config.xml")
-		));
+<c:set var="url">
+	jdbc:mysql://localhost:3306/<x:out select="$configXML/config/database"/>?useUnicode=true&characterEncoding=utf-8
+</c:set>
+<c:set var="username">
+	<x:out select="$configXML/config/username"/>
+</c:set>
+<c:set var="password">
+	<x:out select="$configXML/config/password"/>
+</c:set>
 
-		Class.forName("com.mysql.jdbc.Driver");
-		Connection con = DriverManager.getConnection(
-			"jdbc:mysql://localhost:3306/" +
-			configXML.getElementsByTagName("database").item(0).getTextContent() +
-			"?useUnicode=true&characterEncoding=UTF-8",
-			configXML.getElementsByTagName("username").item(0).getTextContent(),
-			configXML.getElementsByTagName("password").item(0).getTextContent()
-		);
+<sql:setDataSource var="snapshot" driver="com.mysql.jdbc.Driver" url="${url}" user="${username}" password="${password}"/>
+<sql:update dataSource="${snapshot}">
+	INSERT INTO forum (nickname,message) VALUES('${param.nickname}', '${param.message}')
+</sql:update>
 
-		Statement st = con.createStatement();
-		st.executeUpdate(
-			"INSERT INTO forum (nickname,message) VALUES('" +
-			nickname + "','" + message + "')"
-		);
-		out.println("<h1>Data is successfully inserted!</h1>");
-	} catch(Exception e) {
-		out.println(e.getMessage());
-	}
-	out.println("<br><a href='./index.jsp'>Return</a>");
-%>
+<h1>Data is successfully inserted!</h1>
+<br><a href='./index.jsp'>Return</a>
