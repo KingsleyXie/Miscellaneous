@@ -8,6 +8,7 @@ public class testServlet extends HttpServlet {
 		HttpServletResponse res
 	) throws ServletException, IOException {
 		PrintWriter out = res.getWriter();
+		out.println("<title>Servlet Test</title>");
 		out.println("<h1>Hello, Servlet!</h1>");
 		out.flush();
 	}

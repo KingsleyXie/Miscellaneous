@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>JSP TEST</title>
+	<title>JSP Test</title>
 </head>
 
 <body>
 	<h1>
-		<% out.println("Hello World"); %>
+		<% out.println("Hello JSP!"); %>
 	</h1>
 </body>
 </html>

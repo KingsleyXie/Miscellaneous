@@ -1,5 +1,3 @@
-<%@ page import = "tb.testBean" %>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,12 +6,16 @@
 </head>
 
 <body>
-	<% testBean name = new testBean("Naive"); %>
-	The Name Is: <%= name.get() %>
+	<%@ page import = "tb.testBean" %>
 
-	<%
-		out.println("<br>Setting Another Name<br>");
-		name.set("Excited!");
-	%>
-	The Name Is: <%= name.get() %>
+	<h3>
+		<% testBean name = new testBean("Naive"); %>
+		The Name Is: <%= name.get() %>
+
+		<%
+			out.println("<hr>Setting Another Name<hr>");
+			name.set("Excited!");
+		%>
+		The Name Is: <%= name.get() %>
+	</h3>
 </html>
