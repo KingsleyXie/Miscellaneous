@@ -14,7 +14,7 @@
 		setInterval(function () {
 			t.textContent--;
 			if (t.textContent == 0)
-				window.location.href = "index.jsp";
+				window.location.href = "/index.jsp";
 		}, 1000);
 	</script>
 </body>
