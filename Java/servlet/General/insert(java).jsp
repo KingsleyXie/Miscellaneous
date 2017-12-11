@@ -3,10 +3,6 @@
 <%@page import="javax.xml.parsers.*,org.w3c.dom.*"%>
 
 <%
-	request.setCharacterEncoding("UTF8");
-	String nickname = request.getParameter("nickname");
-	String message = request.getParameter("message");
-
 	try {
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder db = dbf.newDocumentBuilder();
@@ -23,11 +19,16 @@
 			configXML.getElementsByTagName("password").item(0).getTextContent()
 		);
 
-		Statement st = con.createStatement();
-		st.executeUpdate(
-			"INSERT INTO forum (nickname,message) VALUES('" +
-			nickname + "','" + message + "')"
+		request.setCharacterEncoding("UTF8");
+		PreparedStatement s = con.prepareStatement(
+			"INSERT INTO " +
+				"forum (nickname, message)" +
+			"VALUES (?, ?)"
 		);
+		s.setString(1, request.getParameter("nickname"));
+		s.setString(2, request.getParameter("message"));
+		s.executeUpdate();
+
 		out.println("<h1>Data is successfully inserted!</h1>");
 	} catch(Exception e) {
 		out.println(e.getMessage());

@@ -101,7 +101,7 @@
 	</c:set>
 
 	<sql:setDataSource var="snapshot" driver="com.mysql.jdbc.Driver" url="${url}" user="${username}" password="${password}"/>
-	<sql:query dataSource="${snapshot}" var="result">SELECT * from forum;</sql:query>
+	<sql:query dataSource="${snapshot}" var="result">SELECT * FROM forum;</sql:query>
 
 	<c:forEach items="${result.rows}" var="row">
 	<div class="container">

@@ -18,7 +18,9 @@
 
 <sql:setDataSource var="snapshot" driver="com.mysql.jdbc.Driver" url="${url}" user="${username}" password="${password}"/>
 <sql:update dataSource="${snapshot}">
-	INSERT INTO forum (nickname,message) VALUES('${param.nickname}', '${param.message}')
+	INSERT INTO forum (nickname,message) VALUES(?, ?)
+	<sql:param value="${param.nickname}"/>
+	<sql:param value="${param.message}"/>
 </sql:update>
 
 <h1>Data is successfully inserted!</h1>
