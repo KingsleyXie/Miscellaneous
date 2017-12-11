@@ -42,7 +42,7 @@ public class Bean {
 			Connection con = DriverManager.getConnection(conURL, username, password);
 
 			Statement s = con.createStatement();
-			ResultSet rs = s.executeQuery("SELECT * FROM forum");
+			ResultSet rs = s.executeQuery("SELECT * FROM forum ORDER BY ID DESC");
 
 			messages = new Vector<Msg>();
 			while (rs.next())
