@@ -90,7 +90,9 @@
 	<c:import var="XMLfile" url="/WEB-INF/config.xml"/>
 	<x:parse xml="${XMLfile}" var="configXML"/>
 
-	<c:set var="url">jdbc:mysql://localhost:3306/<x:out select="$configXML/config/database"/>?useUnicode=true&characterEncoding=utf-8</c:set>
+	<c:set var="url">
+		jdbc:mysql://localhost:3306/<x:out select="$configXML/config/database"/>?useUnicode=true&characterEncoding=utf-8
+	</c:set>
 	<c:set var="username">
 		<x:out select="$configXML/config/username"/>
 	</c:set>

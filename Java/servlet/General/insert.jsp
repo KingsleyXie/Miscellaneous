@@ -12,7 +12,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-	<title>JSP DB Insert</title>
+	<title>JSP Operation Result</title>
 	<link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
 </head>
 
@@ -30,7 +30,7 @@
 				<div class="modal-body text-center" id="msg"></div>
 
 				<div class="modal-footer">
-					<a type="button" class="btn btn-primary center-block" href="/index.jsp">确定</a>
+					<a type="button" class="btn btn-primary center-block" href="/">确定</a>
 				</div>
 			</div>
 		</div>
@@ -40,7 +40,9 @@
 		<c:import var="XMLfile" url="/WEB-INF/config.xml"/>
 		<x:parse xml="${XMLfile}" var="configXML"/>
 
-		<c:set var="url">jdbc:mysql://localhost:3306/<x:out select="$configXML/config/database"/>?useUnicode=true&characterEncoding=utf-8</c:set>
+		<c:set var="url">
+			jdbc:mysql://localhost:3306/<x:out select="$configXML/config/database"/>?useUnicode=true&characterEncoding=utf-8
+		</c:set>
 		<c:set var="username">
 			<x:out select="$configXML/config/username"/>
 		</c:set>
@@ -86,7 +88,7 @@
 				setInterval(function () {
 					t.textContent--;
 					if (t.textContent == 0)
-						window.location.href = "/index.jsp";
+						window.location.href = "/";
 				}, 1000);
 			</script>
 		</c:otherwise>

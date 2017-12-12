@@ -24,7 +24,7 @@
 				<div class="modal-body text-center" id="msg"></div>
 
 				<div class="modal-footer">
-					<a type="button" class="btn btn-primary center-block" href="/index.jsp">确定</a>
+					<a type="button" class="btn btn-primary center-block" href="/">确定</a>
 				</div>
 			</div>
 		</div>
@@ -59,7 +59,7 @@
 				setInterval(function () {
 					t.textContent--;
 					if (t.textContent == 0)
-						window.location.href = "/index.jsp";
+						window.location.href = "/";
 				}, 1000);
 			</script>
 		</c:otherwise>
