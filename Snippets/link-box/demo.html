@@ -24,8 +24,8 @@
 
 	<div class="link-boxes">
 		<a href="#" class="link-box">
-			<img src="./demo-icons/instantlogosearch-coca-cola.png" alt="coca-cola" class="avatar">
-			<div class="nickname">Coca-cola</div>
+			<img src="./demo-icons/instantlogosearch-wechat.png" alt="wechat" class="avatar">
+			<div class="nickname">Wechat</div>
 		</a>
 
 		<a href="#" class="link-box">
@@ -40,7 +40,7 @@
 
 		<a href="#" class="link-box">
 			<img src="./demo-icons/instantlogosearch-google-2.png" alt="google-2" class="avatar">
-			<div class="nickname">Google</div>
+			<div class="nickname">Google Google</div>
 		</a>
 
 		<a href="#" class="link-box">
@@ -64,24 +64,24 @@
 		</a>
 
 		<a href="#" class="link-box">
-			<img src="./demo-icons/instantlogosearch-wechat.png" alt="wechat" class="avatar">
-			<div class="nickname">Wechat</div>
+			<img src="./demo-icons/instantlogosearch-coca-cola.png" alt="coca-cola" class="avatar">
+			<div class="nickname">Coca-cola</div>
 		</a>
 	</div>
 
 	<script>
 		window.onload = function() {
-			var imgSize = parseInt(
-				getComputedStyle(document.body).getPropertyValue('--img-size')
-			);
+			var imgSize = window.innerWidth < 520 ?
+				(window.innerWidth * 0.5 - 22.4) : 150;
 			var imgs = document.getElementsByClassName("avatar");
 
 			for(var i = 0; i < imgs.length; i++)
 			{
-				if (imgs[i].height < imgSize)
+				if (imgs[i].height < imgSize) {
 					imgs[i].style.margin = String(
 						(imgSize - imgs[i].height) / 2
 					) + "px 0";
+				}
 			}
 		}
 	</script>

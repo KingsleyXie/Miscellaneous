@@ -9,8 +9,7 @@ html {
 		--img-size: calc((100% - 1.4rem * 2) / 2) !important;
 	}
 	.link-box .avatar {
-		max-width: 85% !important;
-		margin: 0 7.5% !important;
+		max-width: 100% !important;
 	}
 }
 
@@ -40,10 +39,10 @@ html {
 }
 .link-box .nickname {
 	color: grey;
-	margin: 23px 0;
-	font-size: 1.7em;
+	margin: 15px 0;
+	font-size: 1.3em;
+	text-align: center;
 	overflow: hidden;
 	outline: none;
 	border: none;
-	text-align: center;
 }
