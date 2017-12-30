@@ -1,7 +1,17 @@
 /* Modified from CSS code of Typecho's link-box*/
 
 html {
-	--img-size: 200px;
+	--img-size: 150px;
+}
+
+@media (max-width: 520px) {
+	html {
+		--img-size: calc((100% - 1.4rem * 2) / 2) !important;
+	}
+	.link-box .avatar {
+		max-width: 85% !important;
+		margin: 0 7.5% !important;
+	}
 }
 
 .link-boxes {
@@ -24,8 +34,7 @@ html {
 	transform: translateY(-0.3rem);
 }
 .link-box .avatar {
-	width: 100%;
-	max-width: 100%;
+	max-width: var(--img-size);
 	max-height: var(--img-size);
 	transition: all 1s cubic-bezier(0, 0, 0.2, 1);
 }
