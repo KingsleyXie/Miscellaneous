@@ -1,9 +1,19 @@
 /* Modified from CSS code of Typecho's link-box*/
 
+html {
+	--img-size: 150px;
+}
+
+.link-boxes {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: baseline;
+}
 .link-box {
 	display: inline-block;
 	color: transparent;
-	width: 25%;
+	width: var(--img-size);
 	margin: 0 .7rem 1.5rem;
 	text-decoration: none;
 	box-shadow: 0 1.5px 3px rgba(0,0,0,0.1);
@@ -16,10 +26,11 @@
 .link-box .avatar {
 	width: 100%;
 	max-width: 100%;
+	max-height: var(--img-size);
 }
 .link-box .nickname {
 	color: grey;
-	margin: 13px 0;
+	margin: 23px 0;
 	font-size: 1.7em;
 	overflow: hidden;
 	outline: none;
