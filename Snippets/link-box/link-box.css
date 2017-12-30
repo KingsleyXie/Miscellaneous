@@ -7,6 +7,11 @@
 	margin: 0 .7rem 1.5rem;
 	text-decoration: none;
 	box-shadow: 0 1.5px 3px rgba(0,0,0,0.1);
+	transition: all .3s;
+}
+.link-box:hover {
+	box-shadow: 0 5px 9px rgba(0,0,0,0.15);
+	transform: translateY(-0.3rem);
 }
 .link-box .avatar {
 	width: 100%;
