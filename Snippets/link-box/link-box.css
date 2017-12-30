@@ -1,0 +1,23 @@
+/* Modified from CSS code of Typecho's link-box*/
+
+.link-box {
+	display: inline-block;
+	color: transparent;
+	width: 33.33333%;
+	margin: 0 .7rem 1.5rem;
+	text-decoration: none;
+	box-shadow: 0 1.5px 3px rgba(0,0,0,0.1);
+}
+.link-box .avatar {
+	width: 100%;
+	max-width: 100%;
+}
+.link-box .nickname {
+	color: grey;
+	margin: 13px 0;
+	font-size: 1.7em;
+	overflow: hidden;
+	outline: none;
+	border: none;
+	text-align: center;
+}
