@@ -64,5 +64,22 @@
 			<div class="nickname">Wechat</div>
 		</a>
 	</div>
+
+	<script>
+		window.onload = function() {
+			var imgSize = parseInt(
+				getComputedStyle(document.body).getPropertyValue('--img-size')
+			);
+			var imgs = document.getElementsByClassName("avatar");
+
+			for(var i = 0; i < imgs.length; i++)
+			{
+				if (imgs[i].height < imgSize)
+					imgs[i].style.margin = String(
+						(imgSize - imgs[i].height) / 2
+					) + "px 0";
+			}
+		}
+	</script>
 </body>
 </html>

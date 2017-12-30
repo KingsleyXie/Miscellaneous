@@ -1,7 +1,7 @@
 /* Modified from CSS code of Typecho's link-box*/
 
 html {
-	--img-size: 150px;
+	--img-size: 200px;
 }
 
 .link-boxes {
@@ -16,17 +16,18 @@ html {
 	width: var(--img-size);
 	margin: 0 .7rem 1.5rem;
 	text-decoration: none;
-	box-shadow: 0 1.5px 3px rgba(0,0,0,0.1);
+	box-shadow: 0 1.5px 3px rgba(0, 0, 0, 0.1);
 	transition: all .3s;
 }
 .link-box:hover {
-	box-shadow: 0 5px 9px rgba(0,0,0,0.15);
+	box-shadow: 0 5px 9px rgba(0, 0, 0, 0.15);
 	transform: translateY(-0.3rem);
 }
 .link-box .avatar {
 	width: 100%;
 	max-width: 100%;
 	max-height: var(--img-size);
+	transition: all 1s cubic-bezier(0, 0, 0.2, 1);
 }
 .link-box .nickname {
 	color: grey;
