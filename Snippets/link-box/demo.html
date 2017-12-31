@@ -71,8 +71,11 @@
 
 	<script>
 		window.onload = function() {
+			var fontSize = parseFloat(
+				getComputedStyle(document.body, null).fontSize
+			);
 			var imgSize = window.innerWidth < 520 ?
-				(window.innerWidth * 0.5 - 22.4) : 150;
+				(window.innerWidth * 0.5 - fontSize * 1.4) : 150;
 			var imgs = document.getElementsByClassName("avatar");
 
 			for(var i = 0; i < imgs.length; i++)
