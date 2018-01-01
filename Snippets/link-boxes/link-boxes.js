@@ -1,11 +1,19 @@
 window.onload = function() {
 	reCenterImgs();
 
+	addEventListener("resize", function() {
+		console.log(window.innerWidth);
+	});
+
 	var mql = window.matchMedia("(max-width: 520px)");
 	var matchState = mql.matches;
 
 	mql.addListener(function(e) {
-		if (e.matches != matchState) {
+		//Width changes from (520-)px to (520+)px
+		//Or width is less than 520px
+		if ((e.matches != matchState)
+			|| e.matches) {
+			console.log("emmm");
 			reCenterImgs();
 			matchState = e.matches;
 		}
