@@ -23,52 +23,52 @@
 	<br>
 
 	<div class="link-boxes">
-		<a href="#" class="link-box">
-			<img src="./demo-icons/instantlogosearch-wechat.png" alt="wechat" class="avatar">
-			<div class="nickname">Wechat</div>
+		<a href="https://github.com/KingsleyXie/NaiveProjects/Snippets/link-boxes/" class="link-box">
+			<img src="./demo-icons/kingsley.jpg" alt="kingsley" class="avatar">
+			<div class="nickname">Kingsley</div>
 		</a>
 
-		<a href="#" class="link-box">
-			<img src="./demo-icons/instantlogosearch-facebook.png" alt="facebook" class="avatar">
-			<div class="nickname">Facebook</div>
-		</a>
-
-		<a href="#" class="link-box">
+		<a href="https://github.com/KingsleyXie/NaiveProjects/Snippets/link-boxes/" class="link-box">
 			<img src="./demo-icons/instantlogosearch-google.png" alt="google" class="avatar">
 			<div class="nickname">Google</div>
 		</a>
 
-		<a href="#" class="link-box">
-			<img src="./demo-icons/instantlogosearch-google-2.png" alt="google-2" class="avatar">
-			<div class="nickname">Google 2</div>
+		<a href="https://github.com/KingsleyXie/NaiveProjects/Snippets/link-boxes/" class="link-box">
+			<img src="./demo-icons/instantlogosearch-wechat.png" alt="wechat" class="avatar">
+			<div class="nickname">Wechat</div>
 		</a>
 
-		<a href="#" class="link-box">
+		<a href="https://github.com/KingsleyXie/NaiveProjects/Snippets/link-boxes/" class="link-box">
+			<img src="./demo-icons/instantlogosearch-google-2.png" alt="google" class="avatar">
+			<div class="nickname">Google</div>
+		</a>
+
+		<a href="https://github.com/KingsleyXie/NaiveProjects/Snippets/link-boxes/" class="link-box">
 			<img src="./demo-icons/instantlogosearch-ikea.png" alt="ikea" class="avatar">
 			<div class="nickname">IKEA</div>
 		</a>
 
-		<a href="#" class="link-box">
+		<a href="https://github.com/KingsleyXie/NaiveProjects/Snippets/link-boxes/" class="link-box">
 			<img src="./demo-icons/instantlogosearch-starbucks.png" alt="starbucks" class="avatar">
 			<div class="nickname">Starbucks</div>
 		</a>
 
-		<a href="#" class="link-box">
+		<a href="https://github.com/KingsleyXie/NaiveProjects/Snippets/link-boxes/" class="link-box">
 			<img src="./demo-icons/instantlogosearch-twitter.png" alt="twitter" class="avatar">
 			<div class="nickname">Twitter</div>
 		</a>
 
-		<a href="#" class="link-box">
+		<a href="https://github.com/KingsleyXie/NaiveProjects/Snippets/link-boxes/" class="link-box">
 			<img src="./demo-icons/instantlogosearch-facebook-2.png" alt="facebook" class="avatar">
-			<div class="nickname">Facebook 2</div>
+			<div class="nickname">Facebook</div>
 		</a>
 
-		<a href="#" class="link-box">
+		<a href="https://github.com/KingsleyXie/NaiveProjects/Snippets/link-boxes/" class="link-box">
 			<img src="./demo-icons/instantlogosearch-ubuntu.png" alt="ubuntu" class="avatar">
 			<div class="nickname">Ubuntu</div>
 		</a>
 
-		<a href="#" class="link-box">
+		<a href="https://github.com/KingsleyXie/NaiveProjects/Snippets/link-boxes/" class="link-box">
 			<img src="./demo-icons/instantlogosearch-coca-cola.png" alt="coca-cola" class="avatar">
 			<div class="nickname">Coca-cola</div>
 		</a>
@@ -84,21 +84,13 @@
 			{
 				imgs[i].style.maxHeight = imgSize + 'px';
 
-				if (imgs[i].getBoundingClientRect().width.toFixed(1) < imgSize) {
-					console.log('width');
-					console.log(imgs[i].getBoundingClientRect().width.toFixed(1));
-					console.log(imgSize);
-					console.log(imgs[i]);
+				var rect = imgs[i].getBoundingClientRect();
+				if (rect.width.toFixed(1) < imgSize) {
 					imgs[i].style.margin = '0 ' + String(
 						(imgSize - imgs[i].width) / 2
 					) + 'px';
 				}
-
-				if (imgs[i].getBoundingClientRect().height.toFixed(1) < imgSize) {
-					console.log('height');
-					console.log(imgs[i].getBoundingClientRect().height.toFixed(1));
-					console.log(imgSize);
-					console.log(imgs[i]);
+				if (rect.height.toFixed(1) < imgSize) {
 					imgs[i].style.margin = String(
 						(imgSize - imgs[i].height) / 2
 					) + 'px 0';
