@@ -78,6 +78,13 @@
 			for(var i = 0; i < imgs.length; i++)
 			{
 				imgs[i].style.maxHeight = imgSize + 'px';
+
+				if (imgs[i].width < imgSize) {
+					imgs[i].style.margin = '0 ' + String(
+						(imgSize - imgs[i].width) / 2
+					) + 'px';
+				}
+
 				if (imgs[i].height < imgSize) {
 					imgs[i].style.margin = String(
 						(imgSize - imgs[i].height) / 2

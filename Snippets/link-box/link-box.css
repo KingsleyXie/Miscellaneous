@@ -8,9 +8,6 @@ html {
 	html {
 		--img-size: calc(50% - 22.4px) !important;
 	}
-	.link-box .avatar {
-		max-width: 100% !important;
-	}
 }
 
 .link-boxes {
@@ -33,7 +30,7 @@ html {
 	transform: translateY(-5px);
 }
 .link-box .avatar {
-	max-width: var(--img-size);
+	max-width: 100%;
 	transition: all 1s cubic-bezier(0, 0, 0.2, 1);
 }
 .link-box .nickname {
