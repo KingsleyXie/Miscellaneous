@@ -6,7 +6,7 @@ html {
 
 @media (max-width: 520px) {
 	html {
-		--img-size: calc(50% - 1.4rem) !important;
+		--img-size: calc(50% - 22.4px) !important;
 	}
 	.link-box .avatar {
 		max-width: 100% !important;
@@ -24,14 +24,14 @@ html {
 	display: inline-block;
 	color: transparent;
 	width: var(--img-size);
-	margin: 0 .7rem 1.5rem;
+	margin: 0 11.2px 25px;
 	text-decoration: none;
 	box-shadow: 0 1.5px 3px rgba(0, 0, 0, 0.1);
 	transition: all .3s;
 }
 .link-box:hover {
 	box-shadow: 0 5px 9px rgba(0, 0, 0, 0.15);
-	transform: translateY(-0.3rem);
+	transform: translateY(-5px);
 }
 .link-box .avatar {
 	max-width: var(--img-size);
