@@ -79,13 +79,21 @@
 			{
 				imgs[i].style.maxHeight = imgSize + 'px';
 
-				if (imgs[i].width < imgSize) {
+				if (imgs[i].getBoundingClientRect().width.toFixed(1) < imgSize) {
+					console.log('width');
+					console.log(imgs[i].getBoundingClientRect().width.toFixed(1));
+					console.log(imgSize);
+					console.log(imgs[i]);
 					imgs[i].style.margin = '0 ' + String(
 						(imgSize - imgs[i].width) / 2
 					) + 'px';
 				}
 
-				if (imgs[i].height < imgSize) {
+				if (imgs[i].getBoundingClientRect().height.toFixed(1) < imgSize) {
+					console.log('height');
+					console.log(imgs[i].getBoundingClientRect().height.toFixed(1));
+					console.log(imgSize);
+					console.log(imgs[i]);
 					imgs[i].style.margin = String(
 						(imgSize - imgs[i].height) / 2
 					) + 'px 0';
