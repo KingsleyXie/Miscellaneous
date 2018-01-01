@@ -10,7 +10,6 @@ html {
 	}
 	.link-box .avatar {
 		max-width: 100% !important;
-		max-height: 100% !important;
 	}
 }
 
@@ -35,7 +34,6 @@ html {
 }
 .link-box .avatar {
 	max-width: var(--img-size);
-	max-height: var(--img-size);
 	transition: all 1s cubic-bezier(0, 0, 0.2, 1);
 }
 .link-box .nickname {
