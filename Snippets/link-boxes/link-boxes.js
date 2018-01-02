@@ -25,21 +25,18 @@ function reCenterImgs() {
 	);
 	var imgs = document.getElementsByClassName("avatar");
 
-	for(var i = 0; i < imgs.length; i++)
-	{
+	for(var i = 0; i < imgs.length; i++) {
 		imgs[i].style.maxHeight = imgSize + 'px';
 		imgs[i].style.margin = '0 0';
 
+		var vert = '0', horz = '0';
 		var rect = imgs[i].getBoundingClientRect();
-		if (rect.width.toFixed(1) < imgSize) {
-			imgs[i].style.margin = '0 ' + String(
-				(imgSize - imgs[i].width) / 2
-			) + 'px';
-		}
-		if (rect.height.toFixed(1) < imgSize) {
-			imgs[i].style.margin = String(
-				(imgSize - imgs[i].height) / 2
-			) + 'px 0';
-		}
+
+		if (parseFloat(rect.width.toFixed(1)) < imgSize)
+			horz = ((imgSize - imgs[i].width) / 2).toFixed(1);
+		if (parseFloat(rect.height.toFixed(1)) < imgSize)
+			vert = ((imgSize - imgs[i].height) / 2).toFixed(1);
+
+		imgs[i].style.margin = vert + 'px ' + horz + 'px';
 	}
 }
