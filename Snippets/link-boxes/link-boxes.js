@@ -2,27 +2,27 @@ window.onload = function() {
 	reCenterImgs();
 
 	addEventListener("resize", function() {
-		console.log(window.innerWidth);
-	});
+		var matches = (window.innerWidth < 520);
+		formerState =
+			(typeof formerState == "undefined") ?
+			matches : formerState
 
-	var mql = window.matchMedia("(max-width: 520px)");
-	var matchState = mql.matches;
-
-	mql.addListener(function(e) {
 		//Width changes from (520-)px to (520+)px
 		//Or width is less than 520px
-		if ((e.matches != matchState)
-			|| e.matches) {
-			console.log("emmm");
+		if (matches != formerState
+			|| matches) {
 			reCenterImgs();
-			matchState = e.matches;
+			formerState = matches;
 		}
 	});
 }
 
 function reCenterImgs() {
-	var imgSize = window.innerWidth < 520 ?
-		(window.innerWidth * 0.5 - 22.4) : 150;
+	var imgSize = parseFloat(
+		getComputedStyle(
+			document.getElementsByClassName("link-box")[0]
+		).getPropertyValue("width")
+	);
 	var imgs = document.getElementsByClassName("avatar");
 
 	for(var i = 0; i < imgs.length; i++)
