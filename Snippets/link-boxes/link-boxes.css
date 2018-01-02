@@ -6,20 +6,19 @@ html {
 
 @media (max-width: 520px) {
 	html {
-		--img-size: calc(50% - 22.4px) !important;
+		--img-size: calc(50vw - 22.4px) !important;
 	}
 }
 
 .link-boxes {
 	display: flex;
-	flex-wrap: wrap;
 	justify-content: center;
-	align-items: baseline;
+	flex-wrap: wrap;
 }
 .link-box {
 	display: inline-block;
-	color: transparent;
 	width: var(--img-size);
+	color: transparent;
 	margin: 0 11.2px 25px;
 	text-decoration: none;
 	box-shadow: 0 1.5px 3px rgba(0, 0, 0, 0.1);
@@ -30,8 +29,14 @@ html {
 	transform: translateY(-5px);
 }
 .link-box .avatar {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: var(--img-size);
+}
+.link-box .avatar img {
 	max-width: 100%;
-	transition: all 1s cubic-bezier(0, 0, 0.2, 1);
+	max-height: 100%;
 }
 .link-box .nickname {
 	color: grey;
@@ -39,6 +44,6 @@ html {
 	font-size: 1.3em;
 	text-align: center;
 	overflow: hidden;
-	outline: none;
-	border: none;
+	white-space: nowrap;
+	text-overflow: ellipsis;
 }
