@@ -1,7 +1,16 @@
 $(".toc").remove();
-var TOC = '<div class="toc">文章目录<ul>';
+var config = {
 
-var elements = $(".post-content").find(":header");
+	"title": "文章目录",
+	"contentWrapper": ".post-content",
+	"contentStart": ".post-content>p:first"
+};
+
+
+
+var TOC = '<div class="toc">' + config.title + '<ul>';
+
+var elements = $(config.contentWrapper).find(":header");
 var currHeading = elements[0].nodeName;
 
 if (elements.length > 0) {
@@ -31,4 +40,4 @@ if (elements.length > 0) {
 
 TOC += '</ul></div>';
 
-$(".post-content>p:first").before(TOC);
+$(config.contentStart).before(TOC);
