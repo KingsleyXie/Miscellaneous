@@ -1,16 +1,22 @@
-var toc = '<div class="toc">';
+var TOC = '<div class="toc">';
 
 for (var i = 1; i <= 6; i++) {
-	var ele = $(".post-content>h" + i);
+	var elements = $(".post-content>h" + i);
 
-	if (ele.length > 0) {
-		toc += '<ul>';
-		$.each(ele, function(k, v) {
-			toc += '<li>' + v.innerText + '</li>';
+	if (elements.length > 0) {
+		TOC += '<ul>';
+		$.each(elements, function(key, content) {
+			var text = content.innerText;
+
+			content.id = text;
+			TOC +=
+			'<a href="#' + text + '">' +
+				'<li>' + text + '</li>' +
+			'</a>';
 		});
-		toc += '</ul>';
+		TOC += '</ul>';
 	}
 }
-toc += '</div>';
+TOC += '</div>';
 
-$(".post-content>p:first").before(toc);
+$(".post-content>p:first").before(TOC);
