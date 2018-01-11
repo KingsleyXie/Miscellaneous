@@ -1,6 +1,4 @@
-$(".toc").remove();
 var config = {
-
 	"title": "文章目录",
 	"contentWrapper": ".post-content",
 	"contentStart": ".post-content>p:first"
@@ -10,8 +8,9 @@ var config = {
 
 var TOC = '<div class="toc">' + config.title + '<ul>';
 
-var elements = $(config.contentWrapper).find(":header");
+var elements = $(config.contentWrapper).children(":header");
 var currHeading = elements[0].nodeName;
+var records = new Array();
 
 if (elements.length > 0) {
 	$.each(elements, function(key, content) {
@@ -25,16 +24,20 @@ if (elements.length > 0) {
 				break;
 
 			case 1:
-				TOC += '</li></ul><li>' + link;
 				currHeading = content.nodeName;
+				while (records.includes(currHeading)) {
+					TOC += '</li></ul>';
+					records.pop();
+				}
+				TOC += '<li>' + link;
 				break;
 
 			case -1:
 				TOC += '<ul><li>' + link;
+				records.push(currHeading);
 				currHeading = content.nodeName;
 				break;
 		}
-		console.log(TOC);
 	});
 }
 
