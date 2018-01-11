@@ -15,6 +15,7 @@ function addHeading(val) {
 				alert('This kind of heading structure is not supported.');
 				return;
 			}
+
 			preHeading = val;
 			while (headings.includes(preHeading)) {
 				headings.pop();
@@ -65,6 +66,14 @@ function generateTOC() {
 
 				case 1:
 					currHeading = content.nodeName;
+
+					if (!records.includes(currHeading)) {
+						console.warn(
+							'Warning: There may be some problem with your heading structure, ' +
+							'so the generated TOC is not guaranteed to be in right order.'
+						);
+					}
+
 					while (records.includes(currHeading)) {
 						TOC += '</li></ul>';
 						records.pop();
