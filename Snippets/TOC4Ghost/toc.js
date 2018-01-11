@@ -1,7 +1,6 @@
 var config = {
 	"title": "文章目录",
-	"contentWrapper": ".post-content",
-	"contentStart": ".post-content>p:first"
+	"contentWrapper": ".post-content"
 };
 
 
@@ -43,4 +42,4 @@ if (elements.length > 0) {
 
 TOC += '</ul></div>';
 
-$(config.contentStart).before(TOC);
+$(config.contentWrapper).find(">:first-child").before(TOC);
