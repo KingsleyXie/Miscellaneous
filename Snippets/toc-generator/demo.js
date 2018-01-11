@@ -1,7 +1,27 @@
-var scriptEle = document.createElement("script");
-scriptEle.type = 'text/javascript';
-scriptEle.src = 'https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js';
-document.getElementsByTagName("head")[0].appendChild(scriptEle);
+if (window.innerWidth < 520) {
+	document.body.innerHTML = '';
+	var ele = document.createElement("center");
+	var txt = document.createTextNode(
+		'Sorry, this demo is shown for desktops only.'
+	);
+
+	ele.style.margin = 'calc((100vh - 1em) / 2) auto 0';
+	ele.appendChild(txt);
+	document.body.appendChild(ele);
+} else {
+	loadJQuery();
+}
+
+
+
+function loadJQuery() {
+	var ele = document.createElement("script");
+	ele.type = 'text/javascript';
+	ele.src = 'https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js';
+	document.getElementsByTagName("head")[0].appendChild(ele);
+}
+
+
 
 function addHeading() {
 	var val = document.getElementById("selection").value;
