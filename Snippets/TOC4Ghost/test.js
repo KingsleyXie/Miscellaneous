@@ -1,5 +1,6 @@
-function addHeading(val) {
-	if (val == '') return;
+function addHeading() {
+	var val = document.getElementById("selection").value;
+
 	if (typeof(headings) == 'undefined')
 		headings = new Array();
 	if (typeof(preHeading) == 'undefined')
@@ -33,7 +34,9 @@ function addHeading(val) {
 
 function addElement(val) {
 	var ele = document.createElement(val);
-	var txt = document.createTextNode("Sample Heading " + val);
+	var txt = document.createTextNode(
+		Math.random().toString(36).substr(2, 11) + ' ' + val
+	);
 	ele.appendChild(txt);
 
 	var post = document.getElementById("post-content");

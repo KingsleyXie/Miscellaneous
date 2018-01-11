@@ -21,8 +21,7 @@
 	<br><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut similique, quia? Dignissimos ad at explicabo neque ex. Error deserunt, illo voluptatum. Possimus vero, magni optio corporis aspernatur impedit sit beatae!</p><br>
 
 	Choose the heading size you want to add:
-	<select onchange="addHeading(this.value);">
-		<option value=""></option>
+	<select id="selection" onchange="addHeading();">
 		<option value="h1">h1</option>
 		<option value="h2">h2</option>
 		<option value="h3">h3</option>
@@ -31,7 +30,8 @@
 		<option value="h6">h6</option>
 	</select>
 
-	<button onclick="generateTOC();">Generate TOC</button>
+	<button onclick="addHeading();">Add</button>
+	<button style="float: right;" onclick="generateTOC();">Generate TOC</button>
 
 	<hr><section class="post-content" id="post-content"></section>
 
