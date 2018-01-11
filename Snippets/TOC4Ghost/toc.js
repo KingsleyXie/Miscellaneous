@@ -3,7 +3,10 @@ var config = {
 	"contentWrapper": ".post-content"
 };
 
-var elements = $(config.contentWrapper).children(":header");
+var elements =
+	$(config.contentWrapper).find(":header")
+	.filter(":not(blockquote :header)");
+
 if (elements.length > 0) {
 	var TOC = '<div class="toc">' + config.title + '<ul>';
 
