@@ -1,7 +1,38 @@
 function addHeading(val) {
 	if (val == '') return;
+	if (typeof(headings) == 'undefined')
+		headings = new Array();
+	if (typeof(preHeading) == 'undefined')
+		preHeading = val;
+
+	switch (preHeading.localeCompare(val)) {
+		case 0:
+			addElement(val);
+			break;
+
+		case 1:
+			if (!headings.includes(val)) {
+				alert('This kind of heading structure is not supported.');
+				return;
+			}
+			preHeading = val;
+			while (headings.includes(preHeading)) {
+				headings.pop();
+			}
+			addElement(val);
+			break;
+
+		case -1:
+			headings.push(preHeading);
+			preHeading = val;
+			addElement(val);
+			break;
+	}
+}
+
+function addElement(val) {
 	var ele = document.createElement(val);
-	var txt = document.createTextNode("Sample Heading " + val.replace('h', ''));
+	var txt = document.createTextNode("Sample Heading " + val);
 	ele.appendChild(txt);
 
 	var post = document.getElementById("post-content");
