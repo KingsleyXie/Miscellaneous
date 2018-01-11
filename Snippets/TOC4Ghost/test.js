@@ -1,3 +1,8 @@
+var scriptEle = document.createElement("script");
+scriptEle.type = 'text/javascript';
+scriptEle.src = 'https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js';
+document.getElementsByTagName("head")[0].appendChild(scriptEle);
+
 function addHeading() {
 	var val = document.getElementById("selection").value;
 
