@@ -1,17 +1,15 @@
 var config = {
-	"title": "文章目录",
+	"title": "Table Of Contents",
 	"contentWrapper": ".post-content"
 };
 
-
-
-var TOC = '<div class="toc">' + config.title + '<ul>';
-
 var elements = $(config.contentWrapper).children(":header");
-var currHeading = elements[0].nodeName;
-var records = new Array();
-
 if (elements.length > 0) {
+	var TOC = '<div class="toc">' + config.title + '<ul>';
+
+	var currHeading = elements[0].nodeName;
+	var records = new Array();
+
 	$.each(elements, function(key, content) {
 		var text = content.innerText;
 		var link = '<a href="#' + text + '">' + text  + '</a>';
@@ -46,8 +44,9 @@ if (elements.length > 0) {
 				break;
 		}
 	});
+
+	TOC += '</ul></div>';
+	$(config.contentWrapper).find(">:first-child").before(TOC);
+} else {
+	console.warn('No heading found to generate TOC.');
 }
-
-TOC += '</ul></div>';
-
-$(config.contentWrapper).find(">:first-child").before(TOC);
