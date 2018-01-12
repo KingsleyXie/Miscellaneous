@@ -28,7 +28,7 @@ if (elements.length > 0) {
 	var currHeading = elements[0].nodeName;
 	var records = new Array();
 
-	$.each(elements, function(key, content) {
+	elements.forEach(function(content) {
 		var text = content.innerText;
 		var link = '<a href="#' + text + '">' + text  + '</a>';
 		content.id = text;
@@ -64,7 +64,8 @@ if (elements.length > 0) {
 	});
 
 	TOC += '</ul></div>';
-	$(config.contentWrapper).find(">:first-child").before(TOC);
+	document.querySelector(config.contentWrapper).children[0]
+	.insertAdjacentHTML('beforebegin', TOC);
 } else {
 	console.warn('No heading found to generate TOC.');
 }

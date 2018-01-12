@@ -8,6 +8,17 @@ if (window.innerWidth < 520) {
 	ele.style.margin = 'calc((100vh - 1em) / 2) auto 0';
 	ele.appendChild(txt);
 	document.body.appendChild(ele);
+} else {
+	loadJQuery();
+}
+
+
+
+function loadJQuery() {
+	var ele = document.createElement("script");
+	ele.type = 'text/javascript';
+	ele.src = 'https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js';
+	document.getElementsByTagName("head")[0].appendChild(ele);
 }
 
 
@@ -58,32 +69,16 @@ function addElement(val) {
 }
 
 function generateTOC() {
-	var el = document.querySelector(".toc");
-	if (el != null) el.parentNode.removeChild(el);
+	$(".toc").remove();
 
-	const config = {
+	var config = {
 		"title": "Table Of Contents",
 		"contentWrapper": ".post-content"
 	};
 
-	var elements = Array.prototype.filter.call(
-		document.querySelector(config.contentWrapper)
-		.querySelectorAll("h1,h2,h3,h4,h5,h6"),
-
-		function(ele) {
-			var result = true;
-
-			document.querySelectorAll("blockquote")
-			.forEach(function(bq) {
-				bq.querySelectorAll("h1,h2,h3,h4,h5,h6")
-				.forEach(function(v) {
-					if (ele == v) result = false;
-				});
-			});
-
-			return result;
-		}
-	);
+	var elements =
+		$(config.contentWrapper).find(":header")
+		.filter(":not(blockquote :header)");
 
 	if (elements.length > 0) {
 		var TOC = '<div class="toc">' + config.title + '<ul>';
@@ -91,7 +86,7 @@ function generateTOC() {
 		var currHeading = elements[0].nodeName;
 		var records = new Array();
 
-		elements.forEach(function(content) {
+		$.each(elements, function(key, content) {
 			var text = content.innerText;
 			var link = '<a href="#' + text + '">' + text  + '</a>';
 			content.id = text;
@@ -127,8 +122,7 @@ function generateTOC() {
 		});
 
 		TOC += '</ul></div>';
-		document.querySelector(config.contentWrapper).children[0]
-		.insertAdjacentHTML('beforebegin', TOC);
+		$(config.contentWrapper).find(">:first-child").before(TOC);
 	} else {
 		console.warn('No heading found to generate TOC.');
 	}
