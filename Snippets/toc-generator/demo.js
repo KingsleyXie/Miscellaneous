@@ -66,10 +66,10 @@ function generateTOC() {
 		"contentWrapper": ".post-content"
 	};
 
-	var wrapper = document.querySelector(config.contentWrapper);
-	if (wrapper != null) {
+	var wrapper = document.querySelectorAll(config.contentWrapper);
+	if (wrapper.length == 1) {
 		var elements = Array.prototype.filter.call(
-			wrapper.querySelectorAll("h1,h2,h3,h4,h5,h6"),
+			wrapper[0].querySelectorAll("h1,h2,h3,h4,h5,h6"),
 			function(ele) {
 				var result = true;
 
@@ -106,7 +106,7 @@ function generateTOC() {
 
 						if (!records.includes(currHeading)) {
 							console.warn(
-								'Warning: There may be some problem ' +
+								'There may be some problem ' +
 								'with your heading structure, ' +
 								'so the generated TOC is not guaranteed ' +
 								'to be in right order.'
@@ -136,8 +136,12 @@ function generateTOC() {
 		}
 	} else {
 		console.warn(
-			'Warning: The provided Selector `' +
-			config.contentWrapper + '` is not valid.'
+			'The provided Selector `' +
+			config.contentWrapper + '` ' +
+			(
+				wrapper.length == 0 ?
+				'is not valid.' : 'matches multiple elements'
+			)
 		);
 	}
 }

@@ -6,7 +6,7 @@ const config = {
 
 
 var wrapper = $(config.contentWrapper);
-if (wrapper.length > 0) {
+if (wrapper.length == 1) {
 	var elements = wrapper.find(":header")
 		.filter(":not(blockquote :header)");
 
@@ -31,7 +31,7 @@ if (wrapper.length > 0) {
 
 					if (!records.includes(currHeading)) {
 						console.warn(
-							'Warning: There may be some problem ' +
+							'There may be some problem ' +
 							'with your heading structure, ' +
 							'so the generated TOC is not guaranteed ' +
 							'to be in right order.'
@@ -60,7 +60,11 @@ if (wrapper.length > 0) {
 	}
 } else {
 	console.warn(
-		'Warning: The provided Selector `' +
-		config.contentWrapper + '` is not valid.'
+		'The provided Selector `' +
+		config.contentWrapper + '` ' +
+		(
+			wrapper.length == 0 ?
+			'is not valid.' : 'matches multiple elements'
+		)
 	);
 }
