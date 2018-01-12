@@ -3,9 +3,24 @@ const config = {
 	"contentWrapper": ".post-content"
 };
 
-var elements =
-	$(config.contentWrapper).find(":header")
-	.filter(":not(blockquote :header)");
+var elements = Array.prototype.filter.call(
+	document.querySelector(config.contentWrapper)
+	.querySelectorAll("h1,h2,h3,h4,h5,h6"),
+
+	function(ele) {
+		var result = true;
+
+		document.querySelectorAll("blockquote")
+		.forEach(function(bq) {
+			bq.querySelectorAll("h1,h2,h3,h4,h5,h6")
+			.forEach(function(v) {
+				if (ele == v) result = false;
+			});
+		});
+
+		return result;
+	}
+);
 
 if (elements.length > 0) {
 	var TOC = '<div class="toc">' + config.title + '<ul>';
