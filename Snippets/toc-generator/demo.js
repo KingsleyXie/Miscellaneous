@@ -53,13 +53,16 @@ function addElement(val) {
 	);
 	ele.appendChild(txt);
 
-	var post = document.getElementById("post-content");
+	var post = document.querySelector(".post-content");
 	post.appendChild(ele);
 }
 
 function generateTOC() {
 	var el = document.querySelector(".toc");
-	if (el != null) el.parentNode.removeChild(el);
+	if (el != null) {
+		el.insertAdjacentHTML('beforebegin', '<p>[TOC]</p>');
+		el.parentNode.removeChild(el);
+	}
 
 	const config = {
 		"title": "Table Of Contents",
@@ -67,7 +70,10 @@ function generateTOC() {
 	};
 
 	var wrapper = document.querySelectorAll(config.contentWrapper);
-	if (wrapper.length == 1) {
+	if ((wrapper.length == 1) &&
+		(wrapper[0].firstElementChild.innerText == '[TOC]')) {
+		wrapper[0].removeChild(wrapper[0].firstElementChild);
+
 		var elements = Array.prototype.filter.call(
 			wrapper[0].querySelectorAll("h1,h2,h3,h4,h5,h6"),
 			function(ele) {
@@ -135,13 +141,15 @@ function generateTOC() {
 			console.warn('No heading found to generate TOC.');
 		}
 	} else {
-		console.warn(
-			'The provided Selector `' +
-			config.contentWrapper + '` ' +
-			(
-				wrapper.length == 0 ?
-				'is not valid.' : 'matches multiple elements'
-			)
-		);
+		if (wrapper.length != 1) {
+			console.warn(
+				'The provided Selector `' +
+				config.contentWrapper + '` ' +
+				(
+					wrapper.length == 0 ?
+					'is not valid.' : 'matches multiple elements'
+				)
+			);
+		}
 	}
 }

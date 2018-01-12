@@ -4,7 +4,10 @@ const config = {
 };
 
 var wrapper = document.querySelectorAll(config.contentWrapper);
-if (wrapper.length == 1) {
+if ((wrapper.length == 1) &&
+	(wrapper[0].firstElementChild.innerText == '[TOC]')) {
+	wrapper[0].removeChild(wrapper[0].firstElementChild);
+
 	var elements = Array.prototype.filter.call(
 		wrapper[0].querySelectorAll("h1,h2,h3,h4,h5,h6"),
 		function(ele) {
@@ -72,12 +75,14 @@ if (wrapper.length == 1) {
 		console.warn('No heading found to generate TOC.');
 	}
 } else {
-	console.warn(
-		'The provided Selector `' +
-		config.contentWrapper + '` ' +
-		(
-			wrapper.length == 0 ?
-			'is not valid.' : 'matches multiple elements'
-		)
-	);
+	if (wrapper.length != 1) {
+		console.warn(
+			'The provided Selector `' +
+			config.contentWrapper + '` ' +
+			(
+				wrapper.length == 0 ?
+				'is not valid.' : 'matches multiple elements'
+			)
+		);
+	}
 }

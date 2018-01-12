@@ -6,7 +6,10 @@ const config = {
 
 
 var wrapper = $(config.contentWrapper);
-if (wrapper.length == 1) {
+if ((wrapper.length == 1) &&
+	($(config.contentWrapper + ">:first-child").text() == '[TOC]')) {
+	$(config.contentWrapper + ">:first-child").remove();
+
 	var elements = wrapper.find(":header")
 		.filter(":not(blockquote :header)");
 
@@ -54,17 +57,19 @@ if (wrapper.length == 1) {
 		});
 
 		TOC += '</ul></div>';
-		$(config.contentWrapper).find(">:first-child").before(TOC);
+		$(config.contentWrapper + ">:first-child").before(TOC);
 	} else {
 		console.warn('No heading found to generate TOC.');
 	}
 } else {
-	console.warn(
-		'The provided Selector `' +
-		config.contentWrapper + '` ' +
-		(
-			wrapper.length == 0 ?
-			'is not valid.' : 'matches multiple elements'
-		)
-	);
+	if (wrapper.length != 1) {
+		console.warn(
+			'The provided Selector `' +
+			config.contentWrapper + '` ' +
+			(
+				wrapper.length == 0 ?
+				'is not valid.' : 'matches multiple elements'
+			)
+		);
+	}
 }
