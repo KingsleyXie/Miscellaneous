@@ -92,7 +92,13 @@ function generateTOC() {
 		);
 
 		if (elements.length > 0) {
-			var TOC = '<div class="toc">' + config.title + '<ul>';
+			var TOC =
+			'<div class="toc">' +
+				'<div class="toc-title">' +
+					config.title +
+					'<span>&#9660;</span>' +
+				'</div>' +
+			'<ul class="toc-content">';
 
 			var currHeading = elements[0].nodeName;
 			var records = new Array();
