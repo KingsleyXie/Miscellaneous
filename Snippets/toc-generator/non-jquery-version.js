@@ -87,19 +87,8 @@ if ((wrapper.length == 1) &&
 		document.querySelector(".toc-title")
 		.addEventListener('click', function () {
 			var toc = document.querySelector(".toc");
-			if (toc.classList.contains("toc-off")) {
-				toc.classList.replace("toc-off", "toc-on");
-				this.style.backgroundImage = "url(./assets/toc-on.png)"
-
-				document.querySelector(".toc-content")
-				.style.display = "block";
-			} else {
-				toc.classList.replace("toc-on", "toc-off");
-				this.style.backgroundImage = "url(./assets/toc-off.png)"
-
-				document.querySelector(".toc-content")
-				.style.display = "none";
-			}
+			toc.classList.toggle("toc-off");
+			toc.classList.toggle("toc-on");
 		});
 	} else {
 		console.warn('No heading found to generate TOC.');

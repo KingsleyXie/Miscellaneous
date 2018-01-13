@@ -65,10 +65,10 @@ function addElement(val) {
 }
 
 function generateTOC() {
-	var el = document.querySelector(".toc");
-	if (el != null) {
-		el.insertAdjacentHTML('beforebegin', '<p>[TOC]</p>');
-		el.parentNode.removeChild(el);
+	var existedTOC = document.querySelector(".toc");
+	if (existedTOC != null) {
+		existedTOC.insertAdjacentHTML('beforebegin', '<p>[TOC]</p>');
+		existedTOC.parentNode.removeChild(existedTOC);
 	}
 
 	const config = {
@@ -100,7 +100,15 @@ function generateTOC() {
 
 		if (elements.length > 0) {
 			var TOC =
-			'<div class="toc toc-off">' +
+			'<div class="toc ' +
+			(
+				existedTOC == null ? 'toc-off' :
+				(
+					existedTOC.classList.contains("toc-on") ?
+					'toc-on' : 'toc-off'
+				)
+			) +
+			'">' +
 				'<div class="toc-title">' +
 					config.title +
 				'</div>' +
@@ -153,19 +161,8 @@ function generateTOC() {
 			document.querySelector(".toc-title")
 			.addEventListener('click', function () {
 				var toc = document.querySelector(".toc");
-				if (toc.classList.contains("toc-off")) {
-					toc.classList.replace("toc-off", "toc-on");
-					this.style.backgroundImage = "url(./assets/toc-on.png)"
-
-					document.querySelector(".toc-content")
-					.style.display = "block";
-				} else {
-					toc.classList.replace("toc-on", "toc-off");
-					this.style.backgroundImage = "url(./assets/toc-off.png)"
-
-					document.querySelector(".toc-content")
-					.style.display = "none";
-				}
+				toc.classList.toggle("toc-off");
+				toc.classList.toggle("toc-on");
 			});
 		} else {
 			console.warn('No heading found to generate TOC.');

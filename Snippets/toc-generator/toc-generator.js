@@ -71,17 +71,8 @@ if ((wrapper.length == 1) &&
 
 		$(".toc-title").click(function () {
 			var toc = $(".toc");
-			if (toc.hasClass("toc-off")) {
-				toc.removeClass("toc-off").addClass("toc-on");
-				$(this).css("background-image", "url(./assets/toc-on.png)");
-
-				$(".toc-content").show(500);
-			} else {
-				toc.removeClass("toc-on").addClass("toc-off");
-				$(this).css("background-image", "url(./assets/toc-off.png)");
-
-				$(".toc-content").hide(500);
-			}
+			toc.toggleClass("toc-off");
+			toc.toggleClass("toc-on");
 		});
 	} else {
 		console.warn('No heading found to generate TOC.');

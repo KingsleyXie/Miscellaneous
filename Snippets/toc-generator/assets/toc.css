@@ -8,11 +8,21 @@
 	font-size: 1.1em;
 	padding: .5em 1em;
 	border-radius: 5px;
-	background-image: url(./toc-off.png);
 	background-position: 98.5% center;
 	background-repeat: no-repeat;
 	background-size: .9em;
 }
-.toc-content {
+
+.toc-on .toc-content {
+	display: block;
+}
+.toc-off .toc-content {
 	display: none;
+}
+
+.toc-on .toc-title {
+	background-image: url(./toc-on.png);
+}
+.toc-off .toc-title {
+	background-image: url(./toc-off.png);
 }
