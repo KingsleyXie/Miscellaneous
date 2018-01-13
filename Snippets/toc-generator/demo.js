@@ -93,11 +93,11 @@ function generateTOC() {
 
 		if (elements.length > 0) {
 			var TOC =
-			'<div class="toc">' +
-				'<div class="toc-title toc-off">' +
+			'<div class="toc toc-off">' +
+				'<div class="toc-title">' +
 					config.title +
 				'</div>' +
-			'<ul class="toc-content">';
+				'<ul class="toc-content">';
 
 			var currHeading = elements[0].nodeName;
 			var records = new Array();
@@ -145,14 +145,19 @@ function generateTOC() {
 
 			document.querySelector(".toc-title")
 			.addEventListener('click', function () {
-				if (this.classList.contains("toc-off")) {
-					this.classList.remove("toc-off");
+				var toc = document.querySelector(".toc");
+				if (toc.classList.contains("toc-off")) {
+					toc.classList.replace("toc-off", "toc-on");
 					this.style.backgroundImage = "url(./toc-on.png)"
-					this.classList.add("toc-on");
+
+					document.querySelector(".toc-content")
+					.style.display = "block";
 				} else {
-					this.classList.remove("toc-on");
+					toc.classList.replace("toc-on", "toc-off");
 					this.style.backgroundImage = "url(./toc-off.png)"
-					this.classList.add("toc-off");
+
+					document.querySelector(".toc-content")
+					.style.display = "none";
 				}
 			});
 		} else {
