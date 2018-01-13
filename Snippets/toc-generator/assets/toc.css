@@ -12,12 +12,15 @@
 	background-repeat: no-repeat;
 	background-size: .9em;
 }
-
-.toc-on .toc-content {
-	display: block;
+.toc-content {
+	overflow: hidden;
+	transition: all .7s;
 }
+
 .toc-off .toc-content {
-	display: none;
+	margin: 0;
+	height: 0;
+	opacity: 0;
 }
 
 .toc-on .toc-title {
