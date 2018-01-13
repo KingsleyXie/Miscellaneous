@@ -1,3 +1,10 @@
+var cssLink = document.createElement("link");
+cssLink.rel = "stylesheet";
+cssLink.href = "./assets/toc.css"
+document.getElementsByTagName("head")[0].appendChild(cssLink);
+
+
+
 if (window.innerWidth < 520) {
 	document.body.innerHTML = '';
 	var ele = document.createElement("center");
@@ -148,13 +155,13 @@ function generateTOC() {
 				var toc = document.querySelector(".toc");
 				if (toc.classList.contains("toc-off")) {
 					toc.classList.replace("toc-off", "toc-on");
-					this.style.backgroundImage = "url(./toc-on.png)"
+					this.style.backgroundImage = "url(./assets/toc-on.png)"
 
 					document.querySelector(".toc-content")
 					.style.display = "block";
 				} else {
 					toc.classList.replace("toc-on", "toc-off");
-					this.style.backgroundImage = "url(./toc-off.png)"
+					this.style.backgroundImage = "url(./assets/toc-off.png)"
 
 					document.querySelector(".toc-content")
 					.style.display = "none";
