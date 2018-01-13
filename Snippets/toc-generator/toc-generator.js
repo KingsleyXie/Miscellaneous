@@ -1,9 +1,14 @@
+$("<link/>", {
+	rel: "stylesheet",
+	href: "./assets/toc.css"
+}).appendTo("head");
+
+
+
 const config = {
 	"title": "Table Of Contents",
 	"contentWrapper": ".post-content"
 };
-
-
 
 var wrapper = $(config.contentWrapper);
 if ((wrapper.length == 1) &&
@@ -14,7 +19,12 @@ if ((wrapper.length == 1) &&
 		.filter(":not(blockquote :header)");
 
 	if (elements.length > 0) {
-		var TOC = '<div class="toc">' + config.title + '<ul>';
+		var TOC =
+		'<div class="toc toc-off">' +
+			'<div class="toc-title">' +
+				config.title +
+			'</div>' +
+			'<ul class="toc-content">';
 
 		var currHeading = elements[0].nodeName;
 		var records = new Array();
@@ -58,6 +68,21 @@ if ((wrapper.length == 1) &&
 
 		TOC += '</ul></div>';
 		$(config.contentWrapper + ">:first-child").before(TOC);
+
+		$(".toc-title").click(function () {
+			var toc = $(".toc");
+			if (toc.hasClass("toc-off")) {
+				toc.removeClass("toc-off").addClass("toc-on");
+				$(this).css("background-image", "url(./assets/toc-on.png)");
+
+				$(".toc-content").show(500);
+			} else {
+				toc.removeClass("toc-on").addClass("toc-off");
+				$(this).css("background-image", "url(./assets/toc-off.png)");
+
+				$(".toc-content").hide(500);
+			}
+		});
 	} else {
 		console.warn('No heading found to generate TOC.');
 	}
