@@ -94,9 +94,8 @@ function generateTOC() {
 		if (elements.length > 0) {
 			var TOC =
 			'<div class="toc">' +
-				'<div class="toc-title">' +
+				'<div class="toc-title toc-off">' +
 					config.title +
-					'<span>&#9660;</span>' +
 				'</div>' +
 			'<ul class="toc-content">';
 
@@ -143,6 +142,19 @@ function generateTOC() {
 			TOC += '</ul></div>';
 			document.querySelector(config.contentWrapper).children[0]
 			.insertAdjacentHTML('beforebegin', TOC);
+
+			document.querySelector(".toc-title")
+			.addEventListener('click', function () {
+				if (this.classList.contains("toc-off")) {
+					this.classList.remove("toc-off");
+					this.style.backgroundImage = "url(./toc-on.png)"
+					this.classList.add("toc-on");
+				} else {
+					this.classList.remove("toc-on");
+					this.style.backgroundImage = "url(./toc-off.png)"
+					this.classList.add("toc-off");
+				}
+			});
 		} else {
 			console.warn('No heading found to generate TOC.');
 		}
