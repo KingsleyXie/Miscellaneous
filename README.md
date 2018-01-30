@@ -6,8 +6,6 @@ Actually these code should not even be called as "projects", they are just some 
 Here is a brief index, in order to provide an overview of what are in the repository.
 
 - Snippets
-  - [link-boxes/](https://demos.kingsleyxie.cn/link-boxes/): A CSS tool to list links view as cards, detailed information are provided in the [directory](./Snippets/link-boxes).
-  - [link-boxes-alpha/](https://demos.kingsleyxie.cn/link-boxes-alpha/): Alpha Version of link-boxes
   - target_blank.js: A tool to set `target:_blank` attribute to outer links
 
 - C++
