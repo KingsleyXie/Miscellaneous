@@ -4,6 +4,11 @@ This is the code added on my blog post before footer part, which provides a copy
 
 ```html
 <style type="text/css">
+    .post-copyright {
+        padding-top: 1.75em;
+        border-top: #ebf2f6 1px solid;
+    }
+
     .copyright-notice {
         padding: .3em 1em;
         transition: all .5s;
@@ -18,18 +23,24 @@ This is the code added on my blog post before footer part, which provides a copy
         user-select: none;
     }
 
-    /* Offset For Ghost */
     .copyright-notice p {
         margin: .5em 0;
     }
 </style>
 
-<div class="copyright-notice">
-    <center onclick="this.nextElementSibling.hidden = !this.nextElementSibling.hidden;">文章版权声明</center>
-    <div hidden>
-        <hr>
-        <p>本文链接：{{url absolute="true"}}</p>
-        <p>许可协议：<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名-非商业性使用-相同方式共享 4.0 国际</a></p>
+<div class="post-copyright">
+    <div class="copyright-notice">
+        <center onclick="this.nextElementSibling.hidden = !this.nextElementSibling.hidden;">文章版权声明</center>
+        <div hidden>
+            <hr>
+            <p id="copyright-link">本文链接：</p>
+            <p>许可协议：<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名-非商业性使用-相同方式共享 4.0 国际</a></p>
+        </div>
     </div>
+
+    <script type="text/javascript">
+        document.getElementById("copyright-link").innerText +=
+        window.location.origin + window.location.pathname;
+    </script>
 </div>
 ```
