@@ -33,14 +33,22 @@ This is the code added on my blog post before footer part, which provides a copy
         <center onclick="this.nextElementSibling.hidden = !this.nextElementSibling.hidden;">文章版权声明</center>
         <div hidden>
             <hr>
-            <p id="copyright-link">本文链接：</p>
+            <p>本文链接：{{url absolute="true"}}</p>
             <p>许可协议：<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名-非商业性使用-相同方式共享 4.0 国际</a></p>
         </div>
     </div>
-
-    <script type="text/javascript">
-        document.getElementById("copyright-link").innerText +=
-        window.location.origin + window.location.pathname;
-    </script>
 </div>
+```
+
+If the placeholder `{{url absolute="true"}}` does not work correctly(it doesn't generate the url with `https` protocol in my case), you can change that line of code and use Javascript instead to generate the link:
+
+```html
+<!-- Modify this line of code -->
+<p id="copyright-link">本文链接：</p>
+
+<!-- And then add following JS code -->
+<script type="text/javascript">
+    document.getElementById("copyright-link").innerText +=
+    window.location.origin + window.location.pathname;
+</script>
 ```
