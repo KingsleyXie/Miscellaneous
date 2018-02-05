@@ -4,8 +4,10 @@
 		transition: all .5s;
 		box-shadow: 0 1.5px 3px rgba(0, 0, 0, 0.1);
 	}
-	.copyright-notice:hover {
+	.copyright-notice:hover > center {
 		cursor: pointer;
+	}
+	.copyright-notice:hover {
 		box-shadow: 0 5px 9px rgba(0, 0, 0, 0.15);
 		transform: translateY(-1px);
 	}
@@ -18,28 +20,11 @@
 
 <div class="copyright-notice">
 	<center>文章版权声明</center>
+	<div>
+		<hr>
+		<p>本文链接：{{url absolute="true"}}</p>
+		<p>许可协议：
+			<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名-非商业性使用-相同方式共享 4.0 国际</a>
+		</p>
+	</div>
 </div>
-
-<script type="text/javascript">
-	function copyrightDisplayer() {
-		//Protocol Information
-		const ptc = 'https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh';
-		const ptcName = '知识共享 署名-非商业性使用-相同方式共享 4.0 国际';
-
-		var link = window.location.origin + window.location.pathname;
-
-		document.querySelector(".copyright-notice")
-		.insertAdjacentHTML(
-			'beforeend',
-			'<hr>' +
-			'<p>本文链接：' + link + '</p>' +
-			'<p>许可协议：' +
-				'<a href="' + ptc + '">' + ptcName + '</a>' +
-			'</p>'
-		);
-		removeEventListener('click', copyrightDisplayer);
-	}
-
-	document.querySelector(".copyright-notice")
-	addEventListener('click', copyrightDisplayer);
-</script>
