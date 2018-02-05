@@ -1,10 +1,5 @@
 <style type="text/css">
-	.copyright-notice > a {
-		text-decoration: none;
-		color: inherit;
-	}
 	.copyright-notice {
-		user-select: none;
 		padding: .3em 1em;
 		transition: all .5s;
 		box-shadow: 0 1.5px 3px rgba(0, 0, 0, 0.1);
@@ -21,6 +16,30 @@
 	}
 </style>
 
-<center class="copyright-notice">
-	<a href="../about/#copyright">文章版权声明</a>
-</center>
+<div class="copyright-notice">
+	<center>文章版权声明</center>
+</div>
+
+<script type="text/javascript">
+	function copyrightDisplayer() {
+		//Protocol Information
+		const ptc = 'https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh';
+		const ptcName = '知识共享 署名-非商业性使用-相同方式共享 4.0 国际';
+
+		var link = window.location.origin + window.location.pathname;
+
+		document.querySelector(".copyright-notice")
+		.insertAdjacentHTML(
+			'beforeend',
+			'<hr>' +
+			'<p>本文链接：' + link + '</p>' +
+			'<p>许可协议：' +
+				'<a href="' + ptc + '">' + ptcName + '</a>' +
+			'</p>'
+		);
+		removeEventListener('click', copyrightDisplayer);
+	}
+
+	document.querySelector(".copyright-notice")
+	addEventListener('click', copyrightDisplayer);
+</script>
