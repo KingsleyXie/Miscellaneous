@@ -4,12 +4,13 @@
 		transition: all .5s;
 		box-shadow: 0 1.5px 3px rgba(0, 0, 0, 0.1);
 	}
-	.copyright-notice:hover > center {
-		cursor: pointer;
-	}
 	.copyright-notice:hover {
-		box-shadow: 0 5px 9px rgba(0, 0, 0, 0.15);
 		transform: translateY(-1px);
+		box-shadow: 0 5px 9px rgba(0, 0, 0, 0.15);
+	}
+	.copyright-notice > center {
+		cursor: pointer;
+		user-select: none;
 	}
 
 	body {
@@ -19,8 +20,8 @@
 </style>
 
 <div class="copyright-notice">
-	<center>文章版权声明</center>
-	<div>
+	<center onclick="this.nextElementSibling.hidden = !this.nextElementSibling.hidden;">文章版权声明</center>
+	<div hidden>
 		<hr>
 		<p>本文链接：{{url absolute="true"}}</p>
 		<p>许可协议：
