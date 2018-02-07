@@ -67,10 +67,27 @@ body { margin: 3em auto; }
 
 
 
-<blockquote class="lyric">
-	<p>Almost heaven west virginia</p>
+<blockquote>
+	<p>[lyric]Almost heaven west virginia</p>
 	<p>Blue ridge mountains shenandoah river</p>
 	<p>Life is old there older than the trees</p>
 	<p>Younger than the mountains</p>
 	<p>Growin like a breeze</p>
 </blockquote>
+
+<script>
+	//Lyric Blockquote Placeholder
+	const lrcBPH = '[lyric]';
+
+	document.querySelectorAll("blockquote")
+	.forEach(function(ele) {
+		//Check if the blockquote content starts with `lrcBPH`
+		var txt = ele.firstElementChild.innerText;
+		if(txt.indexOf(lrcBPH) == 0) {
+			ele.firstElementChild.innerText =
+			txt.substr(lrcBPH.length, txt.length);
+
+			ele.classList.add("lyric");
+		}
+	});
+</script>
