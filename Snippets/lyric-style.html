@@ -1,22 +1,55 @@
 <meta name="viewport" content="width=device-width">
 
 <style>
+html {
+	/*
+		The following variables stands for:
+			Start Color
+			End Color
+			Vertical Length
+			Horizontal Length
+			Width
+		of the lyric style, respectively.
+
+		Not decided yet about which color gradient to use?
+		Try https://uigradients.com, it may be of great help!
+	*/
+
+	--lrc-start: #414345;
+	--lrc-end: transparent;
+	--lrc-vlen: 30%;
+	--lrc-hlen: 30%;
+	--lrc-width: 2px;
+}
+
 blockquote.lyric {
+	/* Lyric styles as a blockquote */
 	background-image:
-		linear-gradient(to bottom, grey, white),
-		linear-gradient(to right, grey, white),
-		linear-gradient(to top, grey, white),
-		linear-gradient(to left, grey, white),
+		linear-gradient(
+			to bottom, var(--lrc-start), var(--lrc-end)
+		),
+		linear-gradient(
+			to right, var(--lrc-start), var(--lrc-end)
+		),
+		linear-gradient(
+			to top, var(--lrc-start), var(--lrc-end)
+		),
+		linear-gradient(
+			to left, var(--lrc-start), var(--lrc-end)
+		),
 		linear-gradient(transparent, transparent);
 	background-repeat: no-repeat;
 	background-size:
-		2px 30%, 30% 2px,
-		2px 30%, 30% 2px,
-		calc(100% - 4px) calc(100% - 4px);
+		var(--lrc-width) var(--lrc-vlen),
+		var(--lrc-hlen) var(--lrc-width),
+		var(--lrc-width) var(--lrc-vlen),
+		var(--lrc-hlen) var(--lrc-width),
+		calc(100% - (var(--lrc-width) * 2))
+		calc(100% - (var(--lrc-width) * 2));
 	background-position:
 		left top, left top,
 		right bottom, right bottom,
-		2px 2px;
+		var(--lrc-width) var(--lrc-width);
 
 	/* Style offsets for Ghost */
 	padding: .5em 1.5em;
