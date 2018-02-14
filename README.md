@@ -7,6 +7,8 @@ Here is a brief index, in order to provide an overview of what are in the reposi
 
 - Snippets
   - target_blank.js: A tool to set `target:_blank` attribute to outer links
+  - copyright-notice.md: Copyright notice footer for blog posts
+  - lyric-style.html: Snippet with overwrote styles for lyric blockquotes
 
 - C++
   - maze.cpp: Updated as an individual [repository](https://github.com/KingsleyXie/Maze)

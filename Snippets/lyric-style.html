@@ -22,8 +22,10 @@ html {
 	--lrc-width: 2px;
 }
 
+/* Lyric styles as blockquote */
 blockquote.lyric {
-	/* Lyric styles as a blockquote */
+	text-align: center;
+	background-repeat: no-repeat;
 	background-image:
 		linear-gradient(
 			to bottom, var(--lrc-start), var(--lrc-end)
@@ -38,7 +40,6 @@ blockquote.lyric {
 			to left, var(--lrc-start), var(--lrc-end)
 		),
 		linear-gradient(transparent, transparent);
-	background-repeat: no-repeat;
 	background-size:
 		var(--lrc-width) var(--lrc-vlen),
 		var(--lrc-hlen) var(--lrc-width),
@@ -52,7 +53,7 @@ blockquote.lyric {
 		var(--lrc-width) var(--lrc-width);
 
 	/* Style offsets for Ghost */
-	padding: .5em 1.5em;
+	padding: .5em 0;
 	border: none;
 }
 
