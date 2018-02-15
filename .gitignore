@@ -1,5 +1,15 @@
-#Compiled Java Class
+# Compiled Java Class
 *.class
 
-#Database Configuration File
+# Database Configuration File
 config.xml
+
+# LaTeX Intermediates
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.synctex.gz
+
+# Temporary PDF Ignore
+*.pdf
