@@ -1,4 +1,5 @@
 \documentclass[titlepage]{article}
+\usepackage[hidelinks]{hyperref}
 \usepackage{enumitem}
 \usepackage{listings}
 \usepackage{xcolor}
@@ -16,12 +17,19 @@ Data Structures and Algorithm Analysis in C++
 \begin{document}
 \maketitle
 
+\clearpage
+\tableofcontents
+\clearpage
+
+\section{Basics}
+\subsection{Enumerate with alphabet}
 \begin{enumerate}[label=(\alph*)]
 \item $\Theta(n)$
 \item $\Theta(n\log n)$
 \item $\Theta(n^2)$
 \end{enumerate}
 
+\subsection{inline code}
 Inline code example A: \lstinline{for (int i = 0; i < n; i++)}
 
 \lstset{language=C++,keywordstyle={\bfseries \color{orange}}}
@@ -29,6 +37,7 @@ Inline code example B: \lstinline{for (int i = 0; i < n; i++)}
 
 Inline code example C: \texttt{for (int i = 0; i < n; i++)}\\
 
+\subsection{code block}
 Code block example:
 
 \lstset{

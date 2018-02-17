@@ -10,6 +10,8 @@ config.xml
 *.fls
 *.log
 *.synctex.gz
+*.out
+*.toc
 
 # Temporary PDF Ignore
 *.pdf
