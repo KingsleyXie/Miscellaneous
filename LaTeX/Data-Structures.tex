@@ -2,6 +2,7 @@
 \usepackage{enumitem}
 \usepackage{listings}
 \usepackage{xcolor}
+\usepackage[T1]{fontenc}
 
 \title{
 Homework 1 (Chapter 3) - Due 17th Sep, 2017\\
@@ -30,7 +31,12 @@ Inline code example C: \texttt{for (int i = 0; i < n; i++)}\\
 
 Code block example:
 
-\lstset{language=C++,keywordstyle={}}
+\lstset{
+    basicstyle=
+        \def\fvm@Scale{0.8}
+        \fontfamily{fvm}\selectfont,
+    tabsize=4
+}
 \begin{lstlisting}
 int main()
 {
