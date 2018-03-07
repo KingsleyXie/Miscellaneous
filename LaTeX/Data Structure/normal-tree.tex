@@ -1,0 +1,25 @@
+\documentclass[tikz]{standalone}
+
+\begin{document}
+
+\begin{tikzpicture}[
+	every node/.style={
+		circle, draw,
+		inner sep=0pt,
+		text width=6mm,
+		align=center
+	},
+	level distance=1.2cm
+]
+\node{X}
+child { node{P}
+	child { node{C} }
+	child { node{Q} }
+	child { node{R}
+		child { node{V} }
+		child { node{M} }
+	}
+};
+\end{tikzpicture}
+
+\end{document}
