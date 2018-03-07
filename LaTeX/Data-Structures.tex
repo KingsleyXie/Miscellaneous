@@ -18,16 +18,19 @@ Data Structures and Algorithm Analysis in C++
 \date{\today}
 
 \usetikzlibrary{matrix,arrows,fit,shapes}
-\tikzset{every node/.style={
-	circle,
-	draw,
-	inner sep=0pt,
-	text width=6mm,
-	align=center
-}}
-\tikzset{circarrow/.style={
-		*->,
-		shorten <=-2pt
+
+
+\forestset{
+	cust/.style={
+		for tree={
+			every node/.style={
+				circle,
+				draw,
+				inner sep=0pt,
+				text width=6mm,
+				align=center
+			}
+		}
 	}
 }
 
@@ -83,6 +86,13 @@ int main()
 \section{Trees}
 \subsection{Binary Tree}
 \begin{tikzpicture}[
+	every node/.style={
+		circle,
+		draw,
+		inner sep=0pt,
+		text width=6mm,
+		align=center
+	},
 	level distance=10mm,
 	level 1/.style={sibling distance=30mm},
 	level 2/.style={sibling distance=15mm}
@@ -102,7 +112,16 @@ child { node{$20$}
 \end{tikzpicture}
 
 \subsection{Normal Tree}
-\begin{tikzpicture}[level distance=1.2cm]
+\begin{tikzpicture}[
+	every node/.style={
+		circle,
+		draw,
+		inner sep=0pt,
+		text width=6mm,
+		align=center
+	},
+	level distance=1.2cm
+]
 \node{X}
 child { node{P}
 	child { node{C} }
@@ -114,7 +133,7 @@ child { node{P}
 };
 \end{tikzpicture}
 
-\begin{forest}
+\begin{forest} cust,
 for tree={circle,draw}
 [, phantom, s sep = 1cm
 	[1
@@ -126,7 +145,8 @@ for tree={circle,draw}
 \end{forest}
 
 \subsection{Forest}
-\begin{forest}
+\begin{forest} cust,
+for tree={circle,draw}
 [, phantom, s sep = 1cm
 [A
 	[B [C] [D[E]] [F]]
@@ -142,7 +162,11 @@ for tree={circle,draw}
 
 \leavevmode\vadjust{\vspace{-\baselineskip}}\newline
 \begin{center}
-\begin{tikzpicture}[>=stealth]
+\begin{tikzpicture}[
+circarrow/.style={
+		*->,
+		shorten <=-2pt
+	},>=stealth]
 \matrix (M)
 [
 	matrix of nodes,
