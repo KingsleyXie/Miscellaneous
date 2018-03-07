@@ -24,6 +24,7 @@ Data Structures and Algorithm Analysis in C++
 \forestset{
 	cust-forest/.style={
 		for tree={
+			circle, draw,
 			every node/.style={
 				circle, draw,
 				inner sep=0pt,
@@ -135,8 +136,7 @@ child { node{P}
 };
 \end{tikzpicture}
 
-\begin{forest} cust-forest,
-for tree={circle,draw}
+\begin{forest} cust-forest
 [, phantom, s sep = 1cm
 	[1
 		[2[3]]
@@ -148,8 +148,7 @@ for tree={circle,draw}
 
 \subsection{Forest}
 
-\begin{forest} cust-forest,
-for tree={circle,draw}
+\begin{forest} cust-forest
 [, phantom, s sep = 1cm
 [A
 	[B [C] [D[E]] [F]]
