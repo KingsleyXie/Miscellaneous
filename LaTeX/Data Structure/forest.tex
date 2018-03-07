@@ -1,0 +1,38 @@
+\documentclass[tikz]{standalone}
+\usepackage{forest}
+
+
+
+\forestset{
+	cust-forest/.style={
+		for tree={
+			circle, draw,
+			every node/.style={
+				circle, draw,
+				inner sep=0pt,
+				text width=6mm,
+				align=center
+			}
+		}
+	}
+}
+
+
+
+\begin{document}
+
+\begin{forest} cust-forest
+[, phantom, s sep = 1cm
+[A
+	[B [C] [D[E]] [F]]
+	[G]]
+[H
+	[I]
+	[J [K [L]]
+	[M [N] [O]]]]
+[P
+	[Q] [R [S] [T]] [U] [V [W [X]] [Y]] [Z]]
+]
+\end{forest}
+
+\end{document}
