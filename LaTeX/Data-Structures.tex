@@ -8,6 +8,7 @@
 \usepackage[T1]{fontenc}
 
 
+
 \title{
 Homework 1 (Chapter 3) - Due 17th Sep, 2017\\
 \begin{large}
@@ -17,15 +18,14 @@ Data Structures and Algorithm Analysis in C++
 \author{Kingsley}
 \date{\today}
 
-\usetikzlibrary{matrix,arrows,fit,shapes}
 
 
+\usetikzlibrary{matrix,arrows,fit}
 \forestset{
-	cust/.style={
+	cust-forest/.style={
 		for tree={
 			every node/.style={
-				circle,
-				draw,
+				circle, draw,
 				inner sep=0pt,
 				text width=6mm,
 				align=center
@@ -33,6 +33,8 @@ Data Structures and Algorithm Analysis in C++
 		}
 	}
 }
+
+
 
 \begin{document}
 \maketitle
@@ -85,10 +87,10 @@ int main()
 
 \section{Trees}
 \subsection{Binary Tree}
+
 \begin{tikzpicture}[
 	every node/.style={
-		circle,
-		draw,
+		circle, draw,
 		inner sep=0pt,
 		text width=6mm,
 		align=center
@@ -112,10 +114,10 @@ child { node{$20$}
 \end{tikzpicture}
 
 \subsection{Normal Tree}
+
 \begin{tikzpicture}[
 	every node/.style={
-		circle,
-		draw,
+		circle, draw,
 		inner sep=0pt,
 		text width=6mm,
 		align=center
@@ -133,7 +135,7 @@ child { node{P}
 };
 \end{tikzpicture}
 
-\begin{forest} cust,
+\begin{forest} cust-forest,
 for tree={circle,draw}
 [, phantom, s sep = 1cm
 	[1
@@ -145,7 +147,8 @@ for tree={circle,draw}
 \end{forest}
 
 \subsection{Forest}
-\begin{forest} cust,
+
+\begin{forest} cust-forest,
 for tree={circle,draw}
 [, phantom, s sep = 1cm
 [A
@@ -163,10 +166,10 @@ for tree={circle,draw}
 \leavevmode\vadjust{\vspace{-\baselineskip}}\newline
 \begin{center}
 \begin{tikzpicture}[
-circarrow/.style={
-		*->,
-		shorten <=-2pt
-	},>=stealth]
+	circarrow/.style={
+		*->, shorten <=-2pt
+	}, >=stealth
+]
 \matrix (M)
 [
 	matrix of nodes,
@@ -200,7 +203,6 @@ circarrow/.style={
 \end{tikzpicture}
 \end{center}
 
-
 \begin{center}
 \begin{tikzpicture}
 \tikzstyle{bplus}=
@@ -213,7 +215,7 @@ circarrow/.style={
 \tikzstyle{level 1}=[sibling distance=35mm]
 \tikzstyle{level 2}=[sibling distance=15mm]
 
-\node {I \nodepart{two} M \nodepart{three} S} [->]
+\node {I \nodepart{two} M \nodepart{three} S} [-]
 	child {node {D \nodepart{two} G}
 		child {node {A \nodepart{two} B \nodepart{three} C}}
 		child {node {D \nodepart{two} E}}
@@ -234,4 +236,5 @@ circarrow/.style={
 ;
 \end{tikzpicture}
 \end{center}
+
 \end{document}
