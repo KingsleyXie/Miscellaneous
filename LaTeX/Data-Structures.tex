@@ -7,6 +7,7 @@
 \usepackage{tikz}
 \usepackage[T1]{fontenc}
 
+
 \title{
 Homework 1 (Chapter 3) - Due 17th Sep, 2017\\
 \begin{large}
@@ -16,6 +17,7 @@ Data Structures and Algorithm Analysis in C++
 \author{Kingsley}
 \date{\today}
 
+\usetikzlibrary{shapes}
 \tikzset{every node/.style={
 	circle,
 	draw,
@@ -132,5 +134,37 @@ for tree={circle,draw}
 	[Q] [R [S] [T]] [U] [V [W [X]] [Y]] [Z]]
 ]
 \end{forest}
+\begin{center}
+\begin{tikzpicture}
+\tikzstyle{bplus}=
+[
+	draw, rectangle split,
+	rectangle split horizontal,
+	rectangle split ignore empty parts
+]
+\tikzstyle{every node}=[bplus]
+\tikzstyle{level 1}=[sibling distance=35mm]
+\tikzstyle{level 2}=[sibling distance=15mm]
 
+\node {I \nodepart{two} M \nodepart{three} S} [->]
+	child {node {D \nodepart{two} G}
+		child {node {A \nodepart{two} B \nodepart{three} C}}
+		child {node {D \nodepart{two} E}}
+		child {node {G \nodepart{two} H}}
+	}
+	child {node {K}
+		child {node {I \nodepart{two} J}}
+		child {node {K \nodepart{two} L}}
+	}
+	child {node {P}
+		child {node {M \nodepart{two} N \nodepart{three} O}}
+		child {node {P \nodepart{two} R}}
+	}
+	child {node {U}
+		child {node {S \nodepart{two} T}}
+		child {node {U \nodepart{two} W}}
+	}
+;
+\end{tikzpicture}
+\end{center}
 \end{document}
