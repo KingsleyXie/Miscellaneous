@@ -33,7 +33,7 @@ This is the code added on my blog post before footer part, which provides a copy
         <center onclick="this.nextElementSibling.hidden = !this.nextElementSibling.hidden;">文章版权声明</center>
         <div hidden>
             <hr>
-            <p>本文链接：{{url absolute="true"}}</p>
+            <p>本文链接：<a href="{{url absolute="true"}}">{{url absolute="true"}}</a></p>
             <p>许可协议：<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享 署名-非商业性使用-相同方式共享 4.0 国际</a></p>
         </div>
     </div>
@@ -48,7 +48,8 @@ If the placeholder `{{url absolute="true"}}` does not work correctly(it doesn't 
 
 <!-- And then add following JS code -->
 <script type="text/javascript">
-    document.getElementById("copyright-link").innerText +=
-    window.location.origin + window.location.pathname;
+    var url = window.location.origin + window.location.pathname;
+    document.getElementById("copyright-link").innerHTML +=
+    '<a href="' + url + '">' + url + '</a>';
 </script>
 ```
