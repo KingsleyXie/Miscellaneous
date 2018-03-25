@@ -8,7 +8,8 @@ info = {
 	'success': 'Congratulations! You sunk my battleship!',
 	'overflow': 'Oops, that\'s not even in the ocean.',
 	'duplicate': 'You guessed that one already.',
-	'missed': 'You missed my battleship!'
+	'missed': 'You missed my battleship!',
+	'alert_int': 'Please input an integer'
 }
 
 # Configuration
@@ -23,11 +24,22 @@ conf = {
 	'ans': True, # Display answer
 }
 
+# Function to receive integer
+def int_input(msg):
+	passed = False
+	while not passed:
+		try:
+			num = int(input(msg))
+			passed = True
+		except ValueError as e:
+			print(info['alert_int'])
+	return num
+
 # Simplified customize option
 if re.match(r'n|N', input(info['customize'])):
-	conf['rows'] = int(input('Set Rows: '))
-	conf['cols'] = int(input('Set Cols: '))
-	conf['rounds'] = int(input('Set Rounds: '))
+	conf['rows'] = int_input('Set Rows: ')
+	conf['cols'] = int_input('Set Cols: ')
+	conf['rounds'] = int_input('Set Rounds: ')
 	print()
 
 # Initialize the board
@@ -44,6 +56,8 @@ def print_board():
 	print()
 	for row in board:
 		print(conf['sep'].join(row))
+
+
 
 # Welcome texts
 print(info['welcome'])
@@ -64,8 +78,8 @@ for turn in range(conf['rounds']):
 		sep, turn + 1, conf['rounds'], sep[::-1])
 	)
 
-	guess_row = int(input('Guess Row: '))
-	guess_col = int(input('Guess Col: '))
+	guess_row = int_input('Guess Row: ')
+	guess_col = int_input('Guess Col: ')
 	print()
 
 	if guess_row == ship_row and guess_col == ship_col:
