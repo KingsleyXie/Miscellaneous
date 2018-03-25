@@ -17,7 +17,8 @@ Here is a brief index, in order to provide an overview of what are in the reposi
 - Java
   - statistics/: A program to statistic last name in the list from CSV file
   - socket/: Simple chatroom based on Java socket
-  - servlet/: An experiment for Java Servlet, including Java Bean, JSTL, JDBC and so on.
+  - servlet/: An experiment for Java Servlet, including Java Bean, JSTL, JDBC and so on
 
 - Python
-  - BattleShip Game.py: A naive BattleShip game wrote in Python2
+  - BattleShip.py: A naive BattleShip game
+  - Deprecated/: Some Python2 Programs, currently deprecated

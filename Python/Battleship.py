@@ -21,7 +21,7 @@ conf = {
 	'init': 'O', # Board initial code
 	'guessed': 'X', # Board guessed code
 	'sep': '  ', # Board code separator
-	'ans': True, # Display answer
+	'ans': False, # Display answer
 }
 
 # Function to receive integer
