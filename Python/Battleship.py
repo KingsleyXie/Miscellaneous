@@ -3,7 +3,6 @@ from random import randint
 # Information texts
 info = {
 	'welcome': 'Let\'s play Battleship!',
-	'start': 'Game Starting!',
 	'success': 'Congratulations! You sunk my battleship!',
 	'overflow': 'Oops, that\'s not even in the ocean.',
 	'duplicate': 'You guessed that one already.',
@@ -25,17 +24,16 @@ def print_board():
 	for row in board:
 		print('  '.join(row))
 
+# Welcome Texts
 print(info['welcome'])
 print_board()
-print('-- Answer:  ({0}, {1}) --'.format(ship_row, ship_col))
 
+print('--- Answer:  ({}, {}) ---'.format(ship_row, ship_col))
+
+# Game Start
 sep = '-' * 13 + ' ' * 3
-print(sep, info['start'], sep[::-1])
-
 for turn in range(5):
-	print('\n' + '. ' * 10)
-	print('. . . Round {} . . . '.format(turn + 1))
-	print('. ' * 10 + '\n')
+	print('\n\n\n{}Round {}{}\n'.format(sep, turn + 1, sep[::-1]))
 
 	guess_row = int(input('Guess Row: '))
 	guess_col = int(input('Guess Col: '))
