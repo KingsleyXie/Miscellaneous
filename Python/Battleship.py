@@ -1,18 +1,30 @@
+import re
 from random import randint
 
 # Information texts
 info = {
 	'welcome': 'Let\'s play Battleship!',
+	'customize': 'Begin with default values? [Y/n] ',
 	'success': 'Congratulations! You sunk my battleship!',
 	'overflow': 'Oops, that\'s not even in the ocean.',
 	'duplicate': 'You guessed that one already.',
 	'missed': 'You missed my battleship!'
 }
 
+# Configuration
+conf = {'rows': 7, 'cols': 7, 'rounds': 5}
+
+# Simplified Customize Option
+if re.match(r'n|N', input(info['customize'])):
+	conf['rows'] = int(input('Set Rows: '))
+	conf['cols'] = int(input('Set Cols: '))
+	conf['rounds'] = int(input('Set Rounds: '))
+	print()
+
 # Initialize the board
 board = []
-for x in range(5):
-	board.append(['O'] * 5)
+for x in range(conf['rows']):
+	board.append(['O'] * conf['cols'])
 
 # Generate random ship position
 ship_row = randint(0, len(board) - 1)
@@ -28,12 +40,17 @@ def print_board():
 print(info['welcome'])
 print_board()
 
-print('--- Answer:  ({}, {}) ---'.format(ship_row, ship_col))
+print(
+	' Answer:  ({}, {}) '.format(ship_row, ship_col)
+	.center(3 * conf['cols'] - 2, '*')
+)
 
 # Game Start
 sep = '-' * 13 + ' ' * 3
-for turn in range(5):
-	print('\n\n\n{}Round {}{}\n'.format(sep, turn + 1, sep[::-1]))
+for turn in range(conf['rounds']):
+	print('\n\n{}Round {}/{}{}\n'.format(
+		sep, turn + 1, conf['rounds'], sep[::-1])
+	)
 
 	guess_row = int(input('Guess Row: '))
 	guess_col = int(input('Guess Col: '))
@@ -43,7 +60,8 @@ for turn in range(5):
 		print(info['success'])
 		break
 	else:
-		if (guess_row < 0 or guess_row > 4) or (guess_col < 0 or guess_col > 4):
+		if (guess_row < 0 or guess_row > (conf['rows'] - 1)) \
+		or (guess_col < 0 or guess_col > (conf['cols'] - 1)):
 			print(info['overflow'])
 		elif board[guess_row][guess_col] == 'X':
 			print(info['duplicate'])
