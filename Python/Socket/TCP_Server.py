@@ -13,10 +13,10 @@ while 1:
 	try:
 		print('Connected with', addr)
 		while True:
-			data = con.recv(32)
+			data = con.recv(1024).decode()
 			if data == 'exit':
 				break
 			print('Received', data)
-			con.send('I have received your data:', data)
+			con.send(('I have received your data:' + data).encode())
 	finally:
 		con.close()
