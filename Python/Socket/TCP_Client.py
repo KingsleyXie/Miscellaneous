@@ -1,4 +1,5 @@
 import socket
+import threading
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -11,11 +12,23 @@ recv = s.recv(1024).decode()
 data = input(recv)
 s.send(data.encode())
 
-while True:
-	recv = s.recv(1024).decode()
-	print(recv)
+def listener():
+	while True:
+		recv = s.recv(1024).decode()
+		if recv == 'exit':
+			break
+		else:
+			print(recv)
 
-	data = input('Input your data to server -> ')
-	s.send(data.encode())
-	if data == 'exit':
-		break
+def sender():
+	while True:
+		data = input()
+		s.send(data.encode())
+		if data == 'exit':
+			break
+
+listen = threading.Thread(target = listener)
+listen.start()
+
+send = threading.Thread(target = sender)
+send.start()

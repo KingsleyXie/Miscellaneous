@@ -16,7 +16,9 @@ def listener(con, addr):
 	while True:
 		data = con.recv(1024).decode()
 		if data == 'exit':
+			con.send(b'exit')
 			con.close()
+
 			print(
 				'Disconnected with {} ({}:{})'
 				.format(username, host, port)
