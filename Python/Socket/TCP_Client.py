@@ -25,7 +25,7 @@ def listener():
 		if recv == conf['end_msg']:
 			break
 		else:
-			print(recv)
+			print('\t' + recv)
 
 def sender():
 	while True:

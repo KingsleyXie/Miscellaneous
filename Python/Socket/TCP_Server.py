@@ -10,6 +10,7 @@ conf = {
 }
 
 curr_id = conf['start_id']
+
 server_conf = (conf['server_host'], conf['server_port'])
 print('Starting socket server on {}:{}'.format(*server_conf))
 
@@ -21,11 +22,14 @@ def listener(con, addr):
 	# Set username
 	con.send(b'Please set your username > ')
 	username = con.recv(conf['recv_buff']).decode()
-	user_id = ++curr_id
+
+	global curr_id
+	curr_id += 1
+	user_id = curr_id
 
 	print(
-		'Connected with {}:{}, id: {}, username: {})'
-		.format(addr[0], addr[1], user_id, username)
+		'Connected with {} (ID {})'
+		.format(username, user_id)
 	)
 	con.send(
 		'Welcome, {}! Your ID is {}'
@@ -34,32 +38,34 @@ def listener(con, addr):
 
 	while True:
 		data = con.recv(conf['recv_buff']).decode()
-		if data == conf['end_msg']:
+		if data != conf['end_msg']:
+			print('{}: {}'.format(username, data))
+			con.send(('I have received your data: ' + data).encode())
+		else:
+			# Close current client socket
+			curr_id -= 1
 			con.send(conf['end_msg'].encode())
 			con.close()
-			curr_id--
-
 			print(
-				'Disconnected with {} ({}:{})'
-				.format(username, addr[0], addr[1])
+				'Disconnected with {} (ID {})'
+				.format(username, user_id)
 			)
 
+			# Close server socket if all clients are disconnected
 			if curr_id == conf['start_id']:
-				print('All clients are terminated, closing socket server...')
+				print('All clients are currently terminated, closing server...')
+				global server
 				server.close()
-				sys.exit(0)
+				raise SystemExit(0)
 
-		print('{}: {}'.format(username, data))
-		con.send(('I have received your data: ' + data).encode())
+			# Exit the listener thread
+			break
 
-def sender():
-	# con.send(input().encode())
+try:
+	while True:
+		con, addr = server.accept()
+		listen = threading.Thread(target = listener, args = (con, addr))
+		listen.start()
+except Exception:
+	# Server socket closed on listener thread
 	pass
-
-while True:
-	con, addr = server.accept()
-	listen = threading.Thread(target = listener, args = (con, addr))
-	listen.start()
-
-# send = threading.Thread(target = sender)
-# send.start()
