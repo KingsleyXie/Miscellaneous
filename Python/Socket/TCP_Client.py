@@ -1,21 +1,28 @@
 import socket
 import threading
 
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+conf = {
+	'server_host': 'localhost',
+	'server_port': 2333,
+	'recv_buff': 1024,
+	'end_msg': 'bye'
+}
 
-ser = ('localhost', 2333)
-print('Connecting socket server on {}:{}'.format(*ser))
-s.connect(ser)
+server_conf = (conf['server_host'], conf['server_port'])
+print('Connecting socket server on {}:{}'.format(*server_conf))
+
+client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+client.connect(server_conf)
 
 # Set username
-recv = s.recv(1024).decode()
+recv = client.recv(conf['recv_buff']).decode()
 data = input(recv)
-s.send(data.encode())
+client.send(data.encode())
 
 def listener():
 	while True:
-		recv = s.recv(1024).decode()
-		if recv == 'exit':
+		recv = client.recv(conf['recv_buff']).decode()
+		if recv == conf['end_msg']:
 			break
 		else:
 			print(recv)
@@ -23,8 +30,8 @@ def listener():
 def sender():
 	while True:
 		data = input()
-		s.send(data.encode())
-		if data == 'exit':
+		client.send(data.encode())
+		if data == conf['end_msg']:
 			break
 
 listen = threading.Thread(target = listener)
