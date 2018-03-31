@@ -6,11 +6,16 @@ ser = ('localhost', 2333)
 print('Connecting socket server on {}:{}'.format(*ser))
 s.connect(ser)
 
+# Set username
+recv = s.recv(1024).decode()
+data = input(recv)
+s.send(data.encode())
+
 while True:
-	data = input('Input your data to server->\t')
+	recv = s.recv(1024).decode()
+	print(recv)
+
+	data = input('Input your data to server -> ')
 	s.send(data.encode())
 	if data == 'exit':
 		break
-	recv = s.recv(1024).decode()
-
-	print('Received data from server:', recv)

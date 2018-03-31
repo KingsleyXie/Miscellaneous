@@ -1,15 +1,29 @@
 import socket
 import threading
 
-def listener(addr):
-		print('Connected with {}:{}'.format(addr[0], addr[1]))
-		while True:
-			data = con.recv(1024).decode()
-			if data == 'exit':
-				con.close()
-				break
-			print('Message from client {}:{}\t{}'.format(addr[0], addr[1], data))
-			con.send(('I have received your data:' + data).encode())
+def listener(con, addr):
+	host = addr[0]
+	port = addr[1]
+
+	con.send(b'Please set your username > ')
+	username = con.recv(1024).decode()
+	print(
+		'Connected with {} ({}:{})'
+		.format(username, host, port)
+	)
+	con.send(('Welcome, ' + username).encode())
+
+	while True:
+		data = con.recv(1024).decode()
+		if data == 'exit':
+			con.close()
+			print(
+				'Disconnected with {} ({}:{})'
+				.format(username, host, port)
+			)
+			break
+		print('{}: {}'.format(username, data))
+		con.send(('I have received your data: ' + data).encode())
 
 def sender():
 	# con.send(input().encode())
@@ -27,7 +41,7 @@ s.listen(1)
 
 while 1:
 	con, addr = s.accept()
-	listen = threading.Thread(target = listener, args = (addr, ))
+	listen = threading.Thread(target = listener, args = (con, addr))
 	listen.start()
 
 # send = threading.Thread(target = sender)
