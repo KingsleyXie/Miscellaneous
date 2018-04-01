@@ -18,10 +18,14 @@ server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind(server_conf)
 server.listen(True)
 
+clients = []
+
 def listener(con, addr):
 	# Set username
 	con.send(b'Please set your username > ')
 	username = con.recv(conf['recv_buff']).decode()
+
+	clients.append(con)
 
 	global curr_id
 	curr_id += 1
@@ -39,8 +43,18 @@ def listener(con, addr):
 	while True:
 		data = con.recv(conf['recv_buff']).decode()
 		if data != conf['end_msg']:
-			print('{}: {}'.format(username, data))
-			con.send(('I have received your data: ' + data).encode())
+			msg = '{}: {}'.format(username, data)
+			print(msg)
+
+			for client in clients:
+				if client != con:
+					client.send(msg.encode())
+				else:
+					client.send(
+						'I have received your message "{}"'
+						.format(data).encode()
+					)
+
 		else:
 			# Close current client socket
 			curr_id -= 1
