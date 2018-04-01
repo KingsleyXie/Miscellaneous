@@ -43,18 +43,7 @@ def listener(con, addr):
 	while True:
 		data = con.recv(conf['recv_buff']).decode()
 		if data != conf['end_msg']:
-			msg = '{}: {}'.format(username, data)
-			print(msg)
-
-			for client in clients:
-				if client != con:
-					client.send(msg.encode())
-				else:
-					client.send(
-						'I have received your message "{}"'
-						.format(data).encode()
-					)
-
+			broadcast('{}: {}'.format(username, data))
 		else:
 			# Close current client socket
 			curr_id -= 1
@@ -74,6 +63,11 @@ def listener(con, addr):
 
 			# Exit the listener thread
 			break
+
+def broadcast(msg):
+	print(msg)
+	for client in clients:
+		client.send(msg.encode())
 
 try:
 	while True:
