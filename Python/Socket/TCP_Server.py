@@ -6,7 +6,8 @@ conf = {
 	'server_port': 2333,
 	'recv_buff': 1024,
 	'start_id': 1000,
-	'end_msg': 'bye'
+	'end_msg': 'bye',
+	'sys_msg': '[system]'
 }
 
 curr_id = conf['start_id']
@@ -65,11 +66,23 @@ def broadcast(msg):
 	for client in clients:
 		client.send(msg.encode())
 
-try:
+def accepter():
+	try:
+		while True:
+			con, addr = server.accept()
+			listen = threading.Thread(target = listener, args = (con, addr))
+			listen.start()
+	except Exception:
+		# Server socket closed on listener thread
+		pass
+
+def sender():
 	while True:
-		con, addr = server.accept()
-		listen = threading.Thread(target = listener, args = (con, addr))
-		listen.start()
-except Exception:
-	# Server socket closed on listener thread
-	pass
+		data = input()
+		broadcast(conf['sys_msg'] + ' ' + data)
+
+ac_trd = threading.Thread(target = accepter)
+ac_trd.start()
+
+sd_trd = threading.Thread(target = sender)
+sd_trd.start()
