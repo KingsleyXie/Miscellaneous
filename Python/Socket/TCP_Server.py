@@ -7,6 +7,7 @@ conf = {
 	'recv_buff': 1024,
 	'start_id': 1000,
 	'end_msg': 'bye',
+	'quit_msg': 'terminate',
 	'sys_msg': '[system]'
 }
 
@@ -45,18 +46,18 @@ def listener(con, addr):
 			# Close current client socket
 			curr_id -= 1
 			con.send(conf['end_msg'].encode())
-			con.close()
 
 			clients.remove(con)
+			con.close()
 
 			broadcast('{} (ID {}) left the chat'.format(username, user_id))
 
-			# Close server socket if all clients are disconnected
 			if curr_id == conf['start_id']:
-				print('All clients are currently terminated, closing server...')
-				global server
-				server.close()
-				raise SystemExit(0)
+				print(
+					'\n[info] All clients are currently disconnected\n' +
+					'[info] Type "' + conf['quit_msg'] + '" to quit\n' +
+					'[info] Or just wait for new connections\n'
+				)
 
 			# Exit the listener thread
 			break
@@ -73,12 +74,16 @@ def accepter():
 			listen = threading.Thread(target = listener, args = (con, addr))
 			listen.start()
 	except Exception:
-		# Server socket closed on listener thread
+		# Server socket closed on sender thread
 		pass
 
 def sender():
 	while True:
 		data = input()
+		if data == conf['quit_msg']:
+			global server
+			server.close()
+			break
 		broadcast(conf['sys_msg'] + ' ' + data)
 
 ac_trd = threading.Thread(target = accepter)
