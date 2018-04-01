@@ -25,20 +25,16 @@ def listener(con, addr):
 	con.send(b'Please set your username > ')
 	username = con.recv(conf['recv_buff']).decode()
 
-	clients.append(con)
-
 	global curr_id
 	curr_id += 1
 	user_id = curr_id
 
-	print(
-		'Connected with {} (ID {})'
-		.format(username, user_id)
-	)
 	con.send(
 		'Welcome, {}! Your ID is {}'
 		.format(username, user_id).encode()
 	)
+	broadcast('{} (ID {}) joined the chat'.format(username, user_id))
+	clients.append(con)
 
 	while True:
 		data = con.recv(conf['recv_buff']).decode()
@@ -49,10 +45,10 @@ def listener(con, addr):
 			curr_id -= 1
 			con.send(conf['end_msg'].encode())
 			con.close()
-			print(
-				'Disconnected with {} (ID {})'
-				.format(username, user_id)
-			)
+
+			clients.remove(con)
+
+			broadcast('{} (ID {}) left the chat'.format(username, user_id))
 
 			# Close server socket if all clients are disconnected
 			if curr_id == conf['start_id']:
