@@ -12,6 +12,7 @@ conf = {
 }
 
 curr_id = conf['start_id']
+clients = []
 
 server_conf = (conf['server_host'], conf['server_port'])
 print('Starting socket server on {}:{}'.format(*server_conf))
@@ -19,8 +20,6 @@ print('Starting socket server on {}:{}'.format(*server_conf))
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind(server_conf)
 server.listen(True)
-
-clients = []
 
 def listener(con, addr):
 	# Set username
@@ -44,7 +43,6 @@ def listener(con, addr):
 			broadcast('{}: {}'.format(username, data))
 		else:
 			# Close current client socket
-			curr_id -= 1
 			con.send(conf['end_msg'].encode())
 
 			clients.remove(con)
@@ -52,7 +50,7 @@ def listener(con, addr):
 
 			broadcast('{} (ID {}) left the chat'.format(username, user_id))
 
-			if curr_id == conf['start_id']:
+			if len(clients) == 0:
 				print(
 					'\n[info] All clients are currently disconnected\n' +
 					'[info] Type "' + conf['quit_msg'] + '" to quit\n' +
@@ -81,9 +79,12 @@ def sender():
 	while True:
 		data = input()
 		if data == conf['quit_msg']:
-			global server
-			server.close()
-			break
+			if len(clients) == 0:
+				global server
+				server.close()
+				break
+			else:
+				print('Client list is not empty now!')
 		broadcast(conf['sys_msg'] + ' ' + data)
 
 ac_trd = threading.Thread(target = accepter)
@@ -91,3 +92,5 @@ ac_trd.start()
 
 sd_trd = threading.Thread(target = sender)
 sd_trd.start()
+
+# Todo: Force Terminate, OOP, [Unit Test]
