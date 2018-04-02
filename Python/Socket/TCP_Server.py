@@ -1,3 +1,4 @@
+import re
 import socket
 import threading
 
@@ -8,7 +9,10 @@ conf = {
 	'start_id': 1000,
 	'end_msg': 'bye',
 	'quit_msg': 'terminate',
-	'sys_msg': '[system]'
+	'sys_msg': '[SYSTEM]',
+	'empty_alert': '[ERROR] The client list is empty now!',
+	'force_alert': '[ERROR] Client list is not empty!'
+	# 'force_alert': '[WARNING] Client list is not empty! Disconnect them anyway? [Y/n] '
 }
 
 curr_id = conf['start_id']
@@ -44,7 +48,6 @@ def listener(con, addr):
 		else:
 			# Close current client socket
 			con.send(conf['end_msg'].encode())
-
 			clients.remove(con)
 			con.close()
 
@@ -52,9 +55,9 @@ def listener(con, addr):
 
 			if len(clients) == 0:
 				print(
-					'\n[info] All clients are currently disconnected\n' +
-					'[info] Type "' + conf['quit_msg'] + '" to quit\n' +
-					'[info] Or just wait for new connections\n'
+					'\n[INFO] All clients are currently disconnected\n' +
+					'[INFO] Type "' + conf['quit_msg'] + '" to quit\n' +
+					'[INFO] Or just wait for new connections\n'
 				)
 
 			# Exit the listener thread
@@ -79,13 +82,25 @@ def sender():
 	while True:
 		data = input()
 		if data == conf['quit_msg']:
-			if len(clients) == 0:
+			if not len(clients):
 				global server
 				server.close()
 				break
 			else:
-				print('Client list is not empty now!')
-		broadcast(conf['sys_msg'] + ' ' + data)
+				print(conf['force_alert'])
+				# BUG: Disconnect operation will cause recv problem
+				# if not re.match(r'n|N', input(conf['force_alert'])):
+					# for client in clients:
+						# client.send(conf['end_msg'].encode())
+						# clients.remove(client)
+						# client.close()
+					# server.close()
+					# break
+		else:
+			if len(clients):
+				broadcast(conf['sys_msg'] + ' ' + data)
+			else:
+				print(conf['empty_alert'])
 
 ac_trd = threading.Thread(target = accepter)
 ac_trd.start()
@@ -93,4 +108,4 @@ ac_trd.start()
 sd_trd = threading.Thread(target = sender)
 sd_trd.start()
 
-# Todo: Force Terminate, OOP, [Unit Test]
+# Todo: OOP, [Unit Test]
