@@ -6,7 +6,6 @@ info = {
 	'welcome': 'Let\'s play Battleship!',
 	'customize': 'Begin with default values? [Y/n] ',
 	'success': 'Congratulations! You sunk my battleship!',
-	'overflow': 'Oops, that\'s not even in the ocean.',
 	'duplicate': 'You guessed that one already.',
 	'missed': 'You missed my battleship!',
 	'alert_int': 'Please input an integer'
@@ -25,21 +24,33 @@ conf = {
 }
 
 # Function to receive integer
-def int_input(msg):
+def int_input(msg, lmt_max =0xff, lmt_min =0):
 	passed = False
 	while not passed:
 		try:
 			num = int(input(msg))
-			passed = True
+			if num < lmt_min or num > lmt_max:
+				print(
+					'The input value should between {} and {}'
+					.format(lmt_min, lmt_max)
+				)
+			else:
+				passed = True
 		except ValueError as e:
 			print(info['alert_int'])
 	return num
+
+# Welcome texts
+print(info['welcome'])
 
 # Simplified customize option
 if re.match(r'n|N', input(info['customize'])):
 	conf['rows'] = int_input('Set Rows: ')
 	conf['cols'] = int_input('Set Cols: ')
-	conf['rounds'] = int_input('Set Rounds: ')
+	conf['rounds'] = int_input(
+		'Set Rounds: ',
+		conf['rows'] * conf['cols'] - 1, 1
+	)
 	print()
 
 # Initialize the board
@@ -59,8 +70,6 @@ def print_board():
 
 
 
-# Welcome texts
-print(info['welcome'])
 print_board()
 
 # Display answer
@@ -78,18 +87,15 @@ for turn in range(conf['rounds']):
 		sep, turn + 1, conf['rounds'], sep[::-1])
 	)
 
-	guess_row = int_input('Guess Row: ')
-	guess_col = int_input('Guess Col: ')
+	guess_row = int_input('Guess Row: ', conf['rows'])
+	guess_col = int_input('Guess Col: ', conf['cols'])
 	print()
 
 	if guess_row == ship_row and guess_col == ship_col:
 		print(info['success'])
 		break
 	else:
-		if (guess_row < 0 or guess_row > (conf['rows'] - 1)) \
-		or (guess_col < 0 or guess_col > (conf['cols'] - 1)):
-			print(info['overflow'])
-		elif board[guess_row][guess_col] == conf['guessed']:
+		if board[guess_row][guess_col] == conf['guessed']:
 			print(info['duplicate'])
 		else:
 			print(info['missed'])
