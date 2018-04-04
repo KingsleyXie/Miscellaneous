@@ -8,6 +8,14 @@ info = {
 	'success': 'Congratulations! You sunk my battleship!',
 	'duplicate': 'You guessed that one already.',
 	'missed': 'You missed my battleship!',
+	'round': '\n\n{}Round {}/{}{}\n',
+	'ans': ' Answer:  ({}, {}) ',
+	'row_set': 'Set Rows: ',
+	'col_set': 'Set Columns: ',
+	'rd_set': 'Set Rounds: ',
+	'row_guess': 'Guess Row: ',
+	'col_guess': 'Guess Column: ',
+	'alert_lmt': 'The input value should between {} and {}',
 	'alert_int': 'Please input an integer'
 }
 
@@ -30,10 +38,7 @@ def int_input(msg, lmt_max =0xff, lmt_min =0):
 		try:
 			num = int(input(msg))
 			if num < lmt_min or num > lmt_max:
-				print(
-					'The input value should between {} and {}'
-					.format(lmt_min, lmt_max)
-				)
+				print(info['alert_lmt'].format(lmt_min, lmt_max))
 			else:
 				passed = True
 		except ValueError as e:
@@ -45,10 +50,10 @@ print(info['welcome'])
 
 # Simplified customize option
 if re.match(r'n|N', input(info['customize'])):
-	conf['rows'] = int_input('Set Rows: ')
-	conf['cols'] = int_input('Set Cols: ')
+	conf['rows'] = int_input(info['row_set'])
+	conf['cols'] = int_input(info['col_set'])
 	conf['rounds'] = int_input(
-		'Set Rounds: ',
+		info['rd_set'],
 		conf['rows'] * conf['cols'] - 1, 1
 	)
 	print()
@@ -75,7 +80,7 @@ print_board()
 # Display answer
 if conf['ans']:
 	# Center the answer
-	ans_str = ' Answer:  ({}, {}) '.format(ship_row, ship_col)
+	ans_str = info['ans'].format(ship_row, ship_col)
 	sep_len = len(conf['sep'])
 	ans_width = (sep_len + 1) * conf['cols'] - sep_len
 	print(ans_str.center(ans_width, '*'))
@@ -83,12 +88,12 @@ if conf['ans']:
 # Game start
 sep = '-' * 13 + ' ' * 3
 for turn in range(conf['rounds']):
-	print('\n\n{}Round {}/{}{}\n'.format(
+	print(info['round'].format(
 		sep, turn + 1, conf['rounds'], sep[::-1])
 	)
 
-	guess_row = int_input('Guess Row: ', conf['rows'])
-	guess_col = int_input('Guess Col: ', conf['cols'])
+	guess_row = int_input(info['row_guess'], conf['rows'])
+	guess_col = int_input(info['col_guess'], conf['cols'])
 	print()
 
 	if guess_row == ship_row and guess_col == ship_col:
