@@ -8,13 +8,14 @@ info = {
 	'success': 'Congratulations! You sunk my battleship!',
 	'duplicate': 'You guessed that one already.',
 	'missed': 'You missed my battleship!',
-	'round': '\n\n{}Round {}/{}{}\n',
+	'round': '{}Round {}/{}{}',
 	'ans': ' Answer:  ({}, {}) ',
 	'row_set': 'Set Rows: ',
 	'col_set': 'Set Columns: ',
-	'rd_set': 'Set Rounds: ',
+	'round_set': 'Set Rounds: ',
 	'row_guess': 'Guess Row: ',
 	'col_guess': 'Guess Column: ',
+	'offset': 'You are away from my battleship {} rows/columns',
 	'alert_lmt': 'The input value should between {} and {}',
 	'alert_int': 'Please input an integer'
 }
@@ -29,6 +30,7 @@ conf = {
 	'guessed': 'X', # Board guessed code
 	'sep': '  ', # Board code separator
 	'ans': False, # Display answer
+	'help': True # Display help message
 }
 
 # Function to receive integer
@@ -53,7 +55,7 @@ if re.match(r'n|N', input(info['customize'])):
 	conf['rows'] = int_input(info['row_set'])
 	conf['cols'] = int_input(info['col_set'])
 	conf['rounds'] = int_input(
-		info['rd_set'],
+		info['round_set'],
 		conf['rows'] * conf['cols'] - 1, 1
 	)
 	print()
@@ -88,12 +90,15 @@ if conf['ans']:
 # Game start
 sep = '-' * 13 + ' ' * 3
 for turn in range(conf['rounds']):
-	print(info['round'].format(
-		sep, turn + 1, conf['rounds'], sep[::-1])
+	print('\n\n' +
+		info['round'].format(
+			sep, turn + 1, conf['rounds'], sep[::-1]
+		) +
+		'\n'
 	)
 
-	guess_row = int_input(info['row_guess'], conf['rows'])
-	guess_col = int_input(info['col_guess'], conf['cols'])
+	guess_row = int_input(info['row_guess'], conf['rows'] - 1)
+	guess_col = int_input(info['col_guess'], conf['cols'] - 1)
 	print()
 
 	if guess_row == ship_row and guess_col == ship_col:
@@ -103,7 +108,14 @@ for turn in range(conf['rounds']):
 		if board[guess_row][guess_col] == conf['guessed']:
 			print(info['duplicate'])
 		else:
-			print(info['missed'])
 			board[guess_row][guess_col] = conf['guessed']
+
+			if conf['help']:
+				# Notificate row/column offset as a help information
+				print(info['offset'].format(
+					max(abs(guess_row - ship_row), abs(guess_col - ship_col))
+				))
+			else:
+				print(info['missed'])
 
 		print_board()
