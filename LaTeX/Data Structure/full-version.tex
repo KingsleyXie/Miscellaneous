@@ -10,6 +10,20 @@
 
 \usetikzlibrary{matrix,arrows,shapes}
 
+\lstdefinestyle{monospaced}{
+	basicstyle=
+		\def\fvm@Scale{0.8}
+		\fontfamily{fvm}\selectfont,
+	tabsize=4
+}
+\lstdefinestyle{cpp-orange-hl}{
+	basicstyle=
+		\def\fvm@Scale{0.8}
+		\fontfamily{fvm}\selectfont,
+	language=C++,
+	keywordstyle={\bfseries \color{orange}}
+}
+
 
 
 \title{
@@ -56,20 +70,15 @@ Data Structures and Algorithm Analysis in C++
 
 \subsection{Inline code}
 
-Inline code example A: \texttt{for (int i = 0; i < n; i++)}
+\noindent texttt effect: \texttt{while (true) i++;}
 
-Inline code example B: \lstinline{for (int i = 0; i < n; i++)}
+\noindent lstinline effect: \lstinline[style=monospaced]{while (true) i++;}
 
-Inline code example C: \lstinline[language=C++, keywordstyle={\bfseries \color{orange}}]{for (int i = 0; i < n; i++)}
+\noindent lstinline with highlight option: \lstinline[style=cpp-orange-hl]{while (true) i++;}
 
 \subsection{Code block}
 \noindent Code block example:
-\begin{lstlisting}[
-	basicstyle=
-		\def\fvm@Scale{0.8}
-		\fontfamily{fvm}\selectfont,
-	tabsize=4
-]
+\begin{lstlisting}[style=monospaced]
 int main()
 {
 	cout << "Hello, World!" << endl;
