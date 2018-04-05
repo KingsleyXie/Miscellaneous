@@ -56,9 +56,11 @@ Data Structures and Algorithm Analysis in C++
 \begin{document}
 \maketitle
 
+\hypersetup{pageanchor=false}
 \clearpage
 \tableofcontents
 \clearpage
+\hypersetup{pageanchor=true}
 
 \section{Basics}
 \subsection{Enumerate with alphabet}
@@ -69,15 +71,16 @@ Data Structures and Algorithm Analysis in C++
 \end{enumerate}
 
 \subsection{Inline code}
-
-\noindent texttt effect: \texttt{while (true) i++;}
-
-\noindent lstinline effect: \lstinline[style=monospaced]{while (true) i++;}
-
-\noindent lstinline with highlight option: \lstinline[style=cpp-orange-hl]{while (true) i++;}
+\begin{enumerate}
+\item \verb|verb| effect: \verb|while (true) i++;|
+\item \verb|texttt| effect: \texttt{while (true) i++;}
+\item \verb|texttt| with \verb|underline| command: \texttt{\underline{while} (true) i++;}
+\item \verb|lstinline| effect: \lstinline[style=monospaced]{while (true) i++;}
+\item \verb|lstinline| with \verb|highlight| option: \lstinline[style=cpp-orange-hl]{while (true) i++;}
+\end{enumerate}
 
 \subsection{Code block}
-\noindent Code block example:
+Code block example:
 \begin{lstlisting}[style=monospaced]
 int main()
 {
@@ -85,15 +88,6 @@ int main()
 	return 0;
 }
 \end{lstlisting}
-
-\noindent \LaTeX \, code example:
-\begin{verbatim}
-\begin{enumerate}
-\item $\Theta(n)$
-\item $\Theta(n\log n)$
-\item $\Theta(n^2)$
-\end{enumerate}
-\end{verbatim}
 
 \section{Trees}
 \subsection{Binary Tree}
