@@ -1,5 +1,6 @@
 \documentclass[titlepage]{article}
 \usepackage[hidelinks]{hyperref}
+\usepackage{indentfirst}
 \usepackage{enumitem}
 \usepackage{listings}
 \usepackage{xcolor}
@@ -20,6 +21,13 @@ Data Structures and Algorithm Analysis in C++
 
 
 
+
+\lstset{
+	basicstyle=
+		\def\fvm@Scale{0.8}
+		\fontfamily{fvm}\selectfont,
+	tabsize=4
+}
 \usetikzlibrary{matrix,arrows,shapes}
 \forestset{
 	cust-forest/.style={
@@ -52,23 +60,17 @@ Data Structures and Algorithm Analysis in C++
 \item $\Theta(n^2)$
 \end{enumerate}
 
-\subsection{inline code}
-Inline code example A: \lstinline{for (int i = 0; i < n; i++)}
+\subsection{Inline code}
 
-\lstset{language=C++,keywordstyle={\bfseries \color{orange}}}
+Inline code example A: \texttt{for (int i = 0; i < n; i++)}
+
 Inline code example B: \lstinline{for (int i = 0; i < n; i++)}
 
-Inline code example C: \texttt{for (int i = 0; i < n; i++)}\\
+\lstset{language=C++, keywordstyle={\bfseries \color{orange}}}
+Inline code example C: \lstinline{for (int i = 0; i < n; i++)}
 
-\subsection{code block}
-Code block example:
-
-\lstset{
-	basicstyle=
-		\def\fvm@Scale{0.8}
-		\fontfamily{fvm}\selectfont,
-	tabsize=4
-}
+\subsection{Code block}
+\noindent Code block example:
 \begin{lstlisting}
 int main()
 {
@@ -77,7 +79,7 @@ int main()
 }
 \end{lstlisting}
 
-\LaTeX code example:
+\noindent \LaTeX \, code example:
 \begin{verbatim}
 \begin{enumerate}
 \item $\Theta(n)$
