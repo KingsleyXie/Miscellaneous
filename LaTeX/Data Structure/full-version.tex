@@ -8,6 +8,8 @@
 \usepackage{tikz}
 \usepackage[T1]{fontenc}
 
+\usetikzlibrary{matrix,arrows,shapes}
+
 
 
 \title{
@@ -21,16 +23,8 @@ Data Structures and Algorithm Analysis in C++
 
 
 
-
-\lstset{
-	basicstyle=
-		\def\fvm@Scale{0.8}
-		\fontfamily{fvm}\selectfont,
-	tabsize=4
-}
-\usetikzlibrary{matrix,arrows,shapes}
 \forestset{
-	cust-forest/.style={
+	demo/.style={
 		for tree={
 			circle, draw,
 			every node/.style={
@@ -66,12 +60,16 @@ Inline code example A: \texttt{for (int i = 0; i < n; i++)}
 
 Inline code example B: \lstinline{for (int i = 0; i < n; i++)}
 
-\lstset{language=C++, keywordstyle={\bfseries \color{orange}}}
-Inline code example C: \lstinline{for (int i = 0; i < n; i++)}
+Inline code example C: \lstinline[language=C++, keywordstyle={\bfseries \color{orange}}]{for (int i = 0; i < n; i++)}
 
 \subsection{Code block}
 \noindent Code block example:
-\begin{lstlisting}
+\begin{lstlisting}[
+	basicstyle=
+		\def\fvm@Scale{0.8}
+		\fontfamily{fvm}\selectfont,
+	tabsize=4
+]
 int main()
 {
 	cout << "Hello, World!" << endl;
@@ -138,7 +136,7 @@ child { node{P}
 };
 \end{tikzpicture}
 
-\begin{forest} cust-forest
+\begin{forest} demo
 [, phantom, s sep = 1cm
 	[1
 		[2[3]]
@@ -150,7 +148,7 @@ child { node{P}
 
 \subsection{Forest}
 
-\begin{forest} cust-forest
+\begin{forest} demo
 [, phantom, s sep = 1cm
 [A
 	[B [C] [D[E]] [F]]
