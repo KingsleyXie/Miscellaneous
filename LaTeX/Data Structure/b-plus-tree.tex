@@ -1,17 +1,18 @@
-\documentclass[tikz]{standalone}
+\documentclass[tikz, border={5pt, 15pt}]{standalone}
 
 \usetikzlibrary{shapes}
 
 \begin{document}
 
 \begin{tikzpicture}
-\tikzstyle{bplus}=
+\tikzstyle{bplus-node}=
 [
 	draw, rectangle split,
 	rectangle split horizontal,
 	rectangle split ignore empty parts
 ]
-\tikzstyle{every node}=[bplus]
+\tikzstyle{every node}=[bplus-node]
+
 \tikzstyle{level 1}=[sibling distance=35mm]
 \tikzstyle{level 2}=[sibling distance=15mm]
 
