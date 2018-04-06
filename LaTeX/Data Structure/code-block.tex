@@ -1,0 +1,61 @@
+\documentclass[preview]{standalone}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage[T1]{fontenc}
+
+
+
+\lstset{
+	basicstyle=
+		\def\fvm@Scale{0.8}
+		\fontfamily{fvm}\selectfont,
+	language=C++,
+	tabsize=4
+}
+
+\lstdefinestyle{display-code}{
+	showstringspaces=false,
+	commentstyle=\color{gray},
+	xleftmargin=2\parindent
+}
+\lstdefinestyle{more-settings}{
+	language=Python,
+	numbers=left,
+	numberstyle=\color{gray},
+	showstringspaces=false,
+	morekeywords={True, as},
+	xleftmargin=2\parindent,
+	keywordstyle={\bfseries \color{orange}}
+}
+
+
+
+\begin{document}
+
+\begin{enumerate}
+\item Code block effect:
+\begin{lstlisting}[style=display-code]
+// This is an in-file code block
+#include <iostream>
+
+int main()
+{
+	std::cout << "Hello, World!\n";
+	return 0;
+}
+\end{lstlisting}
+
+\item Code file effect:
+\lstinputlisting[style=display-code]{demo.cpp}
+
+\item More settings example:
+\begin{lstlisting}[style=more-settings]
+try:
+	num = int(input(msg))
+	passed = True
+except ValueError as e:
+	print("Please input a number")
+\end{lstlisting}
+\end{enumerate}
+
+\end{document}
