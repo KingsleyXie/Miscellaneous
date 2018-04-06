@@ -12,6 +12,3 @@ config.xml
 *.synctex.gz
 *.out
 *.toc
-
-# Temporary PDF Ignore
-*.pdf
