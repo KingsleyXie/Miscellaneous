@@ -4,7 +4,7 @@
 
 
 \forestset{
-	demo/.style={
+	forest-style/.style={
 		for tree={
 			circle, draw,
 			every node/.style={
@@ -21,7 +21,7 @@
 
 \begin{document}
 
-\begin{forest} demo
+\begin{forest} forest-style
 [, phantom, s sep = 1cm
 [A
 	[B [C] [D[E]] [F]]

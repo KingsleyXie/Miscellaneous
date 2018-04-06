@@ -1,0 +1,27 @@
+\documentclass[tikz, border={5pt, 15pt}]{standalone}
+\usepackage{forest}
+
+
+
+\begin{document}
+
+\begin{forest}
+for tree={
+	circle, draw,
+	every node/.style={
+		circle, draw,
+		inner sep=0pt,
+		text width=6mm,
+		align=center
+	}
+}
+[, phantom, s sep = 1cm
+	[1
+		[2[3]]
+		[4[5]]
+		[6]
+	]
+]
+\end{forest}
+
+\end{document}
