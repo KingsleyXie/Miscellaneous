@@ -21,4 +21,8 @@ Here is a brief index, in order to provide an overview of what are in the reposi
 
 - Python
   - BattleShip.py: A naive BattleShip game
+  - Socket/: TCP multi-thread socket demo
   - Deprecated/: Some Python2 Programs, currently deprecated
+
+- LaTeX
+  - Data Structure/: Some LaTeX code integrated from my data structure homework
