@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>CORS Test</title>
+</head>
+<body>
+	<script>
+		var request = new XMLHttpRequest();
+		request.open('GET', 'http://localhost/cors.php?param=mydata');
+		request.onload = function() {
+			console.log(this.response);
+		};
+		request.send();
+	</script>
+</body>
+</html>
