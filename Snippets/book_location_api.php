@@ -18,13 +18,26 @@ if ($result[1][0] == 1) {
 
 	$detail_page = request_info($post_data);
 	preg_match_all(
-		'/<td bgcolor="#FFFFFF" width="18%">(.*?)<\/td>/',
+		'/南校区.*<td bgcolor="#FFFFFF" width="18%">(.*?)<\/td>/',
 		$detail_page, $call_no
 	);
+	if (count($call_no[1]) == 0) {
+		preg_match_all(
+			'/<td bgcolor="#FFFFFF" width="18%">(.*?)<\/td>/',
+			$detail_page, $call_no
+		);
+	}
+
 	preg_match_all(
-		'/<td bgcolor="#FFFFFF" width="14%">(C\d*?)<\/td>/',
+		'/南校区.*<td bgcolor="#FFFFFF" width="14%">(C\d*?)<\/td>/',
 		$detail_page, $barcode
 	);
+	if (count($barcode[1]) == 0) {
+		preg_match_all(
+			'/<td bgcolor="#FFFFFF" width="14%">(C\d*?)<\/td>/',
+			$detail_page, $barcode
+		);
+	}
 
 	$location_page = request_location($barcode[1][0]);
 	preg_match_all(
