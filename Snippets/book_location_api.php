@@ -2,33 +2,17 @@
 // Get books' location information from SCUT library OPAC
 
 header('Content-Type: application/json');
-if (!isset($_GET['isbn'])) {
+if (!(isset($_GET['title']) && isset($_GET['press']))) {
 	echo json_encode(['ok' => false]);
 	exit();
 }
 
-$isbn = preg_replace('/978(\d+)/i', '$1', $_GET['isbn']);
-$post_data1 = 'cmdACT=simple.list&FIELD1=ISBN&VAL1=' . $isbn;
-$list_page1 = request_info($post_data1);
+$post_data = 'cmdACT=advance.list&TABLE=&RDID=ANONYMOUS&CODE=&SCODE=&PAGE=&CLANLINK=&libcode=&MARCTYPE=&ORGLIB=SCUT&FIELD1=TITLE&VAL1=' . $_GET['title'] . '&RELATE2=AND&FIELD2=PUBLISHER&VAL2=' . $_GET['press'] . '&RELATE2=AND&FIELD3=TITLE&VAL3=&RELATE2=AND&FIELD4=TITLE&VAL4=&MARCTYPELIST=+%27CNMARC01%27&MARCTYPELIST=+%27CNMARC02%27&MARCTYPELIST=+%27CNMARC11%27&MARCTYPELIST=+%27USMARC01%27&MODE=RANDOM&LIB=%0D%0A%09++++%27SCUT%27%0D%0A%09++++&PAGESIZE=20';
+$list_page = request_info($post_data);
 
-preg_match_all('/结果数：<font color="red">(\d)/', $list_page1, $result1);
+preg_match_all('/结果数：<font color="red">(\d)/', $list_page, $result);
 
-$got = false;
-if ($result1[1][0] == 1) {
-	$got = true;
-	$list_page = $list_page1;
-} else {
-	$post_data2 = 'cmdACT=simple.list&FIELD1=ISBN&VAL1=978' . $isbn;
-	$list_page2 = request_info($post_data2);
-	preg_match_all('/结果数：<font color="red">(\d)/', $list_page2, $result2);
-
-	if ($result2[1][0] == 1) {
-		$got = true;
-		$list_page = $list_page2;
-	}
-}
-
-if ($got) {
+if ($result[1][0] > 1) {
 	preg_match_all('/book_detail\((\d*)\)/', $list_page, $bookid);
 	$post_data = 'cmdACT=query.bookdetail&bookid=' . $bookid[1][0];
 
