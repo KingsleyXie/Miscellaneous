@@ -8,11 +8,27 @@ if (!isset($_GET['isbn'])) {
 }
 
 $isbn = preg_replace('/978(\d+)/i', '$1', $_GET['isbn']);
-$post_data = 'cmdACT=simple.list&FIELD1=ISBN&VAL1=' . $isbn;
-$list_page = request_info($post_data);
+$post_data1 = 'cmdACT=simple.list&FIELD1=ISBN&VAL1=' . $isbn;
+$list_page1 = request_info($post_data1);
 
-preg_match_all('/结果数：<font color="red">(\d)/', $list_page, $result);
-if ($result[1][0] == 1) {
+preg_match_all('/结果数：<font color="red">(\d)/', $list_page1, $result1);
+
+$got = false;
+if ($result1[1][0] == 1) {
+	$got = true;
+	$list_page = $list_page1;
+} else {
+	$post_data2 = 'cmdACT=simple.list&FIELD1=ISBN&VAL1=978' . $isbn;
+	$list_page2 = request_info($post_data2);
+	preg_match_all('/结果数：<font color="red">(\d)/', $list_page2, $result2);
+
+	if ($result2[1][0] == 1) {
+		$got = true;
+		$list_page = $list_page2;
+	}
+}
+
+if ($got) {
 	preg_match_all('/book_detail\((\d*)\)/', $list_page, $bookid);
 	$post_data = 'cmdACT=query.bookdetail&bookid=' . $bookid[1][0];
 
