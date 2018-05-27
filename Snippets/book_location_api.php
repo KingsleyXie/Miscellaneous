@@ -12,7 +12,7 @@ $list_page = request_info($post_data);
 
 preg_match_all('/结果数：<font color="red">(\d)/', $list_page, $result);
 
-if ($result[1][0] > 1) {
+if ($result[1][0] > 0) {
 	preg_match_all('/book_detail\((\d*)\)/', $list_page, $bookid);
 	$post_data = 'cmdACT=query.bookdetail&bookid=' . $bookid[1][0];
 
