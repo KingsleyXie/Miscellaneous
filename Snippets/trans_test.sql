@@ -101,8 +101,25 @@ COMMIT;
 
 
 
+/********* Extra Test For Phantom Read Under RR Isolation Level (BEGIN) *********/
+-- On Session 1 & Session 2:
+START TRANSACTION;
+-- On Session 1:
+SELECT COUNT(*) FROM demo;
+-- On Session 2:
+INSERT INTO demo(id, value) VALUES (233, 0);
+COMMIT;
+-- On Session 1:
+SELECT COUNT(*) FROM demo;
+UPDATE demo SET value = 233 WHERE id = 233;
+SELECT COUNT(*) FROM demo;
+COMMIT;
+/********* Extra Test For Phantom Read Under RR Isolation Level (END) *********/
+
+
+
 /********* More Intuitive Version (BEGIN) *********/
-#SESSION 1                                          #SESSION 2
+            # SESSION 1                                         # SESSION 2
 
 -- Lost Update Test Logic
 START TRANSACTION;                                  START TRANSACTION;
@@ -135,6 +152,16 @@ START TRANSACTION;                                  START TRANSACTION;
 SELECT COUNT(*) FROM demo;
                                                     INSERT INTO demo(value) VALUES (4), (5), (6);
                                                     COMMIT;
+SELECT COUNT(*) FROM demo;
+COMMIT;
+
+-- Phantom Read Extra Test Logic (For RR Isolation Level)
+START TRANSACTION;                                  START TRANSACTION;
+SELECT COUNT(*) FROM demo;
+                                                    INSERT INTO demo(id, value) VALUES (233, 0);
+                                                    COMMIT;
+SELECT COUNT(*) FROM demo;
+UPDATE demo SET value = 233 WHERE id = 233;
 SELECT COUNT(*) FROM demo;
 COMMIT;
 /********* More Intuitive Version (END) *********/
