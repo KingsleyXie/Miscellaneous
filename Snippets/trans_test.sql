@@ -47,6 +47,7 @@ UPDATE demo SET value = value + 1 WHERE id = 1;
 UPDATE demo SET value = value + 1 WHERE id = 1;
 -- On Session 1 & Session 2:
 COMMIT;
+-- On Session 1:
 SELECT value FROM demo WHERE id = 1;
 /********* Test For Lost Update (END) *********/
 
@@ -65,11 +66,12 @@ SELECT value FROM demo WHERE id = 2;
 ROLLBACK;
 -- On Session 1:
 SELECT value FROM demo WHERE id = 2;
+COMMIT;
 /********* Test For Dirty Read (END) *********/
 
 
 
-/********* Test For NonRepeatable Read (BEGIN) *********/
+/********* Test For Non-Repeatable Read (BEGIN) *********/
 -- On Session 1 & Session 2:
 START TRANSACTION;
 -- On Session 1:
@@ -79,7 +81,8 @@ UPDATE demo SET value = 233 WHERE id = 3;
 COMMIT;
 -- On Session 1:
 SELECT value FROM demo WHERE id = 3;
-/********* Test For NonRepeatable Read (END) *********/
+COMMIT;
+/********* Test For Non-Repeatable Read (END) *********/
 
 
 
@@ -93,4 +96,45 @@ INSERT INTO demo(value) VALUES (4), (5), (6);
 COMMIT;
 -- On Session 1:
 SELECT COUNT(*) FROM demo;
+COMMIT;
 /********* Test For Phantom Read (END) *********/
+
+
+
+/********* More Intuitive Version (BEGIN) *********/
+#SESSION 1                                          #SESSION 2
+
+-- Lost Update Test Logic
+START TRANSACTION;                                  START TRANSACTION;
+SELECT value FROM demo WHERE id = 1;
+UPDATE demo SET value = value + 1 WHERE id = 1;
+                                                    UPDATE demo SET value = value + 1 WHERE id = 1;
+COMMIT;                                             COMMIT;
+SELECT value FROM demo WHERE id = 1;
+
+-- Dirty Read Test Logic
+START TRANSACTION;                                  START TRANSACTION;
+SELECT value FROM demo WHERE id = 2;
+                                                    UPDATE demo SET value = 233
+                                                    WHERE id = 2;
+SELECT value FROM demo WHERE id = 2;
+                                                    ROLLBACK;
+SELECT value FROM demo WHERE id = 2;
+COMMIT;
+
+-- Non-Repeatable Read Test Logic
+START TRANSACTION;                                  START TRANSACTION;
+SELECT value FROM demo WHERE id = 3;
+                                                    UPDATE demo SET value = 233 WHERE id = 3;
+                                                    COMMIT;
+SELECT value FROM demo WHERE id = 3;
+COMMIT;
+
+-- Phantom Read Test Logic
+START TRANSACTION;                                  START TRANSACTION;
+SELECT COUNT(*) FROM demo;
+                                                    INSERT INTO demo(value) VALUES (4), (5), (6);
+                                                    COMMIT;
+SELECT COUNT(*) FROM demo;
+COMMIT;
+/********* More Intuitive Version (END) *********/
