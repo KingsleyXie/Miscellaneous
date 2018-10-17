@@ -37,6 +37,68 @@ SET SESSION TRANSACTION ISOLATION LEVEL SERIALIZABLE;
 
 
 
+/********* More Intuitive Version (BEGIN) *********/
+            # SESSION 1                                         # SESSION 2
+
+-- Lost Update Test Logic
+START TRANSACTION;                                     START TRANSACTION;
+SELECT value FROM demo WHERE id = 1;
+UPDATE demo SET value = value + 1 WHERE id = 1;
+                                                       UPDATE demo SET value = value + 1 WHERE id = 1;
+                                                       COMMIT;
+COMMIT;
+SELECT value FROM demo WHERE id = 1;
+
+-- Dirty Read Test Logic
+START TRANSACTION;                                     START TRANSACTION;
+SELECT value FROM demo WHERE id = 2;
+                                                       UPDATE demo SET value = 233 WHERE id = 2;
+SELECT value FROM demo WHERE id = 2;
+                                                       ROLLBACK;
+SELECT value FROM demo WHERE id = 2;
+COMMIT;
+
+-- Non-Repeatable Read Test Logic
+START TRANSACTION;                                     START TRANSACTION;
+SELECT value FROM demo WHERE id = 3;
+                                                       UPDATE demo SET value = 233 WHERE id = 3;
+                                                       COMMIT;
+SELECT value FROM demo WHERE id = 3;
+COMMIT;
+
+-- Phantom Read Test Logic
+START TRANSACTION;                                     START TRANSACTION;
+SELECT COUNT(*) FROM demo;
+                                                       INSERT INTO demo(value) VALUES (4), (5), (6);
+                                                       COMMIT;
+SELECT COUNT(*) FROM demo;
+COMMIT;
+
+-- Phantom Read Extra Test Logic (For RR Isolation Level)
+START TRANSACTION;                                     START TRANSACTION;
+SELECT COUNT(*) FROM demo;
+                                                       INSERT INTO demo(id, value) VALUES (233, 0);
+                                                       COMMIT;
+SELECT COUNT(*) FROM demo;
+UPDATE demo SET value = 233 WHERE id = 233;
+SELECT COUNT(*) FROM demo;
+COMMIT;
+/********* More Intuitive Version (END) *********/
+
+
+
+
+
+
+-- ************************************************************************************
+-- ************************************************************************************
+-- ************************************************************************************
+-- The following code are of the same effect as shown above,
+-- while the typesetting below may not seem so straightforward to understand
+-- ************************************************************************************
+
+
+
 /********* Test For Lost Update (BEGIN) *********/
 -- On Session 1 & Session 2:
 START TRANSACTION;
@@ -116,52 +178,6 @@ SELECT COUNT(*) FROM demo;
 COMMIT;
 /********* Extra Test For Phantom Read Under RR Isolation Level (END) *********/
 
-
-
-/********* More Intuitive Version (BEGIN) *********/
-            # SESSION 1                                         # SESSION 2
-
--- Lost Update Test Logic
-START TRANSACTION;                                  START TRANSACTION;
-SELECT value FROM demo WHERE id = 1;
-UPDATE demo SET value = value + 1 WHERE id = 1;
-                                                    UPDATE demo SET value = value + 1 WHERE id = 1;
-COMMIT;                                             COMMIT;
-SELECT value FROM demo WHERE id = 1;
-
--- Dirty Read Test Logic
-START TRANSACTION;                                  START TRANSACTION;
-SELECT value FROM demo WHERE id = 2;
-                                                    UPDATE demo SET value = 233
-                                                    WHERE id = 2;
-SELECT value FROM demo WHERE id = 2;
-                                                    ROLLBACK;
-SELECT value FROM demo WHERE id = 2;
-COMMIT;
-
--- Non-Repeatable Read Test Logic
-START TRANSACTION;                                  START TRANSACTION;
-SELECT value FROM demo WHERE id = 3;
-                                                    UPDATE demo SET value = 233 WHERE id = 3;
-                                                    COMMIT;
-SELECT value FROM demo WHERE id = 3;
-COMMIT;
-
--- Phantom Read Test Logic
-START TRANSACTION;                                  START TRANSACTION;
-SELECT COUNT(*) FROM demo;
-                                                    INSERT INTO demo(value) VALUES (4), (5), (6);
-                                                    COMMIT;
-SELECT COUNT(*) FROM demo;
-COMMIT;
-
--- Phantom Read Extra Test Logic (For RR Isolation Level)
-START TRANSACTION;                                  START TRANSACTION;
-SELECT COUNT(*) FROM demo;
-                                                    INSERT INTO demo(id, value) VALUES (233, 0);
-                                                    COMMIT;
-SELECT COUNT(*) FROM demo;
-UPDATE demo SET value = 233 WHERE id = 233;
-SELECT COUNT(*) FROM demo;
-COMMIT;
-/********* More Intuitive Version (END) *********/
+-- ************************************************************************************
+-- ************************************************************************************
+-- ************************************************************************************
