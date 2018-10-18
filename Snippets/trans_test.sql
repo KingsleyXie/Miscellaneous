@@ -40,7 +40,8 @@ SET SESSION TRANSACTION ISOLATION LEVEL SERIALIZABLE;
 /********* More Intuitive Version (BEGIN) *********/
             # SESSION 1                                         # SESSION 2
 
--- Lost Update Test Logic
+-- Lost Update Test Logic:
+
 START TRANSACTION;                                     START TRANSACTION;
 SELECT value FROM demo WHERE id = 1;
 UPDATE demo SET value = value + 1 WHERE id = 1;
@@ -49,7 +50,8 @@ UPDATE demo SET value = value + 1 WHERE id = 1;
 COMMIT;
 SELECT value FROM demo WHERE id = 1;
 
--- Dirty Read Test Logic
+-- Dirty Read Test Logic:
+                                                                                                      
 START TRANSACTION;                                     START TRANSACTION;
 SELECT value FROM demo WHERE id = 2;
                                                        UPDATE demo SET value = 233 WHERE id = 2;
@@ -58,7 +60,8 @@ SELECT value FROM demo WHERE id = 2;
 SELECT value FROM demo WHERE id = 2;
 COMMIT;
 
--- Non-Repeatable Read Test Logic
+-- Non-Repeatable Read Test Logic:
+                                                                                                      
 START TRANSACTION;                                     START TRANSACTION;
 SELECT value FROM demo WHERE id = 3;
                                                        UPDATE demo SET value = 233 WHERE id = 3;
@@ -66,7 +69,8 @@ SELECT value FROM demo WHERE id = 3;
 SELECT value FROM demo WHERE id = 3;
 COMMIT;
 
--- Phantom Read Test Logic
+-- Phantom Read Test Logic:
+                                                                                                      
 START TRANSACTION;                                     START TRANSACTION;
 SELECT COUNT(*) FROM demo;
                                                        INSERT INTO demo(value) VALUES (4), (5), (6);
@@ -74,7 +78,8 @@ SELECT COUNT(*) FROM demo;
 SELECT COUNT(*) FROM demo;
 COMMIT;
 
--- Phantom Read Extra Test Logic (For RR Isolation Level)
+-- Phantom Read Extra Test Logic (For RR Isolation Level):
+                                                                                                      
 START TRANSACTION;                                     START TRANSACTION;
 SELECT COUNT(*) FROM demo;
                                                        INSERT INTO demo(id, value) VALUES (233, 0);
