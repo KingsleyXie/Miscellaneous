@@ -1,0 +1,48 @@
+\documentclass[UTF8,titlepage]{ctexart}
+\usepackage[hidelinks]{hyperref}
+\usepackage{tikz}
+\usepackage{flafter}
+
+
+
+\usetikzlibrary{er}
+\tikzset{
+	every entity/.style={
+		minimum height=1pt,minimum width=1.1cm
+	}
+}
+
+
+
+\begin{document}
+\listoffigures
+
+\section{E-R 图}
+如下图 \ref{fig:er-graph} 所示。
+
+\begin{figure}[!htb]
+\begin{center}
+\begin{tikzpicture}[node distance=1.7cm]
+\node[entity] (sch) {学校};
+\node[relationship] (schdep) [below of=sch]{校-系} edge node[auto]{1} (sch);
+\node[entity] (dep) [below of=schdep]{系} edge node[auto]{n} (schdep);
+
+\node[relationship] (depcls) [left of=dep]{系-班} edge node[auto,swap]{1} (dep);
+\node[relationship] (depteo) [right of=dep]{系-室} edge node[auto]{1} (dep);
+
+\node[entity] (cls) [below of=depcls]{班级} edge node[auto]{n} (depcls);
+\node[relationship] (clsstu) [below of=cls]{班-生} edge node[auto]{1} (cls);
+\node[entity] (stu) [below of=clsstu]{学生} edge node[auto]{n} (clsstu);
+\node[relationship] (ele) [below of=stu]{选修} edge node[auto]{m} (stu);
+\node[entity] (cor) [below of=ele]{课程} edge node[auto]{n} (ele);
+
+\node[entity] (teo) [below of=depteo]{教研室} edge node[auto,swap]{n} (depteo);
+\node[relationship] (teosen) [below of=teo]{室-教} edge node[auto,swap]{1} (teo);
+\node[entity] (sen) [below of=teosen]{教员} edge node[auto,swap]{n} (teosen);
+
+\node[relationship] (guide) [left of=sen]{指导} edge node[auto,swap]{n} (stu) edge node[auto]{1} (sen);
+\end{tikzpicture}
+\caption{E-R 图}\label{fig:er-graph}
+\end{center}
+\end{figure}
+\end{document}

@@ -1,0 +1,23 @@
+\documentclass[border={5pt, 15pt}]{standalone}
+\usepackage{listings}
+\usepackage{textcomp}
+\usepackage[T1]{fontenc}
+
+
+
+\lstset{
+	basicstyle=
+		\def\fvm@Scale{0.8}
+		\fontfamily{fvm}\selectfont,
+	upquote=true,
+	escapeinside={\%*}{*)},
+}
+
+
+
+\begin{document}
+\begin{lstlisting}
+SELECT * FROM users WHERE username = 'admin'
+SELECT * FROM users WHERE %*\textbf{username}*) = 'admin'
+\end{lstlisting}
+\end{document}

@@ -1,0 +1,26 @@
+\documentclass[tikz, border={5pt, 15pt}]{standalone}
+\usepackage{forest}
+
+
+
+\begin{document}
+\begin{forest}
+[, phantom, s sep = 1cm
+	[$\pi_{Cname}$
+		[$\sigma_{SC.Cno\,=\,Course.Cno}$
+			[$\times$
+				[$\sigma_{Student.Sno\,=\,SC.Sno}$
+					[$\times$
+						[SC]
+						[$\sigma_{Student.Sdep\,=\,'IS'}$
+							[Student]
+						]
+					]
+				]
+				[{Course}]
+			]
+		]
+	]
+]
+\end{forest}
+\end{document}

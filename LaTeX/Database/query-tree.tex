@@ -1,0 +1,23 @@
+\documentclass[tikz, border={5pt, 15pt}]{standalone}
+\usepackage{forest}
+
+
+
+\begin{document}
+\begin{forest}
+[, phantom, s sep = 1cm
+	[Answer
+		[{project(Cname)}
+			[{select(Student.Sdep = `IS')}
+				[{join(SC.Cno = Course.Cno)}
+					[{join(Student.Sno = SC.Sno)}
+						[Student]
+						[SC]]
+					[{Course}]
+				]
+			]
+		]
+	]
+]
+\end{forest}
+\end{document}
