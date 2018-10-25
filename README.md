@@ -28,3 +28,4 @@ Here is a brief index, in order to provide an overview of what are in the reposi
 
 - LaTeX
   - Data Structure/: Some LaTeX code integrated from my data structure homework
+  - Database/: Some LaTeX code integrated from my database homework
