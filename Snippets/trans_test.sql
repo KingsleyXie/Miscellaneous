@@ -1,44 +1,45 @@
-/********* Create Database & Table With Test Data (BEGIN) *********/
--- DROP DATABASE IF EXISTS trans;
-CREATE DATABASE trans;
-USE trans;
+/********* Create Table With Test Data (BEGIN) *********/
+DROP DATABASE IF EXISTS trans_test_db;
+CREATE DATABASE trans_test_db;
+USE trans_test_db;
 CREATE TABLE demo (
 	id INTEGER NOT NULL AUTO_INCREMENT,
 	value INTEGER,
 	PRIMARY KEY(id)
 ) ENGINE = InnoDB;
 INSERT INTO demo(value) VALUES (1), (2), (3);
-/********* Create Database & Table With Test Data (END) *********/
+/********* Create Table With Test Data (END) *********/
 
 
 
 /********* Create Test Users (BEGIN) *********/
-CREATE USER 'usr1'@'localhost' IDENTIFIED BY 'pwd'; -- As Session 1
-GRANT ALL PRIVILEGES ON trans.* TO 'usr1'@'localhost';
+CREATE USER 'session1'@'localhost' IDENTIFIED BY 'password';
+GRANT ALL PRIVILEGES ON trans_test_db.* TO 'session1'@'localhost';
 
-CREATE USER 'usr2'@'localhost' IDENTIFIED BY 'pwd'; -- As Session 2
-GRANT ALL PRIVILEGES ON trans.* TO 'usr2'@'localhost';
+CREATE USER 'session2'@'localhost' IDENTIFIED BY 'password';
+GRANT ALL PRIVILEGES ON trans_test_db.* TO 'session2'@'localhost';
 /********* Create Test Users (END) *********/
 
 
 
-/********* Test Preparation (BEGIN) *********/
--- On Session 1 & Session 2:
-USE trans;
+/********* Test Preparation - On Both Sessions (BEGIN) *********/
+USE trans_test_db;
 SET SESSION innodb_lock_wait_timeout = 3;
 
---   It is strongly recommended to reset(DROP & RE-CREATE)
---   the database before starting a new test session
+-- It is strongly recommended to reset(DROP & RE-CREATE)
+-- the database before starting a new test session
 SET SESSION TRANSACTION ISOLATION LEVEL READ UNCOMMITTED; -- OR:
 SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED; -- OR:
 SET SESSION TRANSACTION ISOLATION LEVEL REPEATABLE READ; -- OR:
 SET SESSION TRANSACTION ISOLATION LEVEL SERIALIZABLE;
-/********* Test Preparation (END) *********/
+/********* Test Preparation - On Both Sessions (END) *********/
 
 
 
-/********* More Intuitive Version (BEGIN) *********/
-            # SESSION 1                                         # SESSION 2
+
+
+/********* Transction Isolation Level Test Logic Code - A More Intuitive Version (BEGIN) *********/
+/*             # SESSION 1                                           # SESSION 2                 */
 
 -- Lost Update Test Logic:
 
@@ -88,7 +89,7 @@ SELECT COUNT(*) FROM demo;
 UPDATE demo SET value = 233 WHERE id = 233;
 SELECT COUNT(*) FROM demo;
 COMMIT;
-/********* More Intuitive Version (END) *********/
+/********* Transction Isolation Level Test Logic Code - A More Intuitive Version (END) *********/
 
 
 
