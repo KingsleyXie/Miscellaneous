@@ -1,5 +1,5 @@
 <?php
-require_once 'wtf.php';
+require_once 'TextBox.class.php';
 
 header('Content-type: image/png');
 
