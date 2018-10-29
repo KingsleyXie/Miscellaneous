@@ -1,0 +1,1 @@
+This is a demo wrote for snippets of the [BirthdayEmail](https://github.com/KingsleyXie/BirthdayEmail) repository, as a record of those code fragments statemented in my blog for the Repo.
