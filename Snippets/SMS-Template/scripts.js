@@ -115,6 +115,11 @@ function exportAllSMS() {
 	if (!templatePreviewed) {
 		modalAlert('请先预览短信效果');
 	} else {
+		if (navigator.userAgent.match(/MicroMessenger/i)) {
+			modalAlert('抱歉，微信浏览器不支持文件下载，请用其它浏览器导出');
+			return;
+		}
+
 		let type = document.getElementById("select-type").value;
 		let resultarray = generateSMSFromTemplate(headerRow + 1, rowRange);
 		resultarray.splice(0, 0, ['收信人手机号', '短信内容']);
