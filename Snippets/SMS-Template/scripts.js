@@ -2,7 +2,6 @@ let worksheet = null, headerRow = 0, rowRange = 0, templatePreviewed = false;
 
 
 
-// = =! You have to use jQuery here
 $("#file").fileinput({
 	theme: 'explorer',
 	language: 'zh',
@@ -21,7 +20,6 @@ $("#file").fileinput({
 	}
 })
 
-// = =! You have to use jQuery here again
 $('#select-column').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
 	let tgt = e.target;
 	let middle = '{{' + tgt.value + '(' + tgt.selectedOptions[0].dataset.index + ')}}';
@@ -33,7 +31,6 @@ $('#select-column').on('changed.bs.select', function (e, clickedIndex, isSelecte
 	textarea.value = firstHalf + middle + secondHalf;
 	templatePreviewed = false;
 
-	// = =! You have to use jQuery here again and again
 	$("#data-col-modal").modal('hide');
 })
 
@@ -77,13 +74,12 @@ document.getElementById('file')
 
 				optionWithSubtext.dataset.index = col;
 			} catch (TypeError) {
-				modalAlert('<h3><center>表格格式不符合要求！</center></h3>');
+				modalAlert('表格格式不符合要求！');
 				success = false;
 				break;
 			}
 		}
 
-		// = =! You have to use jQuery here again and again and again
 		$('.selectpicker').selectpicker('refresh');
 		if (success) document.getElementById("operations").style.display = "block";
 	};
@@ -95,7 +91,7 @@ document.getElementById('file')
 function generateSMSFromTemplate(start, end) {
 	let idx = document.getElementById("select-phone").selectedIndex - 1;
 	if (idx == -1) {
-		modalAlert('<h3><center>请选择手机号对应的数据列</center></h3>');
+		modalAlert('请选择手机号对应的数据列');
 		// document.querySelector('button[data-id="select-phone"]').click();
 		return;
 	}
@@ -115,40 +111,44 @@ function generateSMSFromTemplate(start, end) {
 
 
 
-function generateSMS() {
+function exportAllSMS() {
 	if (!templatePreviewed) {
-		modalAlert('<h3><center>请先预览短信效果</center></h3>');
+		modalAlert('请先预览短信效果');
 	} else {
+		let type = document.getElementById("select-type").value;
 		let resultarray = generateSMSFromTemplate(headerRow + 1, rowRange);
 		resultarray.splice(0, 0, ['收信人手机号', '短信内容']);
 		let filename = '模板短信';
 
 		let resultsheet = XLSX.utils.aoa_to_sheet(resultarray);
 
-		let workbook = XLSX.utils.book_new();
-		XLSX.utils.book_append_sheet(workbook, resultsheet, filename);
-		XLSX.writeFile(workbook, filename + '.xlsx');
-
-		let txtString = XLSX.utils.sheet_to_txt(resultsheet);
-		let link = document.createElement('a');
-		let blob = new Blob([txtString], { type: 'text/plain;charset=utf-8' });
-		$(link).attr({ 'download': filename + '.txt', 'href': URL.createObjectURL(blob)});
-		link.click();
+		// There may be a little encoding problem with the exporting of txt file
+		// So I wrote it myself using the BLOB API
+		if (type == 'txt') {
+			let txtString = XLSX.utils.sheet_to_txt(resultsheet);
+			let link = document.createElement('a');
+			let blob = new Blob([txtString], { type: 'text/plain;charset=utf-8' });
+			$(link).attr({ 'download': filename + '.txt', 'href': URL.createObjectURL(blob)});
+			link.click();
+		} else {
+			let workbook = XLSX.utils.book_new();
+			XLSX.utils.book_append_sheet(workbook, resultsheet, filename);
+			XLSX.writeFile(workbook, filename + '.' + type);
+		}
 	}
 }
 
 function previewSMS() {
 	if (document.getElementById("textarea").value == '') {
-		modalAlert('<h3><center>请输入短信模板！</center></h3>');
+		modalAlert('请输入短信模板！');
 		return;
 	}
 
 	templatePreviewed = true;
 	if (msg = generateSMSFromTemplate(headerRow + 1, headerRow + 2)) {
-		modalAlert(
-			'<h4>收信人手机号：' + msg[0][0] + '</h4>' +
-			'<h4>短信内容：</h4>' + msg[0][1]
-		);
+		document.getElementById("msg-phone").innerText = msg[0][0];
+		document.getElementById("msg-content").innerText = msg[0][1];
+		$("#preview-modal").modal('show');
 	}
 }
 
@@ -156,17 +156,13 @@ function previewOff() {
 	templatePreviewed = false;
 }
 
-
+function modalAlert(msg) {
+	document.getElementById("modal-msg").innerText = msg;
+	$("#alert-modal").modal('show');
+}
 
 // Get Cell Value Without TypeError
 function parseCellV(pos) {
 	let placeholder = '（表格中该项为空）';
 	return worksheet[pos] == undefined ? placeholder : worksheet[pos].w;
-}
-
-function modalAlert(msg) {
-	document.getElementById("modal-msg").innerHTML = msg;
-
-	// = =! You have to use jQuery here again and again and again and again
-	$("#alert-modal").modal('show');
 }

@@ -34,6 +34,43 @@
 		</div>
 	</div>
 
+	<div class="modal fade" tabindex="-1" id="preview-modal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title text-center">模板短信效果预览</h4>
+				</div>
+				<div class="modal-body">
+					<h4>收信人手机号：<span id="msg-phone"></span></h4>
+					<h4>短信内容：</h4>
+					<p id="msg-content"></p>
+				</div>
+				<div class="modal-footer">
+					<div class="row">
+						<div class="col-md-8">
+							<select class="selectpicker show-tick" id="select-type"
+								title="请选择想导出的文件类型"
+								data-width="100%">
+								<option value="txt">txt</option>
+								<option value="xls">xls</option>
+								<option value="xlsx">xlsx</option>
+								<option value="xlsb">xlsb</option>
+								<option value="csv">csv</option>
+							</select>
+						</div>
+
+						<div class="col-md-4">
+							<button type="button" class="btn btn-warning center-block" data-dismiss="modal" onclick="exportAllSMS()">生成并导出所有短信</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<div class="modal fade" tabindex="-1" id="alert-modal">
 		<div class="modal-dialog">
 			<div class="modal-content">
@@ -43,7 +80,9 @@
 					</button>
 					<h4 class="modal-title text-center">系统提示</h4>
 				</div>
-				<div class="modal-body" id="modal-msg"></div>
+				<div class="modal-body">
+					<h3><center id="modal-msg"></center></h3>
+				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-primary center-block" data-dismiss="modal">我知道了</button>
 				</div>
@@ -88,14 +127,10 @@
 		<br>
 
 		<div class="row">
-			<div class="col-md-offset-3 col-md-2">
-				<button type="button" class="btn btn-primary" onclick="generateSMS()">生成并导出所有短信</button>
-			</div>
-
-			<div class="col-md-4 text-right">
+			<div class="col-md-offset-5 col-md-4 text-right">
 				<button type="button" class="btn btn-info"
 					data-toggle="modal" data-target="#data-col-modal">添加数据列到模板</button>
-				<button type="button" class="btn btn-default" onclick="previewSMS()">预览短信效果</button>
+				<button type="button" class="btn btn-default" onclick="previewSMS()">预览并导出短信</button>
 			</div>
 		</div>
 	</div>
