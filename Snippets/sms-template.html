@@ -12,24 +12,53 @@
 </head>
 
 <body>
-	<br><center><h1>短信批量生成工具</h1></center><br><br><br>
+	<br><h1 class="text-center">短信批量生成工具</h1><br><br><br>
 
 	<input type="file" class="file" id="file" name="file">
 
-	<br><br>
-	<center>
-		<h3><b>收信人手机号</b> 对应的数据列是：
-			<span>
+	<br><br><br>
+
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-offset-3 col-md-2">
+				<h4><b>收信人手机号</b>对应的数据列是：</h4>
+			</div>
+
+			<div class="col-md-4">
 				<select class="selectpicker show-tick" id="select"
 					title="请选择"
-					data-width="30%"
+					data-width="100%"
 					data-live-search="true">
 					<option></option>
 				</select>
-			</span>
-		</h3>
-		<button class="btn btn-lg btn-primary">确定</button>
-	</center>
+			</div>
+		</div>
+
+		<br>
+
+		<div class="row">
+			<div class="col-md-offset-3 col-md-2">
+				<h4>请在右侧输入短信模板：</h4>
+			</div>
+
+			<div class="col-md-4">
+				<textarea class="form-control" rows="3"></textarea>
+			</div>
+		</div>
+
+		<br>
+
+		<div class="row">
+			<div class="col-md-offset-5 col-md-2">
+				<button type="button" class="btn btn-info">添加数据列到模板</button>
+			</div>
+
+			<div class="col-md-2 text-right">
+				<button type="button" class="btn btn-default">预览短信效果</button>
+				<button type="button" class="btn btn-primary">生成所有短信</button>
+			</div>
+		</div>
+	</div>
 
 	<script src="https://cdnjs.loli.net/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	<script src="https://cdnjs.loli.net/ajax/libs/bootstrap-fileinput/4.5.1/js/plugins/piexif.min.js"></script>
@@ -64,7 +93,7 @@
 		});
 
 		// = =! You had to use jQuery here again
-		$('.selectpicker').selectpicker('hide');
+		// $('.selectpicker').selectpicker('hide');
 
 		let worksheet = null, columnNames = [];
 		document.getElementById('file')
