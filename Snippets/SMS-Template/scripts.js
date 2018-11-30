@@ -37,8 +37,6 @@ $('#select-column').on('changed.bs.select', function (e, clickedIndex, isSelecte
 	$("#data-col-modal").modal('hide');
 })
 
-document.getElementById("operations").style.display = "none";
-
 document.getElementById('file')
 .addEventListener('input', (e) => {
 	let reader = new FileReader();
@@ -70,16 +68,16 @@ document.getElementById('file')
 
 			let option = document.createElement("option");
 			try {
-				option.text = worksheet[headerPos].w;
+				option.text = parseCellV(headerPos);
 				document.getElementById("select-phone").add(option);
 
 				let optionWithSubtext = option.cloneNode(true);
-				optionWithSubtext.dataset.subtext = '【示例：' + worksheet[samplePos].w + '】';
+				optionWithSubtext.dataset.subtext = '【示例：' + parseCellV(samplePos) + '】';
 				document.getElementById("select-column").add(optionWithSubtext);
 
 				optionWithSubtext.dataset.index = col;
 			} catch (TypeError) {
-				modalAlert('<center>表格格式不符合要求！</center>');
+				modalAlert('<h3><center>表格格式不符合要求！</center></h3>');
 				success = false;
 				break;
 			}
@@ -95,31 +93,63 @@ document.getElementById('file')
 
 
 function generateSMSFromTemplate(start, end) {
+	let idx = document.getElementById("select-phone").selectedIndex - 1;
+	if (idx == -1) {
+		modalAlert('<h3><center>请选择手机号对应的数据列</center></h3>');
+		// document.querySelector('button[data-id="select-phone"]').click();
+		return;
+	}
+
 	let msgs = [];
 	for (let row = start; row <= end; row++) {
-		let msg = document.getElementById("textarea").value.replace(/\{\{.*?\((\d+)\)\}\}/g, (match, str) => {
+		let msg = document.getElementById("textarea").value
+		.replace(/\{\{.*?\((\d+)\)\}\}/g, (match, str) => {
 			let pos = XLSX.utils.encode_cell({c: parseInt(str), r: row});
-			return worksheet[pos].w;
+			return parseCellV(pos);
 		});
-		msgs.push(msg);
+		let pos = XLSX.utils.encode_cell({c: idx, r: row});
+		msgs.push([parseCellV(pos), msg]);
 	}
 	return msgs;
 }
 
 
 
-
 function generateSMS() {
 	if (!templatePreviewed) {
-		modalAlert('<center>请先预览短信效果</center>');
+		modalAlert('<h3><center>请先预览短信效果</center></h3>');
 	} else {
-		//
+		let resultarray = generateSMSFromTemplate(headerRow + 1, rowRange);
+		resultarray.splice(0, 0, ['收信人手机号', '短信内容']);
+		let filename = '模板短信';
+
+		let resultsheet = XLSX.utils.aoa_to_sheet(resultarray);
+
+		let workbook = XLSX.utils.book_new();
+		XLSX.utils.book_append_sheet(workbook, resultsheet, filename);
+		XLSX.writeFile(workbook, filename + '.xlsx');
+
+		let txtString = XLSX.utils.sheet_to_txt(resultsheet);
+		let link = document.createElement('a');
+		let blob = new Blob([txtString], { type: 'text/plain;charset=utf-8' });
+		$(link).attr({ 'download': filename + '.txt', 'href': URL.createObjectURL(blob)});
+		link.click();
 	}
 }
 
 function previewSMS() {
+	if (document.getElementById("textarea").value == '') {
+		modalAlert('<h3><center>请输入短信模板！</center></h3>');
+		return;
+	}
+
 	templatePreviewed = true;
-	modalAlert(generateSMSFromTemplate(headerRow + 1, headerRow + 2)[0]);
+	if (msg = generateSMSFromTemplate(headerRow + 1, headerRow + 2)) {
+		modalAlert(
+			'<h4>收信人手机号：' + msg[0][0] + '</h4>' +
+			'<h4>短信内容：</h4>' + msg[0][1]
+		);
+	}
 }
 
 function previewOff() {
@@ -127,6 +157,12 @@ function previewOff() {
 }
 
 
+
+// Get Cell Value Without TypeError
+function parseCellV(pos) {
+	let placeholder = '（表格中该项为空）';
+	return worksheet[pos] == undefined ? placeholder : worksheet[pos].w;
+}
 
 function modalAlert(msg) {
 	document.getElementById("modal-msg").innerHTML = msg;
