@@ -8,6 +8,7 @@
 	<link rel="stylesheet" href="https://cdnjs.loli.net/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
 	<link rel="stylesheet" href="https://cdnjs.loli.net/ajax/libs/bootstrap-fileinput/4.5.1/css/fileinput.min.css">
 	<link rel="stylesheet" href="https://cdnjs.loli.net/ajax/libs/bootstrap-fileinput/4.5.1/themes/explorer/theme.min.css">
+	<link rel="stylesheet" href="https://cdnjs.loli.net/ajax/libs/bootstrap-select/1.13.2/css/bootstrap-select.min.css">
 </head>
 
 <body>
@@ -15,7 +16,20 @@
 
 	<input type="file" class="file" id="file" name="file">
 
-	<div id="cols"></div>
+	<br><br>
+	<center>
+		<h3><b>收信人手机号</b> 对应的数据列是：
+			<span>
+				<select class="selectpicker show-tick" id="select"
+					title="请选择"
+					data-width="30%"
+					data-live-search="true">
+					<option></option>
+				</select>
+			</span>
+		</h3>
+		<button class="btn btn-lg btn-primary">确定</button>
+	</center>
 
 	<script src="https://cdnjs.loli.net/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	<script src="https://cdnjs.loli.net/ajax/libs/bootstrap-fileinput/4.5.1/js/plugins/piexif.min.js"></script>
@@ -26,14 +40,16 @@
 	<script src="https://cdnjs.loli.net/ajax/libs/bootstrap-fileinput/4.5.1/js/fileinput.min.js"></script>
 	<script src="https://cdnjs.loli.net/ajax/libs/bootstrap-fileinput/4.5.1/themes/explorer/theme.min.js"></script>
 	<script src="https://cdnjs.loli.net/ajax/libs/bootstrap-fileinput/4.5.1/js/locales/zh.js"></script>
-
-
+	<script src="https://cdnjs.loli.net/ajax/libs/bootstrap-select/1.13.2/js/bootstrap-select.min.js"></script>
+	<script src="https://cdnjs.loli.net/ajax/libs/xlsx/0.8.1/xlsx.core.min.js"></script>
 
 	<script>
+		// = =! You had to use jQuery here
 		$("#file").fileinput({
 			theme: 'explorer',
 			language: 'zh',
 			browseLabel: '浏览',
+			msgPlaceholder: '点击右侧按钮上传 👉',
 			dropZoneTitle:
 				'<p>请上传 Excel 文件后选取数据列并输入短信模板</p>' +
 				'<p><strong>点击右下角浏览按钮选择文件</strong>' +
@@ -46,16 +62,15 @@
 				'xls': function(ext) { return ext.match(/(xls|xlsx)$/i); }
 			}
 		});
-	</script>
 
+		// = =! You had to use jQuery here again
+		$('.selectpicker').selectpicker('hide');
 
-
-	<script src="https://cdnjs.loli.net/ajax/libs/xlsx/0.8.1/xlsx.core.min.js"></script>
-	<script>
-		let worksheet = null;
-		function handleFile(e) {
+		let worksheet = null, columnNames = [];
+		document.getElementById('file')
+		.addEventListener('input', (e) => {
 			var reader = new FileReader();
-			reader.onload = function(e) {
+			reader.onload = (e) => {
 				var data = e.target.result;
 				var workbook = XLSX.read(data, {type: 'binary'});
 				worksheet = workbook.Sheets[workbook.SheetNames[0]];
@@ -68,16 +83,25 @@
 				// var finalCellPos = worksheet['!ref'].replace(/.*:([A-Za-z]*)\d*/, '$1') + '1';
 				if (worksheet[finalCellPos] == undefined) startRow++;
 
+				// = =! You had to use jQuery here again and again
+				$('.selectpicker').selectpicker('show');
+
+				document.getElementById('select').innerHTML = '';
+				columnNames = [];
+
 				for (var col = 0; col <= columns; col++) {
 					var pos = XLSX.utils.encode_cell({c: col, r: startRow});
-					console.log(worksheet[pos].w);
+
+					var option = document.createElement("option");
+					option.text = worksheet[pos].w;
+					document.getElementById('select').add(option);
+					columnNames.push(option.text);
 				}
+				// = =! You had to use jQuery here again and again and again
+				$('.selectpicker').selectpicker('refresh');
 			};
 			reader.readAsBinaryString(e.target.files[0]);
-		}
-
-		document.getElementById('file')
-		.addEventListener('input', handleFile, false);
+		});
 	</script>
 </body>
 </html>
