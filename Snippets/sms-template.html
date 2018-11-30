@@ -12,24 +12,62 @@
 </head>
 
 <body>
+	<div class="modal fade" tabindex="-1" id="data-col-modal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h5 class="modal-title text-center">添加数据列</h5>
+				</div>
+				<div class="modal-body">
+					<select class="selectpicker show-tick" id="select-column"
+						title="请选择要添加的列名"
+						data-width="100%"
+						data-live-search="true">
+						<option></option>
+					</select>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" tabindex="-1" id="alert-modal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title text-center">系统提示</h4>
+				</div>
+				<h3 class="modal-body" id="modal-msg"></h3>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary center-block" data-dismiss="modal">我知道了</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<br><h1 class="text-center">短信批量生成工具</h1><br><br><br>
 
 	<input type="file" class="file" id="file" name="file">
 
 	<br><br><br>
 
-	<div class="container-fluid">
+	<div class="container-fluid" id="operations">
 		<div class="row">
 			<div class="col-md-offset-3 col-md-2">
 				<h4><b>收信人手机号</b>对应的数据列是：</h4>
 			</div>
 
 			<div class="col-md-4">
-				<select class="selectpicker show-tick" id="select"
+				<select class="selectpicker show-tick" id="select-phone"
 					title="请选择"
 					data-width="100%"
 					data-live-search="true">
-					<option></option>
+					<option>wtf</option>
 				</select>
 			</div>
 		</div>
@@ -42,20 +80,21 @@
 			</div>
 
 			<div class="col-md-4">
-				<textarea class="form-control" rows="3"></textarea>
+				<textarea class="form-control" id="textarea" rows="3"></textarea>
 			</div>
 		</div>
 
 		<br>
 
 		<div class="row">
-			<div class="col-md-offset-5 col-md-2">
-				<button type="button" class="btn btn-info">添加数据列到模板</button>
+			<div class="col-md-offset-3 col-md-2">
+				<button type="button" class="btn btn-primary">生成并导出所有短信</button>
 			</div>
 
-			<div class="col-md-2 text-right">
+			<div class="col-md-4 text-right">
+				<button type="button" class="btn btn-info"
+					data-toggle="modal" data-target="#data-col-modal">添加数据列到模板</button>
 				<button type="button" class="btn btn-default">预览短信效果</button>
-				<button type="button" class="btn btn-primary">生成所有短信</button>
 			</div>
 		</div>
 	</div>
@@ -73,7 +112,7 @@
 	<script src="https://cdnjs.loli.net/ajax/libs/xlsx/0.8.1/xlsx.core.min.js"></script>
 
 	<script>
-		// = =! You had to use jQuery here
+		// = =! You have to use jQuery here
 		$("#file").fileinput({
 			theme: 'explorer',
 			language: 'zh',
@@ -90,12 +129,26 @@
 			previewFileExtSettings: {
 				'xls': function(ext) { return ext.match(/(xls|xlsx)$/i); }
 			}
-		});
+		})
 
-		// = =! You had to use jQuery here again
-		// $('.selectpicker').selectpicker('hide');
+		// = =! You have to use jQuery here again
+		$('#select-column').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+			var tgt = e.target;
+			var middle = '{{' + tgt.value + tgt.selectedOptions[0].dataset.subtext + '}}';
 
-		let worksheet = null, columnNames = [];
+			var textarea = document.getElementById("textarea");
+			var firstHalf = textarea.value.substr(0, textarea.selectionStart);
+			var secondHalf = textarea.value.substr(textarea.selectionEnd, textarea.value.length);
+
+			textarea.value = firstHalf + middle + secondHalf;
+
+			// = =! You have to use jQuery here again and again
+			$("#data-col-modal").modal('hide');
+		})
+
+		document.getElementById("operations").style.display = "none";
+		let worksheet = null;
+
 		document.getElementById('file')
 		.addEventListener('input', (e) => {
 			var reader = new FileReader();
@@ -104,33 +157,47 @@
 				var workbook = XLSX.read(data, {type: 'binary'});
 				worksheet = workbook.Sheets[workbook.SheetNames[0]];
 
-				var columns = XLSX.utils.decode_range(worksheet['!ref']).e.c;
-				var startRow = 0;
+				var colRange = XLSX.utils.decode_range(worksheet['!ref']).e.c;
+				var rowRange = XLSX.utils.decode_range(worksheet['!ref']).e.r;
+				var headerRow = 0;
 
-				// Check if there is a title row by where the last column of first row is set
-				var finalCellPos = XLSX.utils.encode_cell({c: columns, r: 0});
-				// var finalCellPos = worksheet['!ref'].replace(/.*:([A-Za-z]*)\d*/, '$1') + '1';
-				if (worksheet[finalCellPos] == undefined) startRow++;
+				// Get the row of header names
+				while (headerRow < rowRange) {
+					var finalCellPos = XLSX.utils.encode_cell({c: colRange, r: headerRow});
+					if (worksheet[finalCellPos] == undefined) headerRow++;
+					else break;
+				}
 
-				// = =! You had to use jQuery here again and again
-				$('.selectpicker').selectpicker('show');
+				document.getElementById("select-phone").innerHTML = '';
+				document.getElementById("select-column").innerHTML = '';
 
-				document.getElementById('select').innerHTML = '';
-				columnNames = [];
-
-				for (var col = 0; col <= columns; col++) {
-					var pos = XLSX.utils.encode_cell({c: col, r: startRow});
+				for (var col = 0; col <= colRange; col++) {
+					var pos = XLSX.utils.encode_cell({c: col, r: headerRow});
 
 					var option = document.createElement("option");
-					option.text = worksheet[pos].w;
-					document.getElementById('select').add(option);
-					columnNames.push(option.text);
+					try {
+						option.text = worksheet[pos].w;
+						document.getElementById("select-phone").add(option);
+
+						var optionWithSubtext = option.cloneNode(true);
+						optionWithSubtext.dataset.subtext = 'COL' + col;
+						document.getElementById("select-column").add(optionWithSubtext);
+					} catch (TypeError) {
+						document.getElementById("modal-msg").innerHTML = '<center>表格格式不符合要求！</center>';
+
+						// = =! You have to use jQuery here again and again and again
+						$("#alert-modal").modal('show');
+						break;
+					}
 				}
-				// = =! You had to use jQuery here again and again and again
+
+				// = =! You have to use jQuery here again and again and again and again
 				$('.selectpicker').selectpicker('refresh');
+				document.getElementById("operations").style.display = "block";
 			};
 			reader.readAsBinaryString(e.target.files[0]);
 		});
+
 	</script>
 </body>
 </html>
