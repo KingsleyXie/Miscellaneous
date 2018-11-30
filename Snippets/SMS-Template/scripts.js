@@ -1,4 +1,4 @@
-let worksheet = null, previewed = false;
+let worksheet = null, headerRow = 0, rowRange = 0, templatePreviewed = false;
 
 
 
@@ -23,15 +23,15 @@ $("#file").fileinput({
 
 // = =! You have to use jQuery here again
 $('#select-column').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
-	var tgt = e.target;
-	var middle = '{{' + tgt.value + '(' + tgt.selectedOptions[0].dataset.subtext + ')}}';
+	let tgt = e.target;
+	let middle = '{{' + tgt.value + '(' + tgt.selectedOptions[0].dataset.index + ')}}';
 
-	var textarea = document.getElementById("textarea");
-	var firstHalf = textarea.value.substr(0, textarea.selectionStart);
-	var secondHalf = textarea.value.substr(textarea.selectionEnd, textarea.value.length);
+	let textarea = document.getElementById("textarea");
+	let firstHalf = textarea.value.substr(0, textarea.selectionStart);
+	let secondHalf = textarea.value.substr(textarea.selectionEnd, textarea.value.length);
 
 	textarea.value = firstHalf + middle + secondHalf;
-	previewed = false;
+	templatePreviewed = false;
 
 	// = =! You have to use jQuery here again and again
 	$("#data-col-modal").modal('hide');
@@ -41,20 +41,21 @@ document.getElementById("operations").style.display = "none";
 
 document.getElementById('file')
 .addEventListener('input', (e) => {
-	var reader = new FileReader();
+	let reader = new FileReader();
 	reader.onload = (e) => {
 		document.getElementById("operations").style.display = "none";
-		var data = e.target.result;
-		var workbook = XLSX.read(data, {type: 'binary'});
+		let data = e.target.result;
+		let workbook = XLSX.read(data, {type: 'binary'});
 		worksheet = workbook.Sheets[workbook.SheetNames[0]];
 
-		var colRange = XLSX.utils.decode_range(worksheet['!ref']).e.c;
-		var rowRange = XLSX.utils.decode_range(worksheet['!ref']).e.r;
-		var headerRow = 0;
+		let colRange = XLSX.utils.decode_range(worksheet['!ref']).e.c;
+
+		headerRow = 0;
+		rowRange = XLSX.utils.decode_range(worksheet['!ref']).e.r;
 
 		// Get the row of header names
 		while (headerRow < rowRange) {
-			var finalCellPos = XLSX.utils.encode_cell({c: colRange, r: headerRow});
+			let finalCellPos = XLSX.utils.encode_cell({c: colRange, r: headerRow});
 			if (worksheet[finalCellPos] == undefined) headerRow++;
 			else break;
 		}
@@ -62,18 +63,21 @@ document.getElementById('file')
 		document.getElementById("select-phone").innerHTML = '';
 		document.getElementById("select-column").innerHTML = '';
 
-		var success = true;
-		for (var col = 0; col <= colRange; col++) {
-			var pos = XLSX.utils.encode_cell({c: col, r: headerRow});
+		let success = true;
+		for (let col = 0; col <= colRange; col++) {
+			let headerPos = XLSX.utils.encode_cell({c: col, r: headerRow});
+			let samplePos = XLSX.utils.encode_cell({c: col, r: headerRow + 1});
 
-			var option = document.createElement("option");
+			let option = document.createElement("option");
 			try {
-				option.text = worksheet[pos].w;
+				option.text = worksheet[headerPos].w;
 				document.getElementById("select-phone").add(option);
 
-				var optionWithSubtext = option.cloneNode(true);
-				optionWithSubtext.dataset.subtext = col;
+				let optionWithSubtext = option.cloneNode(true);
+				optionWithSubtext.dataset.subtext = '【示例：' + worksheet[samplePos].w + '】';
 				document.getElementById("select-column").add(optionWithSubtext);
+
+				optionWithSubtext.dataset.index = col;
 			} catch (TypeError) {
 				modalAlert('<center>表格格式不符合要求！</center>');
 				success = false;
@@ -90,8 +94,23 @@ document.getElementById('file')
 
 
 
+function generateSMSFromTemplate(start, end) {
+	let msgs = [];
+	for (let row = start; row <= end; row++) {
+		let msg = document.getElementById("textarea").value.replace(/\{\{.*?\((\d+)\)\}\}/g, (match, str) => {
+			let pos = XLSX.utils.encode_cell({c: parseInt(str), r: row});
+			return worksheet[pos].w;
+		});
+		msgs.push(msg);
+	}
+	return msgs;
+}
+
+
+
+
 function generateSMS() {
-	if (!previewed) {
+	if (!templatePreviewed) {
 		modalAlert('<center>请先预览短信效果</center>');
 	} else {
 		//
@@ -99,12 +118,12 @@ function generateSMS() {
 }
 
 function previewSMS() {
-	previewed = true;
-	modalAlert('喵喵喵');
+	templatePreviewed = true;
+	modalAlert(generateSMSFromTemplate(headerRow + 1, headerRow + 2)[0]);
 }
 
 function previewOff() {
-	previewed = false;
+	templatePreviewed = false;
 }
 
 
