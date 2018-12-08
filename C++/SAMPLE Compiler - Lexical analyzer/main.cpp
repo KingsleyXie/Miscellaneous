@@ -13,5 +13,7 @@ int main(int argc, char const *argv[])
     scanner.setFile();
     scanner.scanTokens();
 
+    scanner.printTokens();
+
     return 0;
 }

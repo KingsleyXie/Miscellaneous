@@ -3,6 +3,7 @@
 #include <string>
 #include <fstream>
 #include <iostream>
+#include <iomanip>
 
 #include "InvaildTokenException.cpp"
 #include "Token.cpp"
@@ -12,6 +13,9 @@ class Scanner
 public:
     Scanner() {}
     ~Scanner() {}
+
+    std::vector<Token> tokens;
+    std::map<std::string, int> constants;
 
     void setFile()
     {
@@ -42,15 +46,34 @@ public:
             try {
                 scanLine();
             } catch (InvaildTokenException& e) {
-                std::cout << "\tInvaild token at line " << lineCnt;
+                std::cout << "\n\tInvaild token at line " << lineCnt;
                 std::cout << ": " << e.what() << "\n";
             }
         }
     }
 
-    std::vector<Token> getTokens()
+    void printTokens()
     {
-        return tokens;
+        int cnt = 0;
+        std::cout << "\n";
+        for (std::vector<Token>::iterator token = tokens.begin();
+            token != tokens.end(); ++token)
+        {
+            std::cout << "(" << std::setw(2) << token->type << ", ";
+
+            std::cout << std::setw(2);
+            if (token->type >= WORD_IDENTIFIER && token->type <= WORD_CHAR) {
+                std::cout << token->constid;
+            } else {
+                std::cout << "-";
+            }
+
+            std::cout << ")" << "\t";
+
+            cnt++;
+            if (!(cnt % 5)) std::cout << "\n";
+        }
+        std::cout << "\n\n";
     }
 
 private:
@@ -79,7 +102,6 @@ private:
     unsigned int WORD_IDENTIFIER = 36, WORD_NUMBER = 37, WORD_CHAR = 38;
     unsigned int WORD_COMMENT_START = 49, WORD_COMMENT_END = 42;
 
-    std::vector<Token> tokens;
     std::ifstream ifs;
     std::string line;
 
@@ -107,7 +129,7 @@ private:
     void getNextToken()
     {
         state = START;
-        std::string token = "";
+        std::string currWord = "";
 
         while ((state != END) && (charPos <= line.size()))
         {
@@ -135,6 +157,7 @@ private:
                         case ' ':
                         case '\t':
                         case '\r': // Escape `\r` for Windows files
+                        case 0: // Escape NULL char
                         {
                             discardCurr = true;
                             break;
@@ -218,7 +241,7 @@ private:
                         discardCurr = true;
                         tokenT = WORD_CHAR;
                     } else if (curr == '\n' || curr == 0) {
-                        throw InvaildTokenException("line ended before char `" + token + "` finishes");
+                        throw InvaildTokenException("line ended before char `" + currWord + "` finishes");
                     }
                     break;
                 }
@@ -263,7 +286,7 @@ private:
                         tokenT = WORD_NUMBER;
                         backward();
                     } else if (std::isalpha(curr)) {
-                        throw InvaildTokenException("non-digital char following the number value `" + token + "`");
+                        throw InvaildTokenException("non-digital char following the number value `" + currWord + "`");
                     }
                     break;
                 }
@@ -282,19 +305,32 @@ private:
             }
 
             if (!discardCurr) {
-                std::string concat(1, curr);
-                token += concat;
+                std::string ch(1, curr);
+                currWord += ch;
             }
 
             if (state == END)
             {
                 if ((tokenT == WORD_IDENTIFIER)
-                    && (words.find(token) != words.end())) {   
-                    tokenT = words[token];
+                    && (words.find(currWord) != words.end())) {
+                    tokenT = words[currWord];
                 }
 
                 if (tokenT != WORD_COMMENT_END) {
-                    std::cout << token << "\t" << tokenT << "\n";
+                    Token token(currWord, tokenT);
+
+                    if (tokenT >= WORD_IDENTIFIER && tokenT <= WORD_CHAR)
+                    {
+                        if (constants.find(currWord) == constants.end()) {
+                            token.constid = constants.size() + 1;
+                            constants.insert(std::pair<std::string, int>(currWord, token.constid));
+                        }
+                        else {
+                            token.constid = constants.find(currWord)->second;
+                        }
+                    }
+
+                    tokens.push_back(token);
                 }
             }
         }
