@@ -1,0 +1,5 @@
+#define STUHEADER "\n----------------- 2018 编译原理实验 · 作者信息 -----------------\n\n"
+#define STUNAME "\t\t\t姓名：谢仪民\n"
+#define STUCLASS "\t\t\t班级：16 级计科一班\n"
+#define STUNUM "\t\t\t学号：201636599535\n\n"
+#define STUFOOTER "----------------- 2018 编译原理实验 · 作者信息 -----------------\n\n\n"

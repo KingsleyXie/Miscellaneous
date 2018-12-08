@@ -1,0 +1,20 @@
+and array begin bool call case char constant dim do else end false for if input integer not of or output procedure program read real /* 8*/ 998 to for
+s to true until var while */ write abc 123 'EFG'() * + , - . .. / : := ; < <= <> = > >= []
+/* 1888 *dsd*
+/* 888 */
+and  array  begin  bool  call
+case  char  constant  dim  do
+else  end  false  for  if
+input  integer  not  of  or
+output  procedure  program  read  real
+repeat  set  stop  then  to
+true  until  var  while  write
+abc  123  'EFG'  (  )  *  +  ,  -  .  ..  /
+:  :=  ;  <  <=  <>  =  >  >=  [  ]
+program  example2;
+var  A,B,C:integer;
+     X,Y:bool;
+begin  /*  this  is  an  example  */
+  A:=B*C+37;
+  X:='ABC'
+end.
