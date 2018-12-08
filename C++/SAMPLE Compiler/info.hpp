@@ -1,0 +1,5 @@
+#define STUHEADER "------------ Compiler Labs - Author Information ------------\n"
+#define STUNAME "\t\t\tName: xxx\n"
+#define STUCLASS "\t\t\tClass: xxx\n"
+#define STUNUM "\t\t\tStunum: xxx\n"
+#define STUFOOTER "------------ Compiler Labs - Author Information ------------\n\n"
