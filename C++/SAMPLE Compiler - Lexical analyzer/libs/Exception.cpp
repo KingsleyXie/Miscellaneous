@@ -2,16 +2,16 @@
 
 #include <string>
 
-class InvaildTokenException: public std::exception
+class Exception: public std::exception
 {
 public:
-    explicit InvaildTokenException(const char* message):
+    explicit Exception(const char* message):
     msg_(message) {}
 
-    explicit InvaildTokenException(const std::string& message):
+    explicit Exception(const std::string& message):
     msg_(message) {}
 
-    virtual ~InvaildTokenException() throw () {}
+    virtual ~Exception() throw () {}
 
     virtual const char* what() const throw ()
     {

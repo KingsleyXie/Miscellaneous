@@ -5,7 +5,7 @@
 #include <iostream>
 #include <iomanip>
 
-#include "InvaildTokenException.cpp"
+#include "Exception.cpp"
 #include "Token.cpp"
 
 class Scanner
@@ -45,7 +45,7 @@ public:
 
             try {
                 scanLine();
-            } catch (InvaildTokenException& e) {
+            } catch (Exception& e) {
                 std::cout << "\n\tInvaild token at line " << lineCnt;
                 std::cout << ": " << e.what() << "\n";
             }
@@ -175,7 +175,7 @@ private:
                                     tokenT = words[ch];
                                 }
                                 else {
-                                    throw InvaildTokenException("char `" + ch + "` is not in the keyword list");
+                                    throw Exception("char `" + ch + "` is not in the keyword list");
                                 }
                             }
                             break;
@@ -240,7 +240,7 @@ private:
                         discardCurr = true;
                         tokenT = WORD_CHAR;
                     } else if (curr == '\n' || curr == 0) {
-                        throw InvaildTokenException("line ended before char `" + currWord + "` finishes");
+                        throw Exception("line ended before char `" + currWord + "` finishes");
                     }
                     break;
                 }
@@ -260,7 +260,7 @@ private:
                 {
                     if (curr == '*') state = COMMENTR;
                     else if (curr == '\n' || curr == 0) {
-                        throw InvaildTokenException("`*/` is required before this comment finishes");
+                        throw Exception("`*/` is required before this comment finishes");
                     }
                     break;
                 }
@@ -271,7 +271,7 @@ private:
                         state = END;
                         tokenT = words["*/"];
                     } else if (curr == '\n' || curr == 0) {
-                        throw InvaildTokenException("`/` is required before this comment finishes");
+                        throw Exception("`/` is required before this comment finishes");
                     } else {
                         state = COMMENTL;
                     }
@@ -285,7 +285,7 @@ private:
                         tokenT = WORD_NUMBER;
                         backward();
                     } else if (std::isalpha(curr)) {
-                        throw InvaildTokenException("non-digital char following the number value `" + currWord + "`");
+                        throw Exception("non-digital char following the number value `" + currWord + "`");
                     }
                     break;
                 }
