@@ -56,14 +56,13 @@ public:
     {
         int cnt = 0;
         std::cout << "\n";
-        for (std::vector<Token>::iterator token = tokens.begin();
-            token != tokens.end(); ++token)
+        for (Token token : tokens)
         {
-            std::cout << "(" << std::setw(2) << token->type << ", ";
+            std::cout << "(" << std::setw(2) << token.type << ", ";
 
             std::cout << std::setw(2);
-            if (token->type >= WORD_IDENTIFIER && token->type <= WORD_CHAR) {
-                std::cout << token->constid;
+            if (token.type >= WORD_IDENTIFIER && token.type <= WORD_CHAR) {
+                std::cout << token.constid;
             } else {
                 std::cout << "-";
             }
