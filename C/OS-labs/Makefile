@@ -18,6 +18,20 @@ lab1-2:
 
 
 
+lab2-1:
+	$(C) -o lab2/producer_consumer lab2/producer_consumer.c
+	./lab2/producer_consumer
+
+lab2-2:
+	$(C) -pthread -o lab2/barber lab2/barber.c
+	./lab2/barber
+
+lab2-3:
+	$(C) -o lab2/reader_writer lab2/reader_writer.c
+	./lab2/reader_writer
+
+
+
 lab4-1:
 	$(C) -o lab4/doit lab4/doit.c
 	./lab4/doit
