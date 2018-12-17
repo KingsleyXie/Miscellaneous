@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <time.h>
 
-int main()
+int main(int argc, char* argv[])
 {
     time_t curr_time;
     char* fmt_time;

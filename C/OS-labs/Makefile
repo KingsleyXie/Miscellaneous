@@ -4,6 +4,9 @@
 
 C = gcc
 
+help:
+	@echo "Usage: make labx-x(x)"
+
 lab1-11:
 	$(C) -o lab1/an_ch2_lb lab1/an_ch2_lb.c
 	./lab1/an_ch2_lb
@@ -11,6 +14,10 @@ lab1-11:
 lab1-12:
 	$(C) -o lab1/an_ch2_la lab1/an_ch2_la.c
 	./lab1/an_ch2_la
+
+lab1-13:
+	$(C) -o lab1/fork_wait lab1/fork_wait.c
+	./lab1/fork_wait
 
 lab1-2:
 	$(C) -pthread -o lab1/thread_test lab1/thread_test.c
@@ -45,3 +52,15 @@ lab4-1:
 lab4-2:
 	$(C) -o lab4/myshell lab4/myshell.c
 	./lab4/myshell
+
+clean:
+	rm lab1/an_ch2_lb
+	rm lab1/an_ch2_la
+	rm lab1/fork_wait
+	rm lab1/thread_test
+	rm lab2/producer_consumer
+	rm lab2/barber
+	rm lab2/reader_writer
+	rm lab3/myfind
+	rm lab4/doit
+	rm lab4/myshell

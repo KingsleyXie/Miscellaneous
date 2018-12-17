@@ -31,7 +31,7 @@ void up(int *sem_id);
 void reader_come();
 void writer_come();
 
-int main()
+int main(int argc, char* argv[])
 {
     union semun smn;
     pid_t writer1,writer2;

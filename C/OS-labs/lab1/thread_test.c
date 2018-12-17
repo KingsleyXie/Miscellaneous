@@ -17,7 +17,7 @@ void sub_thread()
     }
 }
 
-int main()
+int main(int argc, char* argv[])
 {
     pthread_t thread_id;
     int pt_id = pthread_create(&thread_id, NULL, (void*)sub_thread, NULL);

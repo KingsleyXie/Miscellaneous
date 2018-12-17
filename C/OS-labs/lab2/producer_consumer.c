@@ -30,7 +30,7 @@ void up(int *sem_id);
 void produce(pid_t pid, int base);
 void consume(pid_t pid);
 
-void main()
+int main(int argc, char* argv[])
 {
     srand(time(NULL));
     buffer = (char*)mmap(NULL, sizeof(char) * MAXN, PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
