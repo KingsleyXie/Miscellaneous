@@ -32,6 +32,12 @@ lab2-3:
 
 
 
+lab3-0:
+	$(C) -o lab3/myfind lab3/myfind.c
+	./lab3/myfind
+
+
+
 lab4-1:
 	$(C) -o lab4/doit lab4/doit.c
 	./lab4/doit
