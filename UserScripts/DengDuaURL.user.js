@@ -1,11 +1,9 @@
 // ==UserScript==
-// @name         DengDuaURL
-// @namespace    http://tampermonkey.net/
-// @version      0.2
+// @name         裁判文书网旧版链接跳转工具
+// @version      0.1
 // @description  Make Court Wenshu Accessable Again!
-// @author       AJIE
+// @author       kingsleyxie
 // @match        https://wenshu.court.gov.cn/content/content?DocID=*
-// @grant        none
 // ==/UserScript==
 
 (function() {
